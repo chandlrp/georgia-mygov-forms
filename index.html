@@ -608,7 +608,7 @@ const BA = {before:{ka:'ამჟამინდელი პროცესი'
 const GAS = typeof google !== 'undefined' && google.script && google.script.run;
 /* GitHub Pages 등 외부에서 열 때는 Apps Script를 데이터 창구(API)로만 쓴다 → 구글 다중 로그인(/u/1/) 문제 없음.
    배포 주소가 바뀌면 이 한 줄만 바꾼다. 로컬 파일(file://)이나 ?demo=1은 모의 데이터. */
-const API_URL = 'https://script.google.com/macros/s/AKfycbxfPqlweTJZe5toITm3u889TH6RnBoMKAGj5PqlgyRmYwq3zbW8B288vkXG00Xbf0YQsQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbx8qg6UlgKSw3j0WOO6XkQLMzZ8iqkfPwknCISuv5kadLNt2W2MJIWmCSxlwJxXVCmyKA/exec';
 const STATIC = !GAS && location.protocol.startsWith('http') && !/demo=1/.test(location.search);
 const MOCK = {
   _db(){
