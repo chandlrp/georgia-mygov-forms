@@ -1361,28 +1361,66 @@ function alertBox(msg){ // 브라우저 알림창 대신 화면 안 안내
 function exportXlsx(){
   if(!window.XLSX){ alertBox('엑셀 라이브러리를 불러오지 못했습니다. 「원본 시트 열기」에서 파일 → 다운로드 → Excel을 쓰세요.'); return }
   const wb = XLSX.utils.book_new();
-  const add = (name, rows) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length ? rows : [{'(없음)':''}]), name);
-  const t = x => x ? new Date(x).toLocaleString('ko-KR') : '';
-  add('개인카드', A.data.P.map(c=>({번호:c.id, 제출:t(c.submitted_at), 숨김:c.hidden?'Y':'', 이름:c.name, 제목:c.title, '대상 이용자와 문제':c.problem, '개선 아이디어':c.idea, 기대효과:c.effect, '관련 자료·경험':c.evidence})));
-  add('조별카드', A.data.T.map(c=>({번호:c.id, 조:c.team, 제출:t(c.submitted_at), 수정:t(c.updated_at), 숨김:c.hidden?'Y':'', 제안자:c.proposers, 제목:c.title, '문제·핵심 기능':c.problem, 'AI·빅데이터':c.ai, '개선 전':c.before, '개선 후':c.after, '데이터·관련 기관':c.data, 기대효과:c.effect, '추가 확인사항':c.open})));
-  const items = k => SV[k].items;
-  add('만족도_원본', S.data.map(r=>{
-    const sv = r.survey==='ws' ? 'ws' : 'edu', o = {응답ID:r.id, 제출:t(r.submitted_at), 숨김:r.hidden?'Y':'', 구분:sv==='ws'?'워크숍':'교육', 세션:sv==='ws'?'W':'S'+r.session};
-    items(sv).forEach(it=>{ o[it.k+' '+it.ko] = r[it.k]===''?'':+r[it.k] });
-    if(sv==='edu'){ o['속도'] = (PACE.find(p=>p.v===r.pace)||{}).ko || ''; SV.edu.overall.items.forEach(it=>{ o[it.k+' '+it.ko] = r[it.k]===''||r[it.k]==null?'':+r[it.k] }) }
-    o['가장 유익했던 점'] = r.best||''; o['개선점'] = r.improve||''; o['프로그램 의견'] = r.o_comment||''; o['소속'] = r.agency||'';
+  const add = (name, rows, widths) => {
+    const ws = XLSX.utils.json_to_sheet(rows.length ? rows : [{'(응답 없음)':''}], {cellDates:true, dateNF:'yyyy-mm-dd hh:mm'});
+    if(widths) ws['!cols'] = widths.map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws, name);
+  };
+  // 트빌리시 시각(UTC+4)으로 기록 — 운영자 PC 시간대와 무관
+  const dt = x => { if(!x) return ''; const d = new Date(x); return new Date(d.getTime() + (240 + d.getTimezoneOffset())*60000) };
+  const num = v => (v===''||v==null) ? '' : +v;
+  const byTime = (a,b) => String(a.submitted_at).localeCompare(String(b.submitted_at));
+  const qcol = (it, i) => 'Q'+(i+1)+' '+it.ko;
+  const pcol = (it, i) => 'P'+(i+1)+' '+it.ko;
+
+  /* 1) 교육 만족도: 응답 1건 = 1행 (세션 → 제출 시각 순) */
+  const edu = S.data.filter(r=>r.survey==='edu').sort((a,b)=>(+a.session - +b.session) || byTime(a,b));
+  add('교육_응답', edu.map(r=>{
+    const s = sesOf(r.session) || {};
+    const o = {'응답ID':r.id, '제출일시(트빌리시)':dt(r.submitted_at), '세션':+r.session, '세션명':s.ko||'', '일자':s.dko||'', '오전/오후':s.half||'', '강사':s.wko||''};
+    SV.edu.items.forEach((it,i)=>{ o[qcol(it,i)] = num(r[it.k]) });
+    o['속도'] = (PACE.find(p=>p.v===r.pace)||{}).ko || '';
+    SV.edu.overall.items.forEach((it,i)=>{ o[pcol(it,i)] = num(r[it.k]) });
+    o['가장 유익했던 점'] = r.best||''; o['개선점·더 듣고 싶은 주제'] = r.improve||''; o['프로그램 전체 의견'] = r.o_comment||'';
+    o['소속'] = r.agency||''; o['기기ID'] = r.device||''; o['숨김'] = r.hidden ? 'Y' : 'N';
     return o;
-  }));
-  const sumE = [], sumW = [];
-  SESSIONS.map(s=>['edu', s.n, 'S'+s.n+' '+s.ko+' ('+s.dko+' '+s.half+', '+s.wko+')']).concat([['ws','W','워크숍 (11/27)']]).forEach(([sv, ses, name])=>{
-    const sum = sv==='ws' ? sumW : sumE;
+  }), [11,17,5,30,10,8,12, 9,9,9,9,9,9,9, 6, 9,9,9, 40,40,40, 12,11,5]);
+
+  /* 2) 워크숍 만족도: 응답 1건 = 1행 */
+  const ws = S.data.filter(r=>r.survey==='ws').sort(byTime);
+  add('워크숍_응답', ws.map(r=>{
+    const o = {'응답ID':r.id, '제출일시(트빌리시)':dt(r.submitted_at)};
+    SV.ws.items.forEach((it,i)=>{ o[qcol(it,i)] = num(r[it.k]) });
+    o['가장 유익했던 점'] = r.best||''; o['개선점'] = r.improve||'';
+    o['소속'] = r.agency||''; o['기기ID'] = r.device||''; o['숨김'] = r.hidden ? 'Y' : 'N';
+    return o;
+  }), [11,17, 9,9,9,9,9,9,9, 40,40, 12,11,5]);
+
+  /* 3) 요약 (숨긴 응답 제외) */
+  const summary = (sv, list) => list.map(([ses, name])=>{
     const rows = liveR(S.data.filter(r=>r.survey===sv && String(r.session)===ses));
-    const o = {세션:name, 응답수:rows.length, '만족 비율(q1 4·5점)':rows.length ? Math.round(rows.filter(r=>+r.q1>=4).length/rows.length*1000)/10+'%' : ''};
-    items(sv).forEach(it=>{ const a = avgOf(rows, it.k); o[it.ko+' 평균'] = a==null ? '' : Math.round(a*100)/100 });
-    sum.push(o);
+    const o = {'구분':name, '응답수':rows.length, '만족 비율(Q1 4·5점, %)':rows.length ? Math.round(rows.filter(r=>+r.q1>=4).length/rows.length*1000)/10 : ''};
+    SV[sv].items.forEach((it,i)=>{ const a = avgOf(rows, it.k); o[qcol(it,i)+' 평균'] = a==null ? '' : Math.round(a*100)/100 });
+    return o;
   });
-  add('교육_세션요약', sumE);
-  add('워크숍_요약', sumW);
+  add('교육_세션요약', summary('edu', SESSIONS.map(s=>[s.n, 'S'+s.n+' '+s.ko+' ('+s.dko+' '+s.half+', '+s.wko+')'])));
+  add('워크숍_요약', summary('ws', [['W','워크숍 (11/27)']]));
+
+  /* 4) 문항 설명 (코드북) */
+  const book = [];
+  const scale = '1 전혀 아니다 · 2 아니다 · 3 보통 · 4 그렇다 · 5 매우 그렇다';
+  SV.edu.items.forEach((it,i)=>book.push({'구분':'교육', '열':qcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
+  book.push({'구분':'교육', '열':'속도', '한국어':'세션 속도', 'English':'Pace of the session', 'ქართული':'სესიის ტემპი', '척도':'느림 · 적절 · 빠름'});
+  SV.edu.overall.items.forEach((it,i)=>book.push({'구분':'교육(S6만)', '열':pcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
+  SV.ws.items.forEach((it,i)=>book.push({'구분':'워크숍', '열':qcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
+  book.push({'구분':'공통', '열':'숨김', '한국어':'운영자가 숨긴 응답(시험 응답 등). 분석 시 Y 제외', 'English':'', 'ქართული':'', '척도':'Y / N'});
+  book.push({'구분':'공통', '열':'기기ID', '한국어':'같은 휴대폰에서 낸 응답 표시(익명). 중복 확인용', 'English':'', 'ქართული':'', '척도':''});
+  add('문항설명', book, [10,22,30,60,60,40]);
+
+  /* 5) 아이디어 카드 */
+  add('개인카드', A.data.P.slice().sort(byTime).map(c=>({'번호':c.id, '제출일시(트빌리시)':dt(c.submitted_at), '이름':c.name, '제목':c.title, '대상 이용자와 문제':c.problem, '개선 아이디어':c.idea, '기대효과':c.effect, '관련 자료·경험':c.evidence, '숨김':c.hidden?'Y':'N'})), [8,17,16,30,40,40,30,30,5]);
+  add('조별카드', A.data.T.slice().sort((a,b)=>(+a.team - +b.team)).map(c=>({'번호':c.id, '조':+c.team, '제출일시(트빌리시)':dt(c.submitted_at), '수정일시(트빌리시)':dt(c.updated_at), '제안자':c.proposers, '제목':c.title, '문제·핵심 기능':c.problem, 'AI·빅데이터':c.ai, '개선 전':c.before, '개선 후':c.after, '데이터·관련 기관':c.data, '기대효과':c.effect, '추가 확인사항':c.open, '숨김':c.hidden?'Y':'N'})), [6,4,17,17,20,30,40,30,30,30,30,30,30,5]);
+
   XLSX.writeFile(wb, 'Georgia_교육워크숍_결과_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
 /* ================= boot ================= */
