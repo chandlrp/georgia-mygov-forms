@@ -296,6 +296,16 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
 .qrurl input{flex:1; min-width:280px; font-size:13px}
 .qrurl .ok{color:var(--teal); font-weight:700}
 .qrurl .bad{color:#F2A08F; font-weight:700}
+.dtwrap{background:var(--paper); border-radius:16px; overflow:auto; max-height:72vh; box-shadow:0 14px 30px -14px rgba(0,0,0,.6)}
+.dtable{border-collapse:collapse; font-size:13px; color:var(--ink); min-width:100%}
+.dtable th{position:sticky; top:0; z-index:1; background:#EFE8D6; color:var(--ink); font-weight:700; text-align:left; padding:8px 10px; border-bottom:1px solid #D9CFB8; white-space:nowrap}
+.dtable td{padding:7px 10px; border-bottom:1px solid #EEE7D6; vertical-align:top; white-space:nowrap}
+.dtable td.long{white-space:normal; min-width:240px; max-width:420px; line-height:1.45}
+.dtable td.num{text-align:right; font-variant-numeric:tabular-nums}
+.dtable .rn{position:sticky; left:0; background:#F7F1E3; color:#9A9485; text-align:right; font-weight:600}
+.dtable th.rn{z-index:2; background:#E6DDC6}
+.dtable tr:hover td{background:#FFF6DF}
+.dtable tr.off td{color:#B7B0A0}
 .svtabs{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
 .svtabs button{display:flex; flex-direction:column; align-items:flex-start; gap:2px; min-width:118px; text-align:left; cursor:pointer; padding:10px 14px; border-radius:14px; border:1.5px solid var(--line); background:rgba(13,45,69,.75); color:#F3F8FC}
 .svtabs button b{font-size:14px}
@@ -472,6 +482,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
   <div class="topnav" id="topnav">
       <button data-v="idea" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg>아이디어 카드 <span class="n" id="nIdea">0</span></button>
       <button data-v="survey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>만족도 조사 <span class="n" id="nSurvey">0</span></button>
+      <button data-v="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>데이터 표</button>
     </div>
     <div class="navtools">
       <button class="btn" id="xlsxBtn">엑셀 내려받기</button>
@@ -484,6 +495,19 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
     <input class="tb-input" id="pubUrl" placeholder="배포 관리의 웹 앱 URL (https://script.google.com/macros/s/…/exec)">
     <button class="btn" id="pubSave">저장</button>
     <span id="pubState"></span>
+  </div>
+
+  <!-- ===== 데이터 표 ===== -->
+  <div id="secData" class="hidden">
+    <div class="svtabs" id="dtTabs"></div>
+    <div class="toolbar">
+      <input class="tb-input" id="dtQ" placeholder="표 안에서 검색">
+      <label class="chk"><input type="checkbox" id="dtHide"> 숨긴 행 빼기</label>
+      <span class="spacer"></span>
+      <span class="live" id="dtCount"></span>
+      <button class="btn primary" id="dtXlsx">이 표들을 엑셀로 내려받기</button>
+    </div>
+    <div id="dtBody"></div>
   </div>
 
   <!-- ===== 만족도 조사 ===== -->
@@ -999,7 +1023,7 @@ async function refreshAll(){
     A.data = d.cards || {P:[],T:[]}; A.data.P = A.data.P||[]; A.data.T = A.data.T||[];
     S.data = d.responses || [];
     $('#live').textContent = '갱신 '+t; $('#svLive').textContent = '갱신 '+t;
-    renderAdmin(); renderSurveyAdmin();
+    renderAdmin(); renderSurveyAdmin(); if(A.section==='data') renderData();
   }catch(e){
     if(/authori/i.test(String(e && e.message || e))){ $('#admin').classList.add('hidden'); $('#gate').classList.remove('hidden') }
     else { $('#live').textContent = $('#svLive').textContent = '갱신 실패: '+(e && e.message || e) }
@@ -1325,8 +1349,10 @@ function setSection(v){
   $('#topnav').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
   $('#secIdea').classList.toggle('hidden', v!=='idea');
   $('#secSurvey').classList.toggle('hidden', v!=='survey');
+  $('#secData').classList.toggle('hidden', v!=='data');
   $('#stats').classList.toggle('hidden', v!=='idea');
-  $('#admTitle').textContent = v==='idea' ? '아이디어 카드 관리' : '만족도 조사 결과';
+  $('#admTitle').textContent = v==='idea' ? '아이디어 카드 관리' : v==='survey' ? '만족도 조사 결과' : '데이터 표 (엑셀과 같은 내용)';
+  if(v==='data') renderData();
 }
 function bindSurveyAdmin(){
   $('#topnav').addEventListener('click', e=>{ const b = e.target.closest('button'); if(b) setSection(b.dataset.v) });
@@ -1341,6 +1367,10 @@ function bindSurveyAdmin(){
     setTimeout(()=>window.print(), 200);
   });
   $('#svQr').addEventListener('click', printSurveyPoster);
+  $('#dtTabs').addEventListener('click', e=>{ const b = e.target.closest('button'); if(!b) return; DT.sheet = b.dataset.s; renderData() });
+  $('#dtQ').addEventListener('input', e=>{ DT.q = e.target.value.trim(); renderData() });
+  $('#dtHide').addEventListener('change', e=>{ DT.hideHidden = e.target.checked; renderData() });
+  $('#dtXlsx').addEventListener('click', exportXlsx);
   // hover tooltip
   const tip = document.createElement('div'); tip.className = 'tip'; document.body.appendChild(tip);
   $('#svBody').addEventListener('mousemove', e=>{
@@ -1358,14 +1388,10 @@ function alertBox(msg){ // 브라우저 알림창 대신 화면 안 안내
   b.textContent = msg;
 }
 /* ---------------- 엑셀 내려받기: 원본 + 세션 요약 ---------------- */
-function exportXlsx(){
-  if(!window.XLSX){ alertBox('엑셀 라이브러리를 불러오지 못했습니다. 「원본 시트 열기」에서 파일 → 다운로드 → Excel을 쓰세요.'); return }
-  const wb = XLSX.utils.book_new();
-  const add = (name, rows, widths) => {
-    const ws = XLSX.utils.json_to_sheet(rows.length ? rows : [{'(응답 없음)':''}], {cellDates:true, dateNF:'yyyy-mm-dd hh:mm'});
-    if(widths) ws['!cols'] = widths.map(w=>({wch:w}));
-    XLSX.utils.book_append_sheet(wb, ws, name);
-  };
+/* 엑셀 시트와 화면 「데이터 표」가 같은 행을 쓴다 */
+function buildSheets(){
+  const sheets = [];
+  const add = (name, rows, widths) => sheets.push({name, rows, widths});
   // 트빌리시 시각(UTC+4)으로 기록 — 운영자 PC 시간대와 무관
   const dt = x => { if(!x) return ''; const d = new Date(x); return new Date(d.getTime() + (240 + d.getTimezoneOffset())*60000) };
   const num = v => (v===''||v==null) ? '' : +v;
@@ -1421,7 +1447,40 @@ function exportXlsx(){
   add('개인카드', A.data.P.slice().sort(byTime).map(c=>({'번호':c.id, '제출일시(트빌리시)':dt(c.submitted_at), '이름':c.name, '제목':c.title, '대상 이용자와 문제':c.problem, '개선 아이디어':c.idea, '기대효과':c.effect, '관련 자료·경험':c.evidence, '숨김':c.hidden?'Y':'N'})), [8,17,16,30,40,40,30,30,5]);
   add('조별카드', A.data.T.slice().sort((a,b)=>(+a.team - +b.team)).map(c=>({'번호':c.id, '조':+c.team, '제출일시(트빌리시)':dt(c.submitted_at), '수정일시(트빌리시)':dt(c.updated_at), '제안자':c.proposers, '제목':c.title, '문제·핵심 기능':c.problem, 'AI·빅데이터':c.ai, '개선 전':c.before, '개선 후':c.after, '데이터·관련 기관':c.data, '기대효과':c.effect, '추가 확인사항':c.open, '숨김':c.hidden?'Y':'N'})), [6,4,17,17,20,30,40,30,30,30,30,30,30,5]);
 
+  return sheets;
+}
+function exportXlsx(){
+  if(!window.XLSX){ alertBox('엑셀 라이브러리를 불러오지 못했습니다. 「원본 시트 열기」에서 파일 → 다운로드 → Excel을 쓰세요.'); return }
+  const wb = XLSX.utils.book_new();
+  buildSheets().forEach(sh=>{
+    const ws = XLSX.utils.json_to_sheet(sh.rows.length ? sh.rows : [{'(응답 없음)':''}], {cellDates:true, dateNF:'yyyy-mm-dd hh:mm'});
+    if(sh.widths) ws['!cols'] = sh.widths.map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws, sh.name);
+  });
   XLSX.writeFile(wb, 'Georgia_교육워크숍_결과_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+/* ---------------- 데이터 표 (엑셀과 같은 시트를 화면에서) ---------------- */
+const DT = {sheet:'교육_응답', q:'', hideHidden:false};
+const fmtCell = v => {
+  if(v instanceof Date) return v.getFullYear()+'-'+String(v.getMonth()+1).padStart(2,'0')+'-'+String(v.getDate()).padStart(2,'0')+' '+String(v.getHours()).padStart(2,'0')+':'+String(v.getMinutes()).padStart(2,'0');
+  return v==null ? '' : String(v);
+};
+function renderData(){
+  const sheets = buildSheets();
+  if(!sheets.some(s=>s.name===DT.sheet)) DT.sheet = sheets[0].name;
+  $('#dtTabs').innerHTML = sheets.map(sh=>'<button data-s="'+esc(sh.name)+'" class="'+(sh.name===DT.sheet?'on':'')+'"><b>'+esc(sh.name)+'</b><small>'+sh.rows.length+'행</small></button>').join('');
+  const sh = sheets.find(s=>s.name===DT.sheet);
+  let rows = sh.rows;
+  if(DT.hideHidden) rows = rows.filter(r=>r['숨김']!=='Y');
+  if(DT.q){ const q = DT.q.toLowerCase(); rows = rows.filter(r=>Object.values(r).map(fmtCell).join(' ').toLowerCase().includes(q)) }
+  const cols = sh.rows.length ? Object.keys(sh.rows[0]) : [];
+  $('#dtCount').textContent = rows.length+' / '+sh.rows.length+'행';
+  if(!cols.length){ $('#dtBody').innerHTML = '<div class="blank">아직 데이터가 없습니다.</div>'; return }
+  const isNum = c => /^(Q\d|P\d|세션$|조$|응답수|만족 비율)/.test(c);
+  $('#dtBody').innerHTML = '<div class="dtwrap"><table class="dtable"><thead><tr><th class="rn">#</th>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'
+    + rows.map((r,i)=>'<tr'+(r['숨김']==='Y'?' class="off"':'')+'><td class="rn">'+(i+1)+'</td>'+cols.map(c=>{ const v = fmtCell(r[c]); return '<td class="'+(isNum(c)?'num':(v.length>40?'long':''))+'">'+esc(v)+'</td>' }).join('')+'</tr>').join('')
+    + '</tbody></table></div>';
 }
 /* ================= boot ================= */
 params().then(p=>{
@@ -1429,6 +1488,7 @@ params().then(p=>{
     A.key = p.key || ''; bindAdmin();
     if(p.session==='team'){ A.type = 'T'; $('#sess').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x.dataset.v==='T')) }
     if(p.tab==='survey'){ setSection('survey'); if(p.st) S.tab = p.st }
+    if(p.tab==='data'){ if(p.sheet) DT.sheet = p.sheet; setSection('data') }
     if(!A.key && GAS){ $('#gate').classList.remove('hidden') } else startAdmin();
   } else if(p.survey==='edu' || p.survey==='ws'){
     SVP.survey = p.survey;
