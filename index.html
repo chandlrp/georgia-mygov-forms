@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Idea Card · my.gov.ge Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08253D; --navy2:#0D2D45; --navy3:#16384F; --line:#335D71;
+  --gold:#F2C778; --gold-d:#B8862B; --teal:#50D8C6; --teal-d:#1E7F8C;
+  --paper:#FFFCF4; --paper2:#F7F1E3; --ink:#18222B; --ink2:#55626C; --rule:#E7DFCC;
+  --accent:var(--teal-d); --accent-soft:#DDF4F1; --accent-strong:var(--teal);
+  --f:'Inter','Noto Sans Georgian','Noto Sans KR',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--f); color:#F3F8FC; min-height:100vh;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(80,216,198,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(242,199,120,.10), transparent 60%),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0/28px 28px,
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0/28px 28px,
+    var(--navy);
+  -webkit-font-smoothing:antialiased;
+}
+body.team{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--gold)}
+button,input,textarea,select{font:inherit}
+.hidden{display:none !important}
+.wrap{max-width:680px; margin:0 auto; padding:20px 16px 56px}
+
+/* ---------- header ---------- */
+.top{display:flex; align-items:center; gap:10px; color:var(--gold); font-weight:700; font-size:12px; letter-spacing:.08em; text-transform:uppercase}
+.top .dot{flex:none; width:8px;height:8px;border-radius:50%;background:var(--accent-strong);box-shadow:0 0 0 4px rgba(80,216,198,.18)}
+.hero{margin:14px 0 18px}
+.hero .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 12px 6px 6px; border-radius:999px; background:rgba(13,45,69,.8); border:1px solid var(--line); font-size:13px; font-weight:600; margin-bottom:12px}
+.hero .pill i{display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--accent-strong); color:var(--navy)}
+.hero .pill svg{width:15px; height:15px}
+.hero h1{margin:0; font-size:30px; line-height:1.15; font-weight:800; letter-spacing:-.01em}
+.hero h1 small{display:block; font-size:15px; font-weight:500; color:#ADCAD5; margin-top:6px; letter-spacing:0}
+.hero p{margin:10px 0 0; color:#ADCAD5; font-size:14px; line-height:1.55}
+
+/* ---------- the card ---------- */
+.card{
+  position:relative; background:var(--paper); color:var(--ink); border-radius:22px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.55), 0 2px 0 rgba(255,255,255,.6) inset; overflow:hidden;
+}
+.card::before{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background:radial-gradient(circle at 20% 10%, rgba(255,255,255,.9), transparent 40%),
+             radial-gradient(circle at 90% 90%, rgba(231,223,204,.6), transparent 45%);
+}
+.band{position:relative; padding:22px 22px 18px; color:#fff; background:linear-gradient(120deg, var(--navy) 0%, var(--navy2) 55%, var(--accent) 140%)}
+.band::after{
+  content:""; position:absolute; left:14px; right:14px; bottom:-6px; height:12px;
+  background:radial-gradient(circle at 6px 6px, var(--paper) 4px, transparent 4.5px) 0 0/16px 12px repeat-x;
+}
+.band .hole{position:absolute; top:14px; left:50%; width:30px; height:12px; margin-left:-15px; border-radius:8px; background:var(--navy); box-shadow:inset 0 2px 3px rgba(0,0,0,.5)}
+.band .kicker{font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strong)}
+.band h2{margin:6px 0 0; padding-right:88px; font-size:22px; font-weight:800; line-height:1.25}
+.band h2 small{display:block; font-size:13px; font-weight:500; opacity:.75; margin-top:3px}
+.stamp{
+  position:absolute; right:18px; top:20px; width:78px; height:78px; border-radius:50%;
+  border:2px dashed rgba(255,255,255,.55); display:grid; place-items:center; text-align:center;
+  font-size:10px; letter-spacing:.1em; color:rgba(255,255,255,.8); transform:rotate(-8deg)
+}
+.stamp b{display:block; font-size:16px; letter-spacing:0; color:#fff}
+.bulb{position:absolute; right:110px; top:26px; opacity:.12}
+.bulb svg{width:64px;height:64px}
+
+.body{position:relative; padding:22px 22px 8px}
+.rule-note{display:flex; gap:10px; align-items:flex-start; background:var(--accent-soft); border-radius:12px; padding:10px 12px; font-size:13px; line-height:1.5; color:var(--ink); margin-bottom:18px}
+.rule-note svg{flex:none; width:18px; height:18px; color:var(--accent); margin-top:1px}
+
+.f{margin:0 0 18px}
+.f .lab{display:flex; align-items:baseline; gap:10px; margin-bottom:8px}
+.f .num{flex:none; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--navy); color:var(--accent-strong); font-size:12px; font-weight:800; transform:translateY(5px)}
+.f .t{font-weight:700; font-size:16px; line-height:1.35}
+.f .t small{display:block; font-weight:500; font-size:12.5px; color:var(--ink2)}
+.f .t .req{color:#C2410C; margin-left:2px}
+.f .hint{font-size:13px; color:var(--ink2); margin:-2px 0 8px 36px; line-height:1.45}
+.f .hint i{font-style:normal; opacity:.8}
+.f input[type=text], .f textarea{width:100%; border:none; outline:none; color:var(--ink); background-color:transparent; font-size:16px; padding:0 4px; border-radius:0}
+.f input[type=text]{border-bottom:2px solid var(--rule); padding:8px 4px; transition:border-color .15s}
+.f input[type=text]:focus{border-color:var(--accent)}
+.f textarea{
+  resize:vertical; min-height:calc(32px * 3 + 4px); line-height:32px; padding-top:0;
+  background-image:repeating-linear-gradient(to bottom, transparent 0 31px, var(--rule) 31px 32px); background-attachment:local;
+}
+.f textarea:focus{background-image:repeating-linear-gradient(to bottom, transparent 0 31px, color-mix(in srgb, var(--accent) 45%, var(--rule)) 31px 32px)}
+.f .in{margin-left:36px}
+.f.err .t{color:#B42318}
+.f.err input[type=text], .f.err textarea{border-color:#E8A49B}
+
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chips label{cursor:pointer}
+.chips input{position:absolute; opacity:0; pointer-events:none}
+.chips span{display:inline-flex; align-items:center; justify-content:center; min-width:54px; height:48px; padding:0 14px; border-radius:12px; border:1.5px solid var(--rule); background:#fff; font-weight:800; font-size:18px; color:var(--ink); transition:.15s}
+.chips input:checked + span{background:var(--navy); border-color:var(--navy); color:var(--accent-strong)}
+.chips input:focus-visible + span{outline:3px solid var(--accent-soft)}
+
+.pick{margin:12px 0 0 36px; padding:10px 12px; border-radius:12px; background:var(--accent-soft); font-size:13px; line-height:1.45}
+.pick b{color:var(--navy)}
+.pick small{display:block; color:var(--ink2)}
+.editing{display:flex; gap:8px; align-items:center; margin:0 0 16px; padding:10px 12px; border-radius:12px; background:var(--navy); color:#fff; font-size:13px; line-height:1.4}
+.editing b{color:var(--accent-strong)}
+.ba{display:grid; grid-template-columns:1fr; gap:12px; margin-left:36px}
+@media (min-width:560px){ .ba{grid-template-columns:1fr 1fr} }
+.ba > div{border:1.5px dashed var(--rule); border-radius:14px; padding:10px 12px 4px}
+.ba .tag{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink2)}
+.ba .tag.after{color:var(--accent)}
+
+.foot{position:relative; padding:6px 22px 22px}
+.submit{
+  width:100%; border:none; cursor:pointer; border-radius:16px; padding:16px 18px; background:var(--navy); color:#fff; font-weight:800; font-size:17px;
+  display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 10px 24px -10px rgba(8,37,61,.8); transition:transform .1s;
+}
+.submit:active{transform:translateY(1px)}
+.submit small{font-weight:500; opacity:.75}
+.submit .arrow{width:30px;height:30px;border-radius:50%;background:var(--accent-strong);color:var(--navy);display:grid;place-items:center}
+.submit[disabled]{opacity:.6; cursor:wait}
+.saved{font-size:12px; color:var(--ink2); text-align:center; margin-top:10px}
+.errbox{background:#FDECEA; color:#8A1C12; border-radius:12px; padding:10px 12px; font-size:14px; margin:0 22px 12px}
+
+.done{text-align:center; padding:34px 22px 28px}
+.done .big{
+  margin:6px auto 16px; width:170px; height:170px; border-radius:50%; display:grid; place-items:center;
+  border:3px solid var(--accent); color:var(--accent); transform:rotate(-8deg) scale(.6); opacity:0;
+  animation:stamp .5s cubic-bezier(.2,1.6,.4,1) .15s forwards; background:var(--accent-soft)
+}
+.done .big b{display:block; font-size:34px; line-height:1; color:var(--navy)}
+.done .big span{display:block; font-size:11px; letter-spacing:.14em; font-weight:700}
+@keyframes stamp{to{transform:rotate(-8deg) scale(1); opacity:1}}
+.done h3{margin:0; font-size:22px}
+.done h3 small{display:block; font-size:14px; color:var(--ink2); font-weight:500; margin-top:4px}
+.done p{color:var(--ink2); font-size:14px; line-height:1.55; margin:14px 0 20px}
+.ghost{border:1.5px solid var(--rule); background:#fff; border-radius:14px; padding:13px 18px; font-weight:700; cursor:pointer; color:var(--ink)}
+.fine{color:#7FA3B3; font-size:12px; text-align:center; margin-top:18px; line-height:1.6}
+
+/* ================= ADMIN ================= */
+.adm{max-width:1280px; margin:0 auto; padding:20px 20px 60px}
+.adm-head{display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; justify-content:space-between; margin-bottom:18px}
+.adm-head h1{margin:6px 0 0; font-size:26px}
+.sess{display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap}
+.sess button{
+  flex:1; min-width:240px; display:flex; align-items:center; gap:14px; text-align:left; cursor:pointer;
+  padding:14px 18px; border-radius:18px; border:1.5px solid var(--line); background:rgba(13,45,69,.75); color:#F3F8FC; transition:.15s
+}
+.sess button .ic{flex:none; width:44px; height:44px; border-radius:14px; display:grid; place-items:center; background:var(--navy3)}
+.sess button .ic svg{width:22px; height:22px}
+.sess button b{display:block; font-size:18px}
+.sess button span.sub{display:block; font-size:12.5px; color:#ADCAD5; margin-top:2px}
+.sess button .cnt{margin-left:auto; font-size:30px; font-weight:800}
+.sess button[data-v="P"].on{border-color:var(--teal); background:rgba(30,127,140,.28)}
+.sess button[data-v="P"].on .ic{background:var(--teal); color:var(--navy)}
+.sess button[data-v="T"].on{border-color:var(--gold); background:rgba(184,134,43,.25)}
+.sess button[data-v="T"].on .ic{background:var(--gold); color:var(--navy)}
+.stats{display:flex; gap:10px; flex-wrap:wrap}
+.stat{background:rgba(13,45,69,.85); border:1px solid var(--line); border-radius:14px; padding:8px 14px; min-width:84px}
+.stat b{display:block; font-size:20px}
+.stat span{font-size:12px; color:#ADCAD5}
+.toolbar{position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  padding:10px; margin:0 -10px 14px; background:rgba(8,37,61,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line)}
+.seg{display:inline-flex; background:var(--navy2); border:1px solid var(--line); border-radius:12px; padding:3px}
+.seg button{border:none; background:transparent; color:#ADCAD5; padding:7px 12px; border-radius:9px; cursor:pointer; font-weight:600; font-size:14px}
+.seg button.on{background:var(--gold-d); color:#fff}
+.tb-input{background:var(--navy2); border:1px solid var(--line); color:#fff; border-radius:12px; padding:8px 12px; font-size:14px; min-width:180px}
+.tb-input::placeholder{color:#7FA3B3}
+.btn{border:1px solid var(--line); background:var(--navy2); color:#fff; border-radius:12px; padding:8px 14px; cursor:pointer; font-weight:600; font-size:14px}
+.btn.primary{background:var(--gold); color:var(--navy); border-color:var(--gold)}
+.spacer{flex:1}
+.chk{display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#ADCAD5}
+.live{font-size:12px; color:#7FA3B3}
+
+.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px}
+.mini{position:relative; background:var(--paper); color:var(--ink); border-radius:16px; overflow:hidden; cursor:pointer;
+  box-shadow:0 14px 30px -14px rgba(0,0,0,.6); transition:transform .12s; display:flex; flex-direction:column}
+.mini:hover{transform:translateY(-2px)}
+.mini.sel{outline:3px solid var(--gold); outline-offset:2px}
+.mini.off{opacity:.45}
+.mini .mh{display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--navy); color:#fff}
+.mini .mh .id{font-weight:800; font-size:15px; padding:3px 9px; border-radius:8px; background:var(--teal); color:var(--navy)}
+.mini.T .mh .id{background:var(--gold)}
+.mini .mh .who{font-size:13px; color:#ADCAD5; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.mini .mh input{margin-left:auto; width:18px; height:18px; accent-color:var(--gold)}
+.mini .mb{padding:12px 14px 6px; flex:1}
+.mini .mb h4{margin:0 0 8px; font-size:17px; line-height:1.3}
+.mini .mb p{margin:0 0 8px; font-size:13px; color:var(--ink2); line-height:1.45; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+.mini .mb p b{color:var(--ink); font-weight:600}
+.mini .mf{display:flex; justify-content:space-between; align-items:center; padding:8px 14px 12px; font-size:12px; color:#8A949B}
+.mini .mf button{border:none; background:none; color:#8A949B; cursor:pointer; font-size:12px; text-decoration:underline}
+.teamhead{grid-column:1/-1; display:flex; align-items:center; gap:10px; margin:8px 0 -4px; font-weight:800; font-size:16px; color:var(--gold)}
+.teamhead::after{content:""; flex:1; height:1px; background:var(--line)}
+.blank{border:1.5px dashed var(--line); border-radius:18px; padding:50px 20px; text-align:center; color:#ADCAD5; grid-column:1/-1}
+.gate{max-width:420px; margin:12vh auto; text-align:center}
+.gate input{width:100%; margin:16px 0 10px}
+
+.modal{position:fixed; inset:0; z-index:20; background:rgba(3,15,26,.82); display:grid; place-items:center; padding:24px; overflow:auto}
+.modal .pc{width:min(1100px, 100%)}
+.modal .x{position:fixed; top:16px; right:20px; z-index:21}
+.modal .nav{position:fixed; top:50%; z-index:21; transform:translateY(-50%)}
+.modal .nav.l{left:12px} .modal .nav.r{right:12px}
+
+/* ---------- printed / projected card ---------- */
+.pcard{background:var(--paper); color:var(--ink); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; height:100%}
+.pcard .ph{display:flex; align-items:center; gap:16px; padding:14px 22px; background:var(--navy); color:#fff}
+.pcard .ph .kind{font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--teal)}
+.pcard.T .ph .kind{color:var(--gold)}
+.pcard .ph .ttl{font-size:22px; font-weight:800; line-height:1.25; margin-top:2px}
+.pcard .ph .no{margin-left:auto; flex:none; text-align:center; border:2px solid var(--teal); color:var(--teal); border-radius:12px; padding:6px 12px}
+.pcard.T .ph .no{border-color:var(--gold); color:var(--gold)}
+.pcard .ph .no b{display:block; font-size:24px; color:#fff; line-height:1.1}
+.pcard .ph .no span{font-size:10px; letter-spacing:.12em}
+.pcard .meta{display:flex; flex-wrap:wrap; gap:6px 22px; padding:10px 22px; background:var(--paper2); font-size:14px; border-bottom:1px solid var(--rule)}
+.pcard .meta i{font-style:normal; color:var(--ink2); margin-right:6px; font-size:12px}
+.pcard .pb{flex:1; padding:14px 22px 16px; display:grid; gap:12px 22px; align-content:start}
+.pcard .pb.two{grid-template-columns:1fr 1fr}
+.pcard .sec .sl{font-size:12px; font-weight:700; color:var(--teal-d); letter-spacing:.02em; margin-bottom:3px}
+.pcard.T .sec .sl{color:var(--gold-d)}
+.pcard .sec .sl small{font-weight:500; color:var(--ink2)}
+.pcard .sec .sv{font-size:16px; line-height:1.5; white-space:pre-wrap; word-break:break-word}
+.pcard .sec .sv.none{color:#B7B0A0}
+.pcard .sec.full{grid-column:1/-1}
+.pcard .pf{display:flex; justify-content:space-between; padding:8px 22px 12px; font-size:11px; color:#9A9485; border-top:1px dashed var(--rule)}
+.modal .pcard .ph .ttl{font-size:32px}
+.modal .pcard .sec .sv{font-size:22px}
+.modal .pcard .sec .sl{font-size:15px}
+
+.poster{background:var(--paper); color:var(--navy); border-radius:24px; padding:40px; text-align:center}
+.poster .tag{display:inline-block; padding:8px 18px; border-radius:999px; background:var(--teal); color:var(--navy); font-weight:800; font-size:18px; letter-spacing:.06em}
+.poster.T .tag{background:var(--gold)}
+.poster h2{margin:18px 0 0; font-size:40px; font-weight:800}
+.poster h2 small{display:block; font-size:22px; color:var(--ink2); font-weight:600; margin-top:6px}
+.poster .qr{display:inline-block; padding:18px; background:#fff; border-radius:18px; margin:28px 0 18px; box-shadow:0 0 0 6px var(--teal)}
+.poster.T .qr{box-shadow:0 0 0 6px var(--gold)}
+.poster .steps{display:flex; justify-content:center; gap:26px; margin-top:12px; font-size:18px; text-align:left}
+.poster .steps div{max-width:260px}
+.poster .steps b{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--navy); color:var(--teal); margin-bottom:6px}
+.poster .url{font-size:13px; color:var(--ink2); margin-top:20px; word-break:break-all}
+
+/* ================= SURVEY (participant) ================= */
+body.sv{--accent:var(--teal-d); --accent-soft:#DDF4F1; --accent-strong:var(--teal)}
+body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--gold)}
+.sv-sessions{display:grid; gap:8px; margin-bottom:16px}
+.sv-sessions .day{font-size:12px; font-weight:700; letter-spacing:.08em; color:var(--gold); margin:8px 0 0}
+.sv-ses{display:flex; gap:12px; align-items:center; width:100%; text-align:left; cursor:pointer; padding:12px 14px; border-radius:14px;
+  border:1.5px solid var(--line); background:rgba(13,45,69,.75); color:#F3F8FC}
+.sv-ses .no{flex:none; width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--navy3); font-weight:800}
+.sv-ses b{display:block; font-size:14px; line-height:1.35}
+.sv-ses small{display:block; font-size:12px; color:#ADCAD5; margin-top:2px}
+.sv-ses.on{border-color:var(--teal); background:rgba(30,127,140,.28)}
+.sv-ses.on .no{background:var(--teal); color:var(--navy)}
+.sv-ses .done{margin-left:auto; flex:none; font-size:11px; color:var(--teal); font-weight:700}
+.sv-change{background:none; border:none; color:var(--teal); text-decoration:underline; cursor:pointer; font-size:13px; padding:0; margin:0 0 14px}
+.sv-head{display:flex; gap:12px; align-items:center; margin:2px 0 14px; padding:12px 14px; border-radius:14px; background:var(--accent-soft); color:var(--ink)}
+.sv-head .no{flex:none; width:40px; height:40px; border-radius:12px; display:grid; place-items:center; background:var(--navy); color:var(--accent-strong); font-weight:800; font-size:18px}
+.sv-head b{display:block; font-size:15px; line-height:1.35}
+.sv-head small{display:block; font-size:12.5px; color:var(--ink2); margin-top:2px}
+.sv-group{font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin:22px 0 10px; display:flex; gap:10px; align-items:center}
+.sv-group::after{content:""; flex:1; height:1px; background:var(--rule)}
+.lk{margin:0 0 16px; padding:14px 14px 12px; border:1.5px solid var(--rule); border-radius:16px; background:#fff}
+.lk.err{border-color:#E8A49B; background:#FFF7F5}
+.lk .st{font-weight:700; font-size:15.5px; line-height:1.4}
+.lk .st small{display:block; font-weight:500; font-size:13px; color:var(--ink2); margin-top:2px}
+.lk .scale{display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px}
+.lk .scale label{cursor:pointer}
+.lk .scale input{position:absolute; opacity:0; pointer-events:none}
+.lk .scale span{display:grid; place-items:center; height:46px; border-radius:12px; border:1.5px solid var(--rule); font-weight:800; font-size:18px; color:var(--ink); background:var(--paper); transition:.12s}
+.lk .scale input:checked + span{background:var(--navy); border-color:var(--navy); color:var(--accent-strong); transform:scale(1.04)}
+.lk .scale input:focus-visible + span{outline:3px solid var(--accent-soft)}
+.lk .ends{display:flex; justify-content:space-between; gap:10px; margin-top:6px; font-size:11px; color:var(--ink2); line-height:1.3}
+.lk .ends span:last-child{text-align:right}
+.pace{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:12px}
+.pace label{cursor:pointer}
+.pace input{position:absolute; opacity:0; pointer-events:none}
+.pace span{display:grid; place-items:center; text-align:center; min-height:52px; padding:6px; border-radius:12px; border:1.5px solid var(--rule); background:var(--paper); font-size:13px; font-weight:700; line-height:1.3}
+.pace span small{display:block; font-weight:500; color:var(--ink2); font-size:11.5px}
+.pace input:checked + span{background:var(--navy); border-color:var(--navy); color:#fff}
+.pace input:checked + span small{color:#ADCAD5}
+.sv-again{display:flex; gap:10px; align-items:flex-start; background:#FFF4DB; color:#5C4300; border-radius:12px; padding:10px 12px; font-size:13px; line-height:1.45; margin-bottom:16px}
+
+/* ================= ADMIN: top sections ================= */
+.topnav{display:inline-flex; gap:6px; padding:5px; border-radius:16px; background:rgba(13,45,69,.9); border:1px solid var(--line); margin-bottom:18px}
+.topnav button{display:flex; align-items:center; gap:8px; border:none; background:transparent; color:#ADCAD5; padding:10px 18px; border-radius:12px; cursor:pointer; font-weight:700; font-size:15px}
+.topnav button svg{width:18px; height:18px}
+.topnav button.on{background:#F3F8FC; color:var(--navy)}
+.topnav button .n{font-size:12px; padding:1px 8px; border-radius:999px; background:var(--navy3); color:#ADCAD5}
+.topnav button.on .n{background:var(--navy); color:var(--teal)}
+.qrurl{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:-6px 0 18px; font-size:13px; color:#ADCAD5}
+.qrurl input{flex:1; min-width:280px; font-size:13px}
+.qrurl .ok{color:var(--teal); font-weight:700}
+.qrurl .bad{color:#F2A08F; font-weight:700}
+.svtabs{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.svtabs button{display:flex; flex-direction:column; align-items:flex-start; gap:2px; min-width:118px; text-align:left; cursor:pointer; padding:10px 14px; border-radius:14px; border:1.5px solid var(--line); background:rgba(13,45,69,.75); color:#F3F8FC}
+.svtabs button b{font-size:14px}
+.svtabs button small{font-size:11.5px; color:#ADCAD5}
+.svtabs button.on{border-color:var(--teal); background:rgba(30,127,140,.28)}
+.svtabs button.ws.on{border-color:var(--gold); background:rgba(184,134,43,.25)}
+.svtabs .sep{width:1px; background:var(--line); margin:4px 4px}
+
+/* survey report on paper */
+.rep{background:var(--paper); color:var(--ink); border-radius:20px; padding:22px 24px; margin-bottom:16px; box-shadow:0 14px 30px -14px rgba(0,0,0,.6)}
+.rep h3{margin:0 0 4px; font-size:19px}
+.rep .sub{color:var(--ink2); font-size:13px; margin-bottom:16px}
+.tiles{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:18px}
+.tile{flex:1; min-width:150px; border:1px solid var(--rule); border-radius:14px; padding:12px 14px; background:#fff}
+.tile b{display:block; font-size:30px; line-height:1.1; color:var(--navy)}
+.tile b small{font-size:15px; color:var(--ink2); font-weight:600}
+.tile span{font-size:12.5px; color:var(--ink2)}
+.legend{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:var(--ink2); margin:0 0 10px}
+.legend i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px; vertical-align:-2px}
+.dvrow{display:grid; grid-template-columns:minmax(150px,240px) 1fr 56px; gap:12px; align-items:center; padding:7px 0; border-bottom:1px dashed var(--rule)}
+.dvrow:last-child{border-bottom:none}
+.dvrow .lb{font-size:14px; font-weight:600; line-height:1.3}
+.dvrow .lb small{display:block; font-size:11.5px; font-weight:500; color:var(--ink2)}
+.dvbar{display:flex; height:24px; gap:2px}
+.dvbar .dvs{height:100%; display:grid; place-items:center; font-size:11px; font-weight:700; min-width:0; overflow:hidden; white-space:nowrap}
+.dvbar .dvs:first-child{border-radius:4px 0 0 4px}
+.dvbar .dvs:last-child{border-radius:0 4px 4px 0}
+.dvbar .empty{flex:1; background:#EFEBE1; border-radius:4px}
+.dvrow .avg{text-align:right; font-weight:800; font-size:16px; color:var(--navy)}
+.dvrow .avg small{display:block; font-size:10.5px; font-weight:500; color:var(--ink2)}
+.heat{width:100%; border-collapse:separate; border-spacing:2px; font-size:13px}
+.heat th{font-weight:600; color:var(--ink2); font-size:12px; text-align:center; padding:6px 4px; vertical-align:bottom}
+.heat th:first-child, .heat td:first-child{text-align:left}
+.heat td{text-align:center; padding:9px 6px; border-radius:6px; font-weight:700}
+.heat td.nm{font-weight:600; background:transparent; color:var(--ink); padding-left:0; max-width:280px}
+.heat td.nm small{display:block; font-weight:500; color:var(--ink2); font-size:11.5px}
+.heat td.n{background:transparent; color:var(--ink2); font-weight:600}
+.heat td.na{background:#F3F0E8; color:#B7B0A0; font-weight:500}
+.paces{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.paces span{padding:6px 12px; border-radius:999px; background:#fff; border:1px solid var(--rule); font-size:13px}
+.paces b{margin-left:6px}
+.cmts{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media (max-width:820px){ .cmts{grid-template-columns:1fr} .dvrow{grid-template-columns:1fr 50px} .dvrow .dvbar{grid-column:1/-1; order:3} }
+.cmts h4{margin:0 0 8px; font-size:14px}
+.cmt{border-left:3px solid var(--rule); padding:6px 10px; margin-bottom:8px; font-size:14px; line-height:1.5; white-space:pre-wrap; word-break:break-word}
+.cmt .meta{display:flex; justify-content:space-between; gap:8px; font-size:11px; color:#9A9485; margin-top:2px; white-space:normal}
+.cmt .meta button{border:none; background:none; color:#9A9485; text-decoration:underline; cursor:pointer; font-size:11px}
+.cmt.off{opacity:.45}
+.none-yet{color:var(--ink2); font-size:13px}
+.tip{position:fixed; z-index:30; pointer-events:none; background:var(--navy); color:#fff; font-size:12.5px; padding:7px 10px; border-radius:8px; box-shadow:0 6px 16px rgba(0,0,0,.3); display:none; white-space:nowrap}
+@media print{
+  .report-print{padding:10mm 12mm; --paper:#fff}
+  .report-print .rep{box-shadow:none; border:0.3mm solid #CFC6B2; break-inside:avoid; border-radius:4mm}
+  .report-print .cmt .meta button{display:none}
+  .report-print *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+
+#print-root{display:none}
+@page{size:A4 portrait; margin:0}
+@media print{
+  body{background:#fff !important}
+  body > *:not(#print-root){display:none !important}
+  #print-root{display:block}
+  .sheet{width:210mm; height:297mm; padding:10mm; page-break-after:always; break-after:page; display:flex; flex-direction:column; gap:8mm; overflow:hidden}
+  .sheet:last-child{page-break-after:auto; break-after:auto}
+  .sheet .slot{flex:1; min-height:0}
+  .sheet .pcard{border:0.4mm solid #CFC6B2; border-radius:5mm}
+  .sheet.half .pcard .ph .ttl{font-size:17pt}
+  .sheet.half .pcard .sec .sv{font-size:11pt; line-height:1.4}
+  .sheet.full .pcard .ph .ttl{font-size:22pt}
+  .sheet.full .pcard .sec .sv{font-size:14pt}
+  .sheet .poster{height:100%; display:flex; flex-direction:column; justify-content:center}
+  .sheet *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= PARTICIPANT ================= -->
+<div id="participant" class="wrap hidden">
+  <div class="top"><span class="dot"></span>my.gov.ge · AI &amp; Big Data Idea Workshop · 27.11.2026</div>
+  <div class="hero">
+    <div class="pill" id="pill"></div>
+    <h1 id="heroTitle"></h1>
+    <p id="heroText"></p>
+  </div>
+
+  <div class="card" id="card">
+    <div class="band">
+      <div class="hole"></div>
+      <div class="bulb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></div>
+      <div class="kicker" id="kicker"></div>
+      <h2 id="cardTitle"></h2>
+      <div class="stamp"><div>No.<b id="stampNo">—</b></div></div>
+    </div>
+    <form id="form" novalidate>
+      <div class="body">
+        <div class="rule-note" id="ruleNote"></div>
+        <div class="editing hidden" id="editing"></div>
+        <div id="fields"></div>
+      </div>
+      <div class="errbox hidden" id="errbox"></div>
+      <div class="foot">
+        <button class="submit" id="submitBtn" type="submit">
+          <span>გაგზავნა <small>· Submit</small></span>
+          <span class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <div class="saved">დრაფტი ინახება ამ მოწყობილობაზე · Draft is saved on this device</div>
+      </div>
+    </form>
+    <div class="done hidden" id="done">
+      <div class="big"><div><span>CARD NO.</span><b id="doneNo"></b></div></div>
+      <h3>მადლობა! იდეა მიღებულია<small>Thank you! Your idea has been received.</small></h3>
+      <p id="doneText"></p>
+      <button class="ghost" id="againBtn" type="button">+ კიდევ ერთი იდეა · Add another idea</button>
+    </div>
+  </div>
+
+  <div class="fine" id="fine"></div>
+</div>
+
+<!-- ================= SURVEY (participant) ================= -->
+<div id="survey" class="wrap hidden">
+  <div class="top"><span class="dot"></span><span id="svTop"></span></div>
+  <div class="hero">
+    <div class="pill" id="svPill"></div>
+    <h1 id="svTitle"></h1>
+    <p id="svLead"></p>
+  </div>
+  <div id="svPicker"></div>
+  <div class="card">
+    <div class="band">
+      <div class="hole"></div>
+      <div class="kicker" id="svKicker"></div>
+      <h2 id="svCardTitle"></h2>
+      <div class="stamp"><div>1–5<b>★</b></div></div>
+    </div>
+    <form id="svForm" novalidate>
+      <div class="body">
+        <div class="sv-head hidden" id="svHead"></div>
+        <div class="sv-again hidden" id="svAgain"></div>
+        <div id="svFields"></div>
+      </div>
+      <div class="errbox hidden" id="svErr"></div>
+      <div class="foot">
+        <button class="submit" id="svSubmit" type="submit">
+          <span>გაგზავნა <small>· Submit</small></span>
+          <span class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <div class="saved">ანონიმური — სახელს არ ვითხოვთ · Anonymous — we do not ask for your name</div>
+      </div>
+    </form>
+    <div class="done hidden" id="svDone">
+      <div class="big"><div><span>THANK YOU</span><b>✓</b></div></div>
+      <h3>მადლობა შეფასებისთვის!<small>Thank you for your feedback!</small></h3>
+      <p id="svDoneText"></p>
+      <button class="ghost" id="svAgainBtn" type="button">← სხვა სესია · Another session</button>
+    </div>
+  </div>
+  <div class="fine">თქვენი პასუხები გამოყენებული იქნება მხოლოდ სწავლების გასაუმჯობესებლად.<br>Your answers are used only to improve the training.</div>
+</div>
+
+<!-- ================= ADMIN ================= -->
+<div id="admin" class="adm hidden">
+  <div class="adm-head">
+    <div>
+      <div class="top"><span class="dot"></span>my.gov.ge · 역량강화 교육 · 워크숍 · 운영자 화면</div>
+      <h1 id="admTitle">아이디어 카드 관리</h1>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="topnav" id="topnav">
+    <button data-v="idea" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg>아이디어 카드 <span class="n" id="nIdea">0</span></button>
+    <button data-v="survey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>만족도 조사 <span class="n" id="nSurvey">0</span></button>
+  </div>
+
+  <div style="float:right; display:flex; gap:8px; margin-top:-64px">
+    <button class="btn" id="xlsxBtn">엑셀 내려받기</button>
+    <button class="btn" id="sheetBtn">원본 시트 열기</button>
+  </div>
+  <div class="qrurl">
+    <b style="color:#F3F8FC">참가자 QR 주소</b>
+    <input class="tb-input" id="pubUrl" placeholder="배포 관리의 웹 앱 URL (https://script.google.com/macros/s/…/exec)">
+    <button class="btn" id="pubSave">저장</button>
+    <span id="pubState"></span>
+  </div>
+
+  <!-- ===== 만족도 조사 ===== -->
+  <div id="secSurvey" class="hidden">
+    <div class="svtabs" id="svTabs"></div>
+    <div class="toolbar">
+      <label class="chk"><input type="checkbox" id="svShowHidden"> 숨긴 응답 보기</label>
+      <span class="spacer"></span>
+      <span class="live" id="svLive"></span>
+      <button class="btn primary" id="svPrint">결과 인쇄</button>
+      <button class="btn" id="svQr">QR 포스터</button>
+    </div>
+    <div id="svBody"></div>
+  </div>
+
+  <!-- ===== 아이디어 카드 ===== -->
+  <div id="secIdea">
+
+  <div class="sess" id="sess">
+    <button data-v="P" class="on">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+      <span><b>개인 세션</b><span class="sub">개인 아이디어 카드 · P-번호</span></span>
+      <span class="cnt" id="cP">0</span>
+    </button>
+    <button data-v="T">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M2.5 20c0-3.4 3-5.4 6.5-5.4s6.5 2 6.5 5.4"/><path d="M15.5 14.8c3 .1 6 1.6 6 4.7"/></svg></span>
+      <span><b>조별 세션</b><span class="sub">조당 1장 · T1~T4</span></span>
+      <span class="cnt" id="cT">0</span>
+    </button>
+  </div>
+
+  <div class="toolbar">
+    <div class="seg hidden" id="segTeam">
+      <button data-v="" class="on">모든 조</button><button data-v="1">1조</button><button data-v="2">2조</button><button data-v="3">3조</button><button data-v="4">4조</button>
+    </div>
+    <input class="tb-input" id="q" placeholder="검색 (제목·이름·내용)">
+    <label class="chk"><input type="checkbox" id="showHidden"> 숨긴 카드</label>
+    <span class="spacer"></span>
+    <span class="live" id="live"></span>
+    <select class="tb-input" id="layout" style="min-width:0">
+      <option value="half">A4에 2장 (A5)</option>
+      <option value="full">A4에 1장</option>
+    </select>
+    <button class="btn" id="selAll">모두 선택</button>
+    <button class="btn primary" id="printBtn">인쇄</button>
+    <button class="btn" id="qrBtn">QR 포스터</button>
+  </div>
+  <div id="grid" class="grid"></div>
+  </div>
+</div>
+
+<div id="gate" class="gate hidden">
+  <div class="top" style="justify-content:center"><span class="dot"></span>운영자 화면</div>
+  <h1>접근 키가 필요합니다</h1>
+  <p style="color:#ADCAD5">주소 끝에 <code>?view=admin&amp;key=…</code> 를 붙이거나 아래에 입력하세요.</p>
+  <input class="tb-input" id="gateKey" placeholder="admin key">
+  <button class="btn primary" id="gateBtn">열기</button>
+</div>
+
+<div id="modal" class="modal hidden">
+  <button class="btn x" id="mClose">닫기 ✕</button>
+  <button class="btn nav l" id="mPrev">‹</button>
+  <button class="btn nav r" id="mNext">›</button>
+  <div class="pc" id="mBody"></div>
+</div>
+
+<div id="print-root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ---------------- card definitions (KA + EN) ---------------- */
+const ICON = {
+  P:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+  T:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M2.5 20c0-3.4 3-5.4 6.5-5.4s6.5 2 6.5 5.4"/><path d="M15.5 14.8c3 .1 6 1.6 6 4.7"/></svg>'
+};
+const CARD = {
+  P: {
+    ka:'ინდივიდუალური იდეის ბარათი', en:'Individual Idea Card', pill:'ინდივიდუალური · Individual',
+    lead:['გაგვიზიარეთ, როგორ შეიძლება my.gov.ge გახდეს უფრო მარტივი და სასარგებლო.', 'Tell us how my.gov.ge could become easier and more useful.'],
+    note:['ერთ ბარათზე ჩაწერეთ მხოლოდ ერთი იდეა. დაიწყეთ რეალური პრობლემით, რომელიც თქვენ ან მოქალაქეებმა განიცადეს.',
+          'One idea per card. Start from a real problem that you or citizens have experienced.'],
+    done:['დაიმახსოვრეთ ბარათის ნომერი — ის დაგჭირდებათ ხმის მიცემისას.', 'Please remember your card number — you will need it for voting.'],
+    fine:['ერთ ბარათზე — ერთი იდეა. შეგიძლიათ დაწეროთ ქართულად ან ინგლისურად.', 'One idea per card. You may write in Georgian or English.'],
+    fields:[
+      {k:'name', type:'text', ka:'სახელი და გვარი', en:'Your name', req:1, max:80},
+      {k:'title', type:'text', ka:'იდეის სათაური', en:'Idea title', req:1, max:150, hka:'მოკლედ, ერთი ხაზით', hen:'Short — one line'},
+      {k:'problem', type:'area', ka:'მომხმარებელი და პრობლემა', en:'Target users & problem', req:1,
+        hka:'ვის, რა სიტუაციაში და რა უჭირს?', hen:'Who struggles with what, and in which situation?'},
+      {k:'idea', type:'area', ka:'გაუმჯობესების იდეა', en:'Improvement idea', req:1,
+        hka:'რა და როგორ უნდა გაუმჯობესდეს პორტალზე?', hen:'What should the portal improve, and how?'},
+      {k:'effect', type:'area', ka:'მოსალოდნელი შედეგი', en:'Expected benefits',
+        hka:'როგორ შეიცვლება მომხმარებლის გამოცდილება ან თანამშრომლის სამუშაო?', hen:'How would things change for users or staff?'},
+      {k:'evidence', type:'area', ka:'დაკავშირებული მონაცემები ან გამოცდილება', en:'Related data or experience', rows:2,
+        hka:'პრობლემური შემთხვევები, კვლევის მიგნებები, უწყების მონაცემები', hen:'Problem cases, survey findings, agency data'}
+    ]
+  },
+  T: {
+    ka:'გუნდის იდეის ბარათი', en:'Team Idea Card', pill:'გუნდური · Team',
+    lead:['გუნდის მთავარი იდეა — ერთად განვავითაროთ.', 'Your team’s main idea — developed together.'],
+    note:['თითოეული გუნდი წარადგენს ერთ ბარათს — გუნდის მთავარ იდეას. შენახვის შემდეგაც შეგიძლიათ დაბრუნდეთ და შეასწოროთ.',
+          'Each team submits ONE card — its main idea. You can come back later and edit it.'],
+    done:['შესასწორებლად კვლავ აირჩიეთ თქვენი გუნდის ნომერი — ბარათი ავტომატურად ჩაიტვირთება.', 'To edit, choose your team number again — the card loads automatically.'],
+    fine:['ერთი გუნდი — ერთი ბარათი. შეავსებს გუნდის ჩამწერი.', 'One card per team. Filled in by the team’s note-taker.'],
+    fields:[
+      {k:'team', type:'team', ka:'გუნდის ნომერი', en:'Team No.', req:1},
+      {k:'proposers', type:'text', ka:'იდეის ავტორ(ებ)ი', en:'Proposer(s)', max:200,
+        hka:'სახელები ან ინდივიდუალური ბარათების ნომრები', hen:'Names or individual card numbers'},
+      {k:'title', type:'text', ka:'იდეის სათაური', en:'Idea title', req:1, max:150},
+      {k:'problem', type:'area', ka:'პრობლემა და ძირითადი ფუნქცია', en:'Problem & key function', req:1,
+        hka:'ვის რა უხერხულობას აგვარებს და რა ფუნქციით?', hen:'Whose inconvenience does it solve, and with what function?'},
+      {k:'ai', type:'area', ka:'ხელოვნური ინტელექტი და დიდი მონაცემები', en:'Use of AI & big data', rows:2,
+        hka:'სად გამოიყენება: ძიება, კლასიფიკაცია, რეკომენდაცია, ანალიზი…', hen:'Where it is used: search, classification, recommendation, analysis…'},
+      {k:'ba', type:'ba', ka:'სანამ და შემდეგ', en:'Before & after'},
+      {k:'data', type:'area', ka:'მონაცემები და დაკავშირებული უწყებები', en:'Data & related agencies', rows:2,
+        hka:'საჭირო მონაცემები, მფლობელი უწყება, გამოყენების პირობები', hen:'Data needed, holding agency, conditions of use'},
+      {k:'effect', type:'area', ka:'მოსალოდნელი შედეგი', en:'Expected effects', rows:2},
+      {k:'open', type:'area', ka:'დამატებით გასარკვევი საკითხები', en:'Open questions', rows:2,
+        hka:'რა უნდა დავაზუსტოთ ექსპერტებთან ან უწყებებთან?', hen:'What should be checked with experts or agencies?'}
+    ]
+  }
+};
+const BA = {before:{ka:'ამჟამინდელი პროცესი', en:'Now'}, after:{ka:'გაუმჯობესების შემდეგ', en:'After'}};
+
+/* ---------------- backend bridge (Apps Script or local mock) ---------------- */
+const GAS = typeof google !== 'undefined' && google.script && google.script.run;
+/* GitHub Pages 등 외부에서 열 때는 Apps Script를 데이터 창구(API)로만 쓴다 → 구글 다중 로그인(/u/1/) 문제 없음.
+   배포 주소가 바뀌면 이 한 줄만 바꾼다. 로컬 파일(file://)이나 ?demo=1은 모의 데이터. */
+const API_URL = 'https://script.google.com/macros/s/AKfycbxfPqlweTJZe5toITm3u889TH6RnBoMKAGj5PqlgyRmYwq3zbW8B288vkXG00Xbf0YQsQ/exec';
+const STATIC = !GAS && location.protocol.startsWith('http') && !/demo=1/.test(location.search);
+const MOCK = {
+  _db(){
+    if(/demo=1/.test(location.search)) return DEMO;
+    try{ const d = JSON.parse(localStorage.getItem('ic_mock')||'{}'); return {P:d.P||[], T:d.T||[]} }catch(e){ return {P:[],T:[]} }
+  },
+  _save(d){ try{ localStorage.setItem('ic_mock', JSON.stringify(d)) }catch(e){} },
+  submitCard(type, data){
+    const d = this._db(); let id;
+    if(type==='P'){ id = 'P-'+String(d.P.length+1).padStart(3,'0') }
+    else {
+      const c = d.T.find(x=>String(x.team)===String(data.team));
+      if(c){ Object.assign(c, data, {hidden:false, updated_at:new Date().toISOString()}); this._save(d); return {id:c.id, updated:true} }
+      id = 'T'+data.team;
+    }
+    d[type].push(Object.assign({id, type, submitted_at:new Date().toISOString(), hidden:false}, data)); this._save(d); return {id};
+  },
+  getTeamCard(team){ const c = this._db().T.find(c=>String(c.team)===String(team)); return c && !c.hidden ? c : null },
+  listCards(){ return this._db() },
+  _sv(){ if(/demo=1/.test(location.search)) return DEMO_SV; try{ return JSON.parse(localStorage.getItem('sv_mock')||'[]') }catch(e){ return [] } },
+  submitSurvey(d){ const a = this._sv(); const id = 'R'+Math.random().toString(36).slice(2,10); a.push(Object.assign({id, submitted_at:new Date().toISOString(), hidden:false}, d)); try{ localStorage.setItem('sv_mock', JSON.stringify(a)) }catch(e){} return {id} },
+  listResponses(){ return this._sv() },
+  adminData(){ return {cards:this._db(), responses:this._sv()} },
+  getSheetUrl(){ return 'https://docs.google.com/spreadsheets/' },
+  setPublicUrl(key,u){ u = String(u||'').trim().replace(/[?#].*$/,''); if(!/^https:\/\/script\.google\.com\/(a\/macros\/[^\/]+|macros)\/s\/[\w-]+\/exec$/.test(u)) throw new Error('웹 앱 URL(https://script.google.com/macros/s/…/exec)을 넣어 주세요'); try{ localStorage.setItem('pub_mock',u) }catch(e){} return u },
+  setResponseHidden(key,id,h){ const a = this._sv(); a.forEach(r=>{ if(r.id===id) r.hidden=h }); try{ localStorage.setItem('sv_mock', JSON.stringify(a)) }catch(e){} return true },
+  setHidden(key,id,h){ const d = this._db(); ['P','T'].forEach(t=>d[t].forEach(c=>{ if(c.id===id) c.hidden=h })); this._save(d); return true },
+  getAppUrl(){ try{ return localStorage.getItem('pub_mock') || location.href.split('?')[0] }catch(e){ return location.href.split('?')[0] } }
+};
+/* 로컬 미리보기 전용 예시 카드 (?view=admin&demo=1) — Apps Script에서는 쓰이지 않음 */
+const DEMO = {
+  P:[
+    {id:'P-001', type:'P', name:'Nino Beridze', title:'One-click status tracker for all my applications', problem:'Citizens who apply for several services cannot see in one place where each application is and call the agency repeatedly.', idea:'A single timeline on my.gov.ge that shows every application, its current step, and the next expected date, with SMS alerts.', effect:'Fewer phone calls to agencies; citizens plan their time.', evidence:'Call-centre logs; survey: “I did not know the status” was a frequent complaint.', submitted_at:'2026-11-27T06:42:00Z', hidden:false},
+    {id:'P-002', type:'P', name:'Giorgi Kapanadze', title:'ჭკვიანი ძიება მარტივი ენით', problem:'მომხმარებლები ვერ პოულობენ სერვისს, რადგან არ იციან ოფიციალური სახელწოდება.', idea:'AI ძიება, რომელიც მარტივ კითხვას (მაგ. „ბავშვის დაბადების რეგისტრაცია“) სწორ სერვისთან აკავშირებს.', effect:'ნაკლები დრო ძიებაზე, მეტი ონლაინ განაცხადი.', evidence:'', submitted_at:'2026-11-27T06:45:00Z', hidden:false},
+    {id:'P-003', type:'P', name:'Tamar Lomidze', title:'Pre-filled forms from data the state already holds', problem:'People retype the same personal data in every application.', idea:'Pre-fill forms from registries after consent.', effect:'Shorter forms, fewer errors.', evidence:'G3 gateway already links ~300 agencies.', submitted_at:'2026-11-27T06:51:00Z', hidden:false}
+  ],
+  T:[
+    {id:'T1', type:'T', team:'1', proposers:'P-001, P-007 (Nino, Levan)', title:'My Applications — one timeline with smart alerts', problem:'Citizens with several applications lose track and call agencies; staff spend time answering status questions.', ai:'Classification of status messages; prediction of completion date from past cases.', before:'Citizen calls or visits each agency to ask about status.', after:'One timeline on my.gov.ge with predicted dates and SMS/e-mail alerts.', data:'Application status from G3 services; agency processing-time history (NAPR, PSDA).', effect:'Fewer calls; higher repeat use of my.gov.ge.', open:'Which agencies already expose status via G3? Consent rules for alerts.', submitted_at:'2026-11-27T08:10:00Z', hidden:false},
+    {id:'T2', type:'T', team:'2', proposers:'P-002, P-005', title:'Plain-language AI search for services', problem:'Users cannot find a service because they do not know its official name.', ai:'Semantic search and intent classification over 400+ service descriptions.', before:'Keyword search returns nothing for everyday words.', after:'Users type a plain question and get the right service with steps.', data:'Service catalogue texts; anonymised search logs (DGA).', effect:'More services found and started online.', open:'Georgian-language model quality; who maintains synonyms.', submitted_at:'2026-11-27T08:14:00Z', hidden:false}
+  ]
+};
+const DEMO_SV = (()=>{
+  let seed = 7; const rnd = ()=> (seed = (seed*9301+49297)%233280)/233280;
+  const pick = (base)=> String(Math.max(1, Math.min(5, Math.round(base + (rnd()-0.5)*2.2))));
+  const best = ['Concrete Korean examples of portal integration.','Step-by-step explanation of the data-sharing architecture.','ძალიან საინტერესო მაგალითები.','The Q&A part was the most useful.'];
+  const imp = ['More time for questions.','Slides in Georgian would help.','More examples about small agencies.',''];
+  const out = []; let k = 0;
+  [['edu','1',14,4.2],['edu','2',12,3.9],['edu','3',15,4.4],['edu','4',9,3.6],['ws','W',11,4.1]].forEach(([sv,ses,n,base])=>{
+    for(let i=0;i<n;i++){ const r = {id:'R'+(++k), survey:sv, session:ses, hidden:false, submitted_at:'2026-11-2'+(sv==='ws'?7:(ses<3?4:5))+'T0'+(8+i%2)+':'+(10+i)+':00Z', agency:['DGA','MoJ','PSDA',''][i%4]};
+      ['q1','q2','q3','q4','q5','q6','q7'].forEach((q,j)=> r[q] = pick(base - (j===4?0.6:0) + (j===2?0.3:0)));
+      if(sv==='edu') r.pace = ['ok','ok','ok','fast','slow'][i%5];
+      if(i%3===0) r.best = best[i%4]; if(i%4===1) r.improve = imp[i%4];
+      out.push(r) } });
+  return out;
+})();
+async function apiCall(fn, args){
+  const r = await fetch(API_URL, {method:'POST', body:JSON.stringify({fn, args}), headers:{'Content-Type':'text/plain;charset=utf-8'}, credentials:'omit', redirect:'follow'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.error || 'Server error');
+  return j.result;
+}
+function call1(fn, args){
+  if(STATIC) return apiCall(fn, args);
+  return new Promise((res, rej)=>{
+    if(GAS){ google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn](...args) }
+    else { setTimeout(()=>{ try{ res(MOCK[fn](...args)) }catch(e){ rej(e) } }, 250) }
+  });
+}
+/* 동시 접속이 몰려 잠금 대기·실행 수 초과·네트워크 오류가 나면 잠깐 쉬었다 최대 3번 다시 시도 */
+const TRANSIENT = /lock|timed? ?out|too many|simultaneous|busy|try again|network|NetworkError|failed to fetch|503|500/i;
+async function call(fn, ...args){
+  for(let i=0;;i++){
+    try{ return await call1(fn, args) }
+    catch(e){
+      const m = String(e && e.message || e);
+      if(i>=3 || !TRANSIENT.test(m)) throw e;
+      await new Promise(r=>setTimeout(r, 800*(i+1) + Math.random()*1200));
+    }
+  }
+}
+function params(){
+  return new Promise(res=>{
+    if(GAS && google.script.url){ google.script.url.getLocation(l=>res(l.parameter||{})) }
+    else res(Object.fromEntries(new URLSearchParams(location.search)));
+  });
+}
+const store = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)) }catch(e){ return null } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k) }catch(e){} }
+};
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = s => document.querySelector(s);
+const two = (a, cls) => esc(a[0])+'<br><span'+(cls?' class="'+cls+'"':' style="opacity:.8"')+'>'+esc(a[1])+'</span>';
+
+/* ================= PARTICIPANT ================= */
+let curType = 'P';
+function renderForm(){
+  const def = CARD[curType];
+  document.body.classList.toggle('team', curType==='T');
+  document.title = def.en + ' · my.gov.ge Workshop';
+  $('#pill').innerHTML = '<i>'+ICON[curType]+'</i>'+esc(def.pill);
+  $('#heroTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
+  $('#heroText').innerHTML = two(def.lead);
+  $('#kicker').textContent = curType==='P' ? 'Idea Card · Individual' : 'Idea Card · Team';
+  $('#cardTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
+  $('#ruleNote').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg><div>'+esc(def.note[0])+'<br><span style="color:var(--ink2)">'+esc(def.note[1])+'</span></div>';
+  $('#doneText').innerHTML = two(def.done);
+  $('#fine').innerHTML = two(def.fine);
+  $('#stampNo').textContent = '—';
+  let n = 0, html = '';
+  def.fields.forEach(f=>{
+    n++;
+    const lab = '<div class="lab"><span class="num">'+n+'</span><div class="t">'+esc(f.ka)+(f.req?'<span class="req">*</span>':'')+'<small>'+esc(f.en)+'</small></div></div>';
+    const hint = f.hka ? '<div class="hint">'+esc(f.hka)+' <i>· '+esc(f.hen)+'</i></div>' : '';
+    let input = '';
+    if(f.type==='team'){
+      input = '<div class="in chips">'+[1,2,3,4].map(i=>'<label><input type="radio" name="team" value="'+i+'"><span>'+i+'</span></label>').join('')+'</div>'
+            + '<div class="pick hidden" id="pick"></div>';
+    } else if(f.type==='text'){
+      input = '<div class="in"><input type="text" name="'+f.k+'" maxlength="'+(f.max||150)+'" autocomplete="off"></div>';
+    } else if(f.type==='area'){
+      const r = f.rows||3;
+      input = '<div class="in"><textarea name="'+f.k+'" rows="'+r+'" maxlength="3000" style="min-height:'+(32*r+4)+'px"></textarea></div>';
+    } else if(f.type==='ba'){
+      input = '<div class="ba"><div><div class="tag">'+esc(BA.before.ka)+' · '+BA.before.en+'</div><textarea name="before" rows="3" maxlength="3000"></textarea></div>'
+            + '<div><div class="tag after">'+esc(BA.after.ka)+' · '+BA.after.en+'</div><textarea name="after" rows="3" maxlength="3000"></textarea></div></div>';
+    }
+    html += '<div class="f" data-k="'+f.k+'">'+lab+hint+input+'</div>';
+  });
+  $('#fields').innerHTML = html;
+  const draft = store.get('ic_draft_'+curType) || {};
+  Object.keys(draft).forEach(k=>{
+    const els = $('#form').elements[k];
+    if(!els) return;
+    if(els instanceof RadioNodeList){ els.forEach(r=>{ r.checked = r.value===draft[k] }) } else els.value = draft[k];
+  });
+  if(curType==='T' && !draft.team){ const t = store.get('ic_team'); if(t){ const r = $('#form').querySelector('input[name=team][value="'+t+'"]'); if(r) r.checked = true } }
+  $('#errbox').classList.add('hidden');
+  setEdit(curType==='T' ? (draft._edit || null) : null);
+  if(curType==='T'){ const t = readForm().team; if(t) loadPick(t, true) }
+}
+
+/* ---- 조별 카드: 조당 1장. 조 번호를 고르면 이미 낸 카드를 불러와 고친다 ---- */
+let editId = null, loadSeq = 0;
+function setEdit(id){
+  editId = id || null;
+  $('#stampNo').textContent = editId || '—';
+  $('#editing').classList.toggle('hidden', !editId);
+  $('#editing').innerHTML = editId ? '✎ <span><b>'+esc(editId)+'</b> — გუნდის ბარათი უკვე არსებობს. შეასწორეთ და შეინახეთ.<br>Your team’s card <b>'+esc(editId)+'</b> is loaded — edit and save.</span>' : '';
+  $('#submitBtn').firstElementChild.innerHTML = editId ? 'შენახვა <small>· Save changes</small>' : 'გაგზავნა <small>· Submit</small>';
+}
+async function loadPick(team, keepDraft){
+  const box = $('#pick'); if(!box) return;
+  const seq = ++loadSeq;
+  box.classList.remove('hidden'); box.innerHTML = '…';
+  let c = null;
+  try{ c = await call('getTeamCard', team) }catch(e){ box.innerHTML = esc(e && e.message || e); return }
+  if(seq !== loadSeq) return; // 그사이 다른 조를 눌렀으면 무시
+  if(!c){
+    box.innerHTML = '<b>'+esc(team)+'</b> გუნდის ბარათი ჯერ არ არის — შეავსეთ და გააგზავნეთ.<small>No card for team '+esc(team)+' yet — fill in and submit.</small>';
+    if(editId){ fillFrom(null); setEdit(null) }
+    return;
+  }
+  box.innerHTML = '<b>'+esc(c.id)+'</b> · '+esc(c.title)+'<small>ბოლოს შენახული ვერსია ჩაიტვირთა · Last saved version loaded</small>';
+  if(!(keepDraft && editId===c.id)) fillFrom(c);
+  setEdit(c.id); saveDraft();
+}
+function fillFrom(c){
+  const f = $('#form');
+  ['proposers','title','problem','ai','before','after','data','effect','open'].forEach(k=>{ if(f.elements[k]) f.elements[k].value = (c && c[k]) || '' });
+}
+function readForm(){
+  const fd = new FormData($('#form')); const o = {};
+  fd.forEach((v,k)=>{ o[k] = String(v).trim() });
+  return o;
+}
+function validate(o){
+  let first = null;
+  document.querySelectorAll('.f').forEach(el=>el.classList.remove('err'));
+  CARD[curType].fields.forEach(f=>{
+    if(f.req && !o[f.k]){ const el = document.querySelector('.f[data-k="'+f.k+'"]'); el.classList.add('err'); first = first || el }
+  });
+  if(first) first.scrollIntoView({behavior:'smooth', block:'center'});
+  return !first;
+}
+function saveDraft(){ const o = readForm(); if(editId) o._edit = editId; store.set('ic_draft_'+curType, o); if(o.team) store.set('ic_team', o.team) }
+function bindParticipant(){
+  $('#form').addEventListener('input', saveDraft);
+  $('#form').addEventListener('change', e=>{
+    if(e.target.name==='team'){ loadPick(e.target.value); return }
+    saveDraft();
+  });
+  $('#form').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const o = readForm();
+    if(!validate(o)){
+      $('#errbox').textContent = 'გთხოვთ, შეავსოთ * აღნიშნული ველები. · Please fill in the fields marked *.';
+      $('#errbox').classList.remove('hidden'); return;
+    }
+    const btn = $('#submitBtn'); btn.disabled = true;
+    try{
+      const r = await call('submitCard', curType, o);
+      store.del('ic_draft_'+curType);
+      $('#stampNo').textContent = r.id; $('#doneNo').textContent = r.id;
+      $('#done h3').innerHTML = r.updated ? 'ცვლილებები შენახულია<small>Changes saved — same card number.</small>' : 'მადლობა! იდეა მიღებულია<small>Thank you! Your idea has been received.</small>';
+      $('#form').classList.add('hidden'); $('#done').classList.remove('hidden');
+      $('#card').scrollIntoView({behavior:'smooth', block:'start'});
+    }catch(err){
+      $('#errbox').textContent = 'ვერ გაიგზავნა. სცადეთ თავიდან. · Could not send — please try again. ('+(err && err.message || err)+')';
+      $('#errbox').classList.remove('hidden');
+    }finally{ btn.disabled = false }
+  });
+  $('#againBtn').addEventListener('click', ()=>{
+    $('#form').classList.remove('hidden'); $('#done').classList.add('hidden'); renderForm(); window.scrollTo({top:0, behavior:'smooth'});
+  });
+}
+
+/* ================= PRINT / PROJECT CARD ================= */
+function cardHTML(c){
+  const def = CARD[c.type], T = c.type==='T';
+  const sec = (k, ka, en, full) => {
+    const v = c[k];
+    return '<div class="sec'+(full?' full':'')+'"><div class="sl">'+esc(ka)+' <small>· '+esc(en)+'</small></div><div class="sv'+(v?'':' none')+'">'+(v?esc(v):'—')+'</div></div>';
+  };
+  let body = '';
+  def.fields.forEach(f=>{
+    if(['team','name','title','proposers'].includes(f.k)) return;
+    if(f.k==='ba'){ body += sec('before', BA.before.ka, 'Now') + sec('after', BA.after.ka, 'After'); return }
+    body += sec(f.k, f.ka, f.en, !T || ['problem','ai'].includes(f.k));
+  });
+  const meta = T
+    ? '<span><i>Team · გუნდი</i><b>'+esc(c.team)+'</b></span><span><i>Proposer(s) · ავტორ(ებ)ი</i><b>'+esc(c.proposers||'—')+'</b></span>'
+    : '<span><i>Author · ავტორი</i><b>'+esc(c.name||'—')+'</b></span>';
+  const fmt = x => new Date(x).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  const stampTxt = (c.submitted_at ? fmt(c.submitted_at) : '') + (c.updated_at ? ' · updated '+fmt(c.updated_at) : '');
+  return '<div class="pcard '+c.type+'">'
+    + '<div class="ph"><div><div class="kind">'+(T?'Team Idea · გუნდური':'Individual Idea · ინდივიდუალური')+'</div><div class="ttl">'+esc(c.title)+'</div></div>'
+    + '<div class="no"><span>CARD NO.</span><b>'+esc(c.id)+'</b></div></div>'
+    + '<div class="meta">'+meta+'</div>'
+    + '<div class="pb'+(T?' two':'')+'">'+body+'</div>'
+    + '<div class="pf"><span>my.gov.ge · AI &amp; Big Data Idea Workshop · 27.11.2026</span><span>'+esc(stampTxt)+'</span></div>'
+    + '</div>';
+}
+
+/* ================= ADMIN ================= */
+const A = {key:'', data:{P:[],T:[]}, type:'P', team:'', q:'', showHidden:false, sel:new Set(), view:[], mi:0};
+const live = t => (A.data[t]||[]).filter(c=>!c.hidden);
+function filtered(){
+  let list = (A.data[A.type]||[]).slice();
+  if(!A.showHidden) list = list.filter(c=>!c.hidden);
+  if(A.type==='T' && A.team) list = list.filter(c=>String(c.team)===A.team);
+  if(A.q){ const q = A.q.toLowerCase(); list = list.filter(c=>Object.values(c).join(' ').toLowerCase().includes(q)) }
+  if(A.type==='T') list.sort((a,b)=> (+a.team - +b.team) || a.id.localeCompare(b.id, undefined, {numeric:true}));
+  return list;
+}
+function renderStats(){
+  const P = live('P'), T = live('T');
+  $('#cP').textContent = P.length; $('#cT').textContent = T.length; $('#nIdea').textContent = P.length + T.length;
+  const st = A.type==='P'
+    ? [[P.length,'개인 카드'], [new Set(P.map(c=>(c.name||'').trim().toLowerCase()).filter(Boolean)).size,'작성자 수']]
+    : [[T.length+'/4','제출한 조']].concat([1,2,3,4].map(i=>[T.some(c=>String(c.team)===String(i)) ? '✓' : '—', i+'조']));
+  $('#stats').innerHTML = st.map(s=>'<div class="stat"><b>'+s[0]+'</b><span>'+s[1]+'</span></div>').join('');
+}
+function miniHTML(c, i){
+  const T = c.type==='T';
+  const who = T ? (c.team+'조 · '+(c.proposers||'')) : (c.name||'');
+  const lines = T ? [['문제·기능', c.problem], ['AI·데이터', c.ai]] : [['문제', c.problem], ['아이디어', c.idea]];
+  return '<div class="mini '+c.type+(A.sel.has(c.id)?' sel':'')+(c.hidden?' off':'')+'" data-i="'+i+'">'
+    + '<div class="mh"><span class="id">'+esc(c.id)+'</span><span class="who">'+esc(who)+'</span><input type="checkbox" data-sel="'+esc(c.id)+'" '+(A.sel.has(c.id)?'checked':'')+'></div>'
+    + '<div class="mb"><h4>'+esc(c.title)+'</h4>'+lines.filter(l=>l[1]).map(l=>'<p><b>'+l[0]+'</b> '+esc(l[1])+'</p>').join('')+'</div>'
+    + '<div class="mf"><span>'+(c.submitted_at? new Date(c.submitted_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'')+(c.updated_at? ' · <b style="color:#B8862B">수정 '+new Date(c.updated_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</b>':'')+'</span><button data-hide="'+esc(c.id)+'" data-h="'+(c.hidden?0:1)+'">'+(c.hidden?'되살리기':'숨기기')+'</button></div>'
+    + '</div>';
+}
+function renderAdmin(){
+  renderStats();
+  A.view = filtered();
+  $('#segTeam').classList.toggle('hidden', A.type!=='T');
+  if(!A.view.length){
+    $('#grid').innerHTML = '<div class="blank">아직 '+(A.type==='P'?'개인':'조별')+' 카드가 없습니다. 참가자가 QR로 들어와 제출하면 여기에 나타납니다(30초마다 새로고침).</div>';
+  } else {
+    let html = '', lastTeam = null;
+    A.view.forEach((c,i)=>{
+      if(A.type==='T' && !A.team && c.team!==lastTeam){ html += '<div class="teamhead">'+esc(c.team)+'조</div>'; lastTeam = c.team }
+      html += miniHTML(c,i);
+    });
+    $('#grid').innerHTML = html;
+  }
+  const sel = A.view.filter(c=>A.sel.has(c.id)).length;
+  $('#printBtn').textContent = sel ? '선택 '+sel+'장 인쇄' : '보이는 '+A.view.length+'장 인쇄';
+  $('#qrBtn').textContent = (A.type==='P'?'개인':'조별')+' QR 포스터';
+}
+async function load(){
+  try{
+    A.data = await call('listCards', A.key);
+    A.data.P = A.data.P||[]; A.data.T = A.data.T||[];
+    $('#live').textContent = '갱신 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    renderAdmin();
+  }catch(e){
+    if(/authori/i.test(String(e && e.message || e))){ $('#admin').classList.add('hidden'); $('#gate').classList.remove('hidden') }
+    else $('#live').textContent = '갱신 실패: '+(e && e.message || e);
+  }
+}
+function openModal(i){
+  if(!A.view.length) return;
+  A.mi = (i + A.view.length) % A.view.length;
+  $('#mBody').innerHTML = cardHTML(A.view[A.mi]);
+  $('#modal').classList.remove('hidden');
+}
+function printCards(list, layout){
+  const per = layout==='full' ? 1 : 2; let html = '';
+  for(let i=0;i<list.length;i+=per){
+    html += '<div class="sheet '+layout+'">' + list.slice(i,i+per).map(c=>'<div class="slot">'+cardHTML(c)+'</div>').join('') + (per===2 && i+1>=list.length ? '<div class="slot"></div>' : '') + '</div>';
+  }
+  $('#print-root').innerHTML = html;
+  setTimeout(()=>window.print(), 300);
+}
+async function printPoster(){
+  const base = STATIC ? location.origin + location.pathname : String(A.pub || await call('getAppUrl', A.key) || '').replace(/\?.*$/, '');
+  if(!STATIC && !/\/exec$/.test(base)){ alertBox('QR 주소가 공개 주소(…/exec)가 아닙니다: '+base+' — 위쪽 「참가자 QR 주소」 칸에 배포 관리의 웹 앱 URL(…/exec)을 넣고 저장하세요.'); return }
+  const T = A.type==='T';
+  const url = T ? base+'?card=team' : base;
+  const def = CARD[A.type];
+  $('#print-root').innerHTML = '<div class="sheet full"><div class="poster '+A.type+'">'
+    + '<div><span class="tag">'+esc(def.pill)+'</span></div>'
+    + '<h2>'+esc(def.ka)+'<small>'+esc(def.en)+' · my.gov.ge AI &amp; Big Data Workshop</small></h2>'
+    + '<div><div class="qr" id="qrbox"></div></div>'
+    + '<div class="steps"><div><b>1</b><br>დაასკანერეთ QR კოდი<br><span style="color:#55626C">Scan the QR code</span></div>'
+    + (T ? '<div><b>2</b><br>შეავსებს გუნდის ჩამწერი<br><span style="color:#55626C">The team note-taker fills it in</span></div>'
+         : '<div><b>2</b><br>ჩაწერეთ იდეა და გააგზავნეთ<br><span style="color:#55626C">Write your idea and submit</span></div>')
+    + '</div><div style="margin-top:18px; font-size:15px; color:#55626C; line-height:1.5">ⓘ თუ გვერდი არ იხსნება, გახსენით ბრაუზერის პირად (ინკოგნიტო) ფანჯარაში ან სხვა ბრაუზერში.<br>If the page does not open, use a private / incognito tab or another browser.</div><div class="url"><a href="'+esc(url)+'" style="color:inherit">'+esc(url)+'</a></div></div></div>';
+  if(window.QRCode) new QRCode(document.getElementById('qrbox'), {text:url, width:340, height:340, colorDark:'#08253D', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M});
+  else $('#qrbox').textContent = '(QR 라이브러리를 불러오지 못함)';
+  setTimeout(()=>window.print(), 500);
+}
+function bindAdmin(){
+  bindSurveyAdmin();
+  $('#sess').addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    $('#sess').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+    A.type = b.dataset.v; renderAdmin();
+  });
+  $('#segTeam').addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    $('#segTeam').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+    A.team = b.dataset.v; renderAdmin();
+  });
+  $('#q').addEventListener('input', e=>{ A.q = e.target.value.trim(); renderAdmin() });
+  $('#showHidden').addEventListener('change', e=>{ A.showHidden = e.target.checked; renderAdmin() });
+  $('#grid').addEventListener('click', async e=>{
+    const cb = e.target.closest('[data-sel]');
+    if(cb){ e.stopPropagation(); const id = cb.dataset.sel; cb.checked ? A.sel.add(id) : A.sel.delete(id); renderAdmin(); return }
+    const hb = e.target.closest('[data-hide]');
+    if(hb){ e.stopPropagation(); await call('setHidden', A.key, hb.dataset.hide, hb.dataset.h==='1'); await load(); return }
+    const m = e.target.closest('.mini'); if(m) openModal(+m.dataset.i);
+  });
+  $('#selAll').addEventListener('click', ()=>{
+    const all = A.view.length && A.view.every(c=>A.sel.has(c.id));
+    A.view.forEach(c=> all ? A.sel.delete(c.id) : A.sel.add(c.id));
+    $('#selAll').textContent = all ? '모두 선택' : '선택 해제'; renderAdmin();
+  });
+  $('#printBtn').addEventListener('click', ()=>{
+    const sel = A.view.filter(c=>A.sel.has(c.id));
+    const list = sel.length ? sel : A.view;
+    if(list.length) printCards(list, $('#layout').value);
+  });
+  $('#qrBtn').addEventListener('click', printPoster);
+  $('#mClose').addEventListener('click', ()=>$('#modal').classList.add('hidden'));
+  $('#mPrev').addEventListener('click', ()=>openModal(A.mi-1));
+  $('#mNext').addEventListener('click', ()=>openModal(A.mi+1));
+  document.addEventListener('keydown', e=>{
+    if($('#modal').classList.contains('hidden')) return;
+    if(e.key==='Escape') $('#modal').classList.add('hidden');
+    if(e.key==='ArrowLeft') openModal(A.mi-1);
+    if(e.key==='ArrowRight') openModal(A.mi+1);
+  });
+  $('#gateBtn').addEventListener('click', ()=>{ A.key = $('#gateKey').value.trim(); $('#gate').classList.add('hidden'); startAdmin() });
+}
+async function refreshAll(){
+  try{
+    const d = await call('adminData', A.key);
+    const t = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    A.data = d.cards || {P:[],T:[]}; A.data.P = A.data.P||[]; A.data.T = A.data.T||[];
+    S.data = d.responses || [];
+    $('#live').textContent = '갱신 '+t; $('#svLive').textContent = '갱신 '+t;
+    renderAdmin(); renderSurveyAdmin();
+  }catch(e){
+    if(/authori/i.test(String(e && e.message || e))){ $('#admin').classList.add('hidden'); $('#gate').classList.remove('hidden') }
+    else { $('#live').textContent = $('#svLive').textContent = '갱신 실패: '+(e && e.message || e) }
+  }
+}
+function showPub(u){
+  A.pub = u || ''; $('#pubUrl').value = A.pub;
+  const ok = /\/exec$/.test(A.pub);
+  $('#pubState').innerHTML = ok ? '<span class="ok">✓ 공개 주소</span>' : '<span class="bad">⚠ 공개 주소(…/exec)가 아님 — QR이 열리지 않을 수 있음</span>';
+}
+async function loadPub(){ try{ showPub(await call('getAppUrl', A.key)) }catch(e){} }
+function startAdmin(){
+  $('#admin').classList.remove('hidden');
+  $('#xlsxBtn').onclick = exportXlsx;
+  $('#sheetBtn').onclick = async ()=>{ try{ const u = await call('getSheetUrl', A.key); window.open(u, '_blank') }catch(e){ alertBox('시트 주소를 가져오지 못했습니다: '+(e && e.message || e)) } };
+  if(STATIC) $('.qrurl').classList.add('hidden'); else loadPub();
+  $('#pubSave').onclick = async ()=>{
+    try{ showPub(await call('setPublicUrl', A.key, $('#pubUrl').value)); $('#pubState').innerHTML += ' 저장됨' }
+    catch(e){ $('#pubState').innerHTML = '<span class="bad">'+esc(e && e.message || e)+'</span>' }
+  };
+  refreshAll(); clearInterval(A.timer);
+  // 30초마다, 화면을 보고 있을 때만 새로고침 (여러 창을 열어 둬도 서버 부담이 적게)
+  A.timer = setInterval(()=>{ if(document.visibilityState==='visible') refreshAll() }, 30000);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') refreshAll() });
+}
+
+/* =====================================================================
+ * 만족도 조사 — 역량강화 교육(6개 세션) · 워크숍
+ * ===================================================================== */
+const SESSIONS = [
+  {n:'1', date:'2026-11-24', day:'24.11 (Tue)', dko:'11/24(화)', start:'09:30', end:'12:30', half:'오전',
+   ka:'ხელოვნური ინტელექტისა და ციფრული მთავრობის პოლიტიკა და მმართველობა', en:'AI & Digital Government Policy and Governance', ko:'AI·디지털정부 정책·거버넌스', who:'Dr. Oh Kwangseok', wko:'오광석 박사'},
+  {n:'2', date:'2026-11-24', day:'24.11 (Tue)', dko:'11/24(화)', start:'14:00', end:'17:00', half:'오후',
+   ka:'პორტალის განვითარება, სერვისების ინოვაცია და გამოყენების ზრდა', en:'Portal Development, Service Innovation and Usage Growth', ko:'포털 발전·서비스 혁신 및 이용 활성화', who:'Oh Jonghyuk', wko:'오종혁 부대표'},
+  {n:'3', date:'2026-11-25', day:'25.11 (Wed)', dko:'11/25(수)', start:'09:30', end:'12:30', half:'오전',
+   ka:'ხელოვნური ინტელექტისა და დიდი მონაცემების ტენდენციები და გამოყენების მაგალითები', en:'AI and Big Data Trends and Use Cases', ko:'AI·빅데이터 동향 및 활용사례', who:'Choi Keun Ho', wko:'최근호 전무이사'},
+  {n:'4', date:'2026-11-25', day:'25.11 (Wed)', dko:'11/25(수)', start:'14:00', end:'17:00', half:'오후',
+   ka:'K-DID (ციფრული იდენტობა): მიმოხილვა და გამოყენების მაგალითები', en:'K-DID (Digital ID): Overview and Use Cases', ko:'K-DID(디지털ID) 개요 및 적용 사례', who:'Lee Jaeyoung', wko:'이재영 이사'},
+  {n:'5', date:'2026-11-26', day:'26.11 (Thu)', dko:'11/26(목)', start:'09:30', end:'12:30', half:'오전',
+   ka:'ადმინისტრაციული ინფორმაციის გაზიარების სისტემა', en:'Administrative Information Sharing System', ko:'행정정보 공유 시스템', who:'Dr. Jeong Chanil', wko:'정찬일 박사'},
+  {n:'6', date:'2026-11-26', day:'26.11 (Thu)', dko:'11/26(목)', start:'14:00', end:'17:00', half:'오후',
+   ka:'ხელოვნური ინტელექტის სერვისების დაგეგმვა, PCP და პროექტების მართვა', en:'AI Service Planning, PCP and Project Management', ko:'AI 서비스 기획·PCP·프로젝트관리', who:'Ahn Heecheol', wko:'안희철 수석'}
+];
+const LIK = {
+  ka:['სრულიად არ ვეთანხმები','არ ვეთანხმები','ნეიტრალური','ვეთანხმები','სრულიად ვეთანხმები'],
+  en:['Strongly disagree','Disagree','Neutral','Agree','Strongly agree'],
+  ko:['전혀 아니다','아니다','보통','그렇다','매우 그렇다']
+};
+const SV = {
+  edu:{
+    top:'my.gov.ge · Digital Government Capacity Building · 24–26.11.2026',
+    pill:'სესიის შეფასება · Session feedback', ka:'სასწავლო სესიის შეფასება', en:'Training Session Feedback',
+    group:['ამ სესიის შესახებ','About this session'],
+    items:[
+      {k:'q1', ka:'საერთო ჯამში, კმაყოფილი ვარ ამ სესიით.', en:'Overall, I am satisfied with this session.', ko:'전반적 만족도', ke:'Overall'},
+      {k:'q2', ka:'შინაარსი რელევანტური იყო ჩემი სამუშაოსთვის.', en:'The content was relevant to my work.', ko:'업무 관련성', ke:'Relevance'},
+      {k:'q3', ka:'ლექტორმა თემა გასაგებად ახსნა.', en:'The instructor explained the topic clearly.', ko:'강사 설명', ke:'Instructor'},
+      {k:'q4', ka:'სასწავლო მასალები (სლაიდები) სასარგებლო იყო.', en:'The materials (slides) were helpful.', ko:'교육자료', ke:'Materials'},
+      {k:'q5', ka:'ქართული თარგმანი გასაგები იყო.', en:'The Georgian interpretation was clear.', ko:'통역', ke:'Interpretation'},
+      {k:'q6', ka:'ახლა ამ თემას უკეთ ვიგებ, ვიდრე სესიამდე.', en:'I understand this topic better than before the session.', ko:'이해도 향상', ke:'Understanding'},
+      {k:'q7', ka:'შემიძლია ნასწავლის გამოყენება ჩემს სამუშაოში.', en:'I can apply what I learned to my work.', ko:'업무 활용 가능성', ke:'Applicability'}
+    ],
+    pace:true,
+    open:{best:{ka:'რა იყო ყველაზე სასარგებლო ამ სესიაში?', en:'What was most useful in this session?', ko:'가장 유익했던 점'},
+          improve:{ka:'რა გავაუმჯობესოთ, ან რა თემაზე გსურთ მეტის გაგება?', en:'What should we improve, or what would you like to learn more about?', ko:'개선점 · 더 듣고 싶은 주제'}},
+    overall:{n:'6', group:['მთელი სასწავლო პროგრამა (3 დღე)','Whole training program (3 days)'],
+      items:[
+        {k:'o1', ka:'საერთო ჯამში, კმაყოფილი ვარ მთელი პროგრამით.', en:'Overall, I am satisfied with the whole program.', ko:'프로그램 전체 만족도', ke:'Program overall'},
+        {k:'o2', ka:'ორგანიზება (ადგილი, განრიგი, კვება) კარგი იყო.', en:'The organisation (venue, schedule, meals) was good.', ko:'운영(장소·일정·식사)', ke:'Organisation'},
+        {k:'o3', ka:'ამ პროგრამას კოლეგებს ვურჩევდი.', en:'I would recommend this program to colleagues.', ko:'추천 의향', ke:'Recommend'}
+      ],
+      comment:{ka:'სხვა კომენტარები მთელი პროგრამის შესახებ', en:'Other comments on the whole program', ko:'프로그램 전체 의견'}}
+  },
+  ws:{
+    top:'my.gov.ge · AI & Big Data Idea Workshop · 27.11.2026',
+    pill:'ვორქშოპის შეფასება · Workshop feedback', ka:'ვორქშოპის შეფასება', en:'Workshop Feedback',
+    group:['ვორქშოპის შესახებ','About the workshop'],
+    items:[
+      {k:'q1', ka:'საერთო ჯამში, კმაყოფილი ვარ ვორქშოპით.', en:'Overall, I am satisfied with the workshop.', ko:'전반적 만족도', ke:'Overall'},
+      {k:'q2', ka:'შემთხვევებისა და კვლევის შედეგების პრეზენტაცია დამეხმარა პრობლემების გააზრებაში.', en:'The case and survey presentations helped me understand the problems.', ko:'사례·설문 발표', ke:'Cases & survey'},
+      {k:'q3', ka:'გუნდურ განხილვაში ყველას ჰქონდა აზრის გამოთქმის შესაძლებლობა.', en:'In the team discussion everyone had a chance to share ideas.', ko:'팀 토의 참여', ke:'Team discussion'},
+      {k:'q4', ka:'ექსპერტების რჩევები სასარგებლო იყო იდეების განსავითარებლად.', en:'Expert advice helped us develop our ideas.', ko:'전문가 자문', ke:'Expert advice'},
+      {k:'q5', ka:'თითოეული ეტაპისთვის დრო საკმარისი იყო.', en:'There was enough time for each activity.', ko:'시간 배분', ke:'Time'},
+      {k:'q6', ka:'თარგმანი და მოდერაცია გასაგები იყო.', en:'Interpretation and facilitation were clear.', ko:'통역·진행', ke:'Interpretation'},
+      {k:'q7', ka:'მოველი, რომ ჩვენი იდეები გამოყენებული იქნება my.gov.ge-ის გასაუმჯობესებლად.', en:'I expect our ideas to be used to improve my.gov.ge.', ko:'아이디어 활용 기대', ke:'Use of ideas'}
+    ],
+    pace:false,
+    open:{best:{ka:'რა იყო ყველაზე სასარგებლო ვორქშოპში?', en:'What was most useful in the workshop?', ko:'가장 유익했던 점'},
+          improve:{ka:'რა გავაუმჯობესოთ შემდეგ ჯერზე?', en:'What should we improve next time?', ko:'개선점'}}
+  }
+};
+const PACE = [
+  {v:'slow', ka:'ძალიან ნელი', en:'Too slow', ko:'느림'},
+  {v:'ok', ka:'შესაფერისი', en:'Just right', ko:'적절'},
+  {v:'fast', ka:'ძალიან სწრაფი', en:'Too fast', ko:'빠름'}
+];
+const sesOf = n => SESSIONS.find(s=>s.n===String(n));
+/* 트빌리시(UTC+4) 시각으로 지금 응답할 세션: 시작 30분 전 ~ 끝나고 3시간 */
+function autoSession(){
+  const now = Date.now(); let pick = null;
+  SESSIONS.forEach(s=>{
+    const [y,m,d] = s.date.split('-').map(Number);
+    const t = (hm, add) => { const [h,mi] = hm.split(':').map(Number); return Date.UTC(y, m-1, d, h-4, mi) + add*60000 };
+    if(now >= t(s.start,-30) && now <= t(s.end,180)) pick = s.n;
+  });
+  return pick;
+}
+function deviceId(){
+  let d = store.get('sv_device');
+  if(!d){ d = 'D'+Math.random().toString(36).slice(2,10); store.set('sv_device', d) }
+  return d;
+}
+
+/* ---------------- participant ---------------- */
+const SVP = {survey:'edu', session:null};
+function lkHTML(it){
+  return '<div class="lk" data-k="'+it.k+'"><div class="st">'+esc(it.ka)+'<small>'+esc(it.en)+'</small></div>'
+    + '<div class="scale">'+[1,2,3,4,5].map(v=>'<label title="'+esc(LIK.en[v-1])+'"><input type="radio" name="'+it.k+'" value="'+v+'"><span>'+v+'</span></label>').join('')+'</div>'
+    + '<div class="ends"><span>1 · '+esc(LIK.ka[0])+'<br>'+LIK.en[0]+'</span><span>5 · '+esc(LIK.ka[4])+'<br>'+LIK.en[4]+'</span></div></div>';
+}
+function openHTML(k, o, rows){
+  return '<div class="f" data-k="'+k+'"><div class="lab"><span class="num">✎</span><div class="t">'+esc(o.ka)+'<small>'+esc(o.en)+'</small></div></div>'
+    + '<div class="in"><textarea name="'+k+'" rows="'+(rows||3)+'" maxlength="2000" style="min-height:'+(32*(rows||3)+4)+'px"></textarea></div></div>';
+}
+function renderSurvey(){
+  const def = SV[SVP.survey], ws = SVP.survey==='ws';
+  document.body.classList.add('sv'); document.body.classList.toggle('ws', ws);
+  document.title = def.en + ' · my.gov.ge';
+  $('#svTop').textContent = def.top;
+  $('#svPill').innerHTML = '<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></i>'+esc(def.pill);
+  $('#svTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
+  $('#svLead').innerHTML = 'შეაფასეთ 1-დან 5-მდე (1 = სრულიად არ ვეთანხმები, 5 = სრულიად ვეთანხმები). დაახლოებით 2 წუთი.<br><span style="opacity:.8">Rate from 1 to 5 (1 = strongly disagree, 5 = strongly agree). About 2 minutes.</span>';
+  $('#svKicker').textContent = ws ? 'Feedback · Workshop' : 'Feedback · Training';
+  $('#svCardTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
+
+  // 세션 고르기 (교육만)
+  const card = document.querySelector('#survey .card');
+  if(!ws && !SVP.session){
+    let html = '<div class="sv-sessions">', lastDay = '';
+    SESSIONS.forEach(s=>{
+      if(s.day!==lastDay){ html += '<div class="day">'+esc(s.day)+'</div>'; lastDay = s.day }
+      const done = store.get('sv_done_edu'+s.n);
+      html += '<button type="button" class="sv-ses" data-s="'+s.n+'"><span class="no">'+s.n+'</span><span><b>'+esc(s.ka)+'</b><small>'+esc(s.en)+' · '+s.start+'–'+s.end+'</small></span>'+(done?'<span class="done">✓</span>':'')+'</button>';
+    });
+    $('#svPicker').innerHTML = '<p style="margin:0 0 8px; color:#ADCAD5; font-size:14px">აირჩიეთ სესია · Choose the session</p>'+html+'</div>';
+    card.classList.add('hidden');
+    return;
+  }
+  card.classList.remove('hidden');
+  $('#svForm').classList.remove('hidden'); $('#svDone').classList.add('hidden');
+  const s = ws ? null : sesOf(SVP.session);
+  $('#svPicker').innerHTML = ws ? '' : '<button type="button" class="sv-change" id="svChange">↺ სესიის შეცვლა · Change session</button>';
+  $('#svHead').classList.toggle('hidden', ws);
+  if(s) $('#svHead').innerHTML = '<span class="no">'+s.n+'</span><span><b>'+esc(s.ka)+'</b><small>'+esc(s.en)+'<br>'+esc(s.day)+' · '+s.start+'–'+s.end+' · '+esc(s.who)+'</small></span>';
+
+  const doneKey = 'sv_done_'+SVP.survey+(SVP.session||'W');
+  $('#svAgain').classList.toggle('hidden', !store.get(doneKey));
+  $('#svAgain').innerHTML = 'ⓘ <span>ამ მოწყობილობიდან უკვე გაგზავნეთ შეფასება. ხელახლა გაგზავნა მხოლოდ საჭიროების შემთხვევაში.<br>You already sent feedback from this device. Please send again only if needed.</span>';
+
+  let h = '<div class="sv-group">'+esc(def.group[0])+' · '+esc(def.group[1])+'</div>' + def.items.map(lkHTML).join('');
+  if(def.pace){
+    h += '<div class="lk" data-k="pace"><div class="st">სესიის ტემპი<small>Pace of the session</small></div><div class="pace">'
+      + PACE.map(p=>'<label><input type="radio" name="pace" value="'+p.v+'"><span>'+esc(p.ka)+'<small>'+p.en+'</small></span></label>').join('')+'</div></div>';
+  }
+  h += openHTML('best', def.open.best) + openHTML('improve', def.open.improve);
+  if(def.overall && SVP.session===def.overall.n){
+    h += '<div class="sv-group">'+esc(def.overall.group[0])+' · '+esc(def.overall.group[1])+'</div>' + def.overall.items.map(lkHTML).join('') + openHTML('o_comment', def.overall.comment);
+  }
+  h += '<div class="f" data-k="agency"><div class="lab"><span class="num">i</span><div class="t">ორგანიზაცია (არასავალდებულო)<small>Organisation (optional)</small></div></div><div class="in"><input type="text" name="agency" maxlength="120" autocomplete="organization"></div></div>';
+  $('#svFields').innerHTML = h;
+  const draft = store.get('sv_draft_'+SVP.survey+(SVP.session||'W')) || {};
+  Object.keys(draft).forEach(k=>{
+    const el = $('#svForm').elements[k]; if(!el) return;
+    if(el instanceof RadioNodeList) el.forEach(r=>{ r.checked = r.value===draft[k] }); else el.value = draft[k];
+  });
+  $('#svErr').classList.add('hidden');
+}
+function svRead(){ const o = {}; new FormData($('#svForm')).forEach((v,k)=>{ o[k] = String(v).trim() }); return o }
+function bindSurvey(){
+  $('#svPicker').addEventListener('click', e=>{
+    const b = e.target.closest('[data-s]');
+    if(b){ SVP.session = b.dataset.s; renderSurvey(); window.scrollTo({top:0, behavior:'smooth'}); return }
+    if(e.target.closest('#svChange')){ SVP.session = null; renderSurvey() }
+  });
+  const save = ()=> store.set('sv_draft_'+SVP.survey+(SVP.session||'W'), svRead());
+  $('#svForm').addEventListener('input', save); $('#svForm').addEventListener('change', save);
+  $('#svForm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const o = svRead(); let first = null;
+    document.querySelectorAll('#svFields .lk').forEach(el=>el.classList.remove('err'));
+    SV[SVP.survey].items.forEach(it=>{ if(!o[it.k]){ const el = document.querySelector('.lk[data-k="'+it.k+'"]'); el.classList.add('err'); first = first || el } });
+    if(first){
+      first.scrollIntoView({behavior:'smooth', block:'center'});
+      $('#svErr').textContent = 'გთხოვთ, უპასუხოთ ყველა შეფასების კითხვას (1–5). · Please answer all rating questions (1–5).';
+      $('#svErr').classList.remove('hidden'); return;
+    }
+    const btn = $('#svSubmit'); btn.disabled = true;
+    try{
+      await call('submitSurvey', Object.assign(o, {survey:SVP.survey, session:SVP.session||'W', device:deviceId()}));
+      const key = SVP.survey+(SVP.session||'W');
+      store.del('sv_draft_'+key); store.set('sv_done_'+key, Date.now());
+      const last = SVP.survey==='ws' || SVP.session==='6';
+      $('#svDoneText').innerHTML = last ? 'მადლობა მონაწილეობისთვის!<br>Thank you for taking part!' : 'შემდეგ სესიაზე შეხვედრამდე!<br>See you at the next session!';
+      $('#svAgainBtn').classList.toggle('hidden', SVP.survey==='ws');
+      $('#svForm').classList.add('hidden'); $('#svDone').classList.remove('hidden');
+      $('#svPicker').innerHTML = '';
+      document.querySelector('#survey .card').scrollIntoView({behavior:'smooth', block:'start'});
+    }catch(err){
+      $('#svErr').textContent = 'ვერ გაიგზავნა. სცადეთ თავიდან. · Could not send — please try again. ('+(err && err.message || err)+')';
+      $('#svErr').classList.remove('hidden');
+    }finally{ btn.disabled = false }
+  });
+  $('#svAgainBtn').addEventListener('click', ()=>{ SVP.session = null; renderSurvey(); window.scrollTo({top:0, behavior:'smooth'}) });
+}
+
+/* ---------------- admin: 만족도 조사 결과 ---------------- */
+const S = {data:[], tab:'all', showHidden:false};
+const DV = ['#B8432F','#E89A85','#E3DFD5','#86B6EA','#2A6FC2'];       // 1~5 (diverging: red ↔ gray ↔ blue)
+const DV_INK = ['#fff','#3A1A12','#3A3A36','#0E2440','#fff'];
+const HEAT = ['#F1F7F6','#CBE9E4','#94D3C9','#4FB3A6','#1E7F8C'];      // sequential, one hue
+function svRows(survey, session){
+  return S.data.filter(r=>(S.showHidden || !r.hidden) && r.survey===survey && (session==null || String(r.session)===String(session)));
+}
+const liveR = rows => rows.filter(r=>!r.hidden);
+function avgOf(rows, k){ const v = rows.map(r=>+r[k]).filter(x=>x>=1&&x<=5); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null }
+function distOf(rows, k){ const d = [0,0,0,0,0]; rows.forEach(r=>{ const x = +r[k]; if(x>=1&&x<=5) d[x-1]++ }); return d }
+const f2 = v => v==null ? '–' : v.toFixed(2);
+function legendHTML(){
+  return '<div class="legend">'+LIK.ko.map((t,i)=>'<span><i style="background:'+DV[i]+'"></i>'+(i+1)+' '+t+'</span>').join('')+'</div>';
+}
+function dvRowHTML(it, rows){
+  const d = distOf(rows, it.k), n = d.reduce((a,b)=>a+b,0), a = avgOf(rows, it.k);
+  let bar = '';
+  if(!n) bar = '<div class="empty"></div>';
+  else d.forEach((c,i)=>{ if(!c) return; const p = c/n*100;
+    bar += '<div class="dvs" style="flex:'+c+';background:'+DV[i]+';color:'+DV_INK[i]+'" data-tip="'+esc(it.ko)+' · '+(i+1)+' '+LIK.ko[i]+': '+c+'명 ('+Math.round(p)+'%)">'+(p>=9?Math.round(p)+'%':'')+'</div>' });
+  return '<div class="dvrow"><div class="lb">'+esc(it.ko)+'<small>'+esc(it.en)+'</small></div><div class="dvbar">'+bar+'</div><div class="avg">'+f2(a)+'<small>n='+n+'</small></div></div>';
+}
+function cmtHTML(rows, k){
+  const list = rows.filter(r=>r[k]);
+  if(!list.length) return '<div class="none-yet">아직 의견 없음</div>';
+  return list.map(r=>'<div class="cmt'+(r.hidden?' off':'')+'">'+esc(r[k])+'<div class="meta"><span>'+esc(r.agency||'')+(r.agency?' · ':'')+(r.submitted_at? new Date(r.submitted_at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</span><button data-rh="'+esc(r.id)+'" data-h="'+(r.hidden?0:1)+'">'+(r.hidden?'되살리기':'응답 숨기기')+'</button></div></div>').join('');
+}
+function heatColor(v){ const t = Math.max(0, Math.min(1, (v-1)/4)); return HEAT[Math.min(4, Math.round(t*4))] }
+function reportHTML(survey, session){
+  const def = SV[survey], rows = svRows(survey, session), lv = liveR(rows), ws = survey==='ws';
+  const s = ws ? null : sesOf(session);
+  const q1 = avgOf(lv,'q1'), sat = lv.length ? lv.filter(r=>+r.q1>=4).length/lv.length*100 : null;
+  let h = '<div class="rep"><h3>'+(ws ? '워크숍 만족도 · 11/27(금)' : 'S'+s.n+' · '+esc(s.ko))+'</h3>'
+    + '<div class="sub">'+(ws ? 'AI·빅데이터 서비스 발굴 워크숍 · 09:00–12:00, 14:00–17:00' : esc(s.dko)+' '+s.half+' '+s.start+'–'+s.end+' · '+esc(s.wko)+' · '+esc(s.en))+'</div>'
+    + '<div class="tiles"><div class="tile"><b>'+lv.length+'</b><span>응답 수</span></div>'
+    + '<div class="tile"><b>'+f2(q1)+'<small> / 5</small></b><span>전반적 만족도 평균</span></div>'
+    + '<div class="tile"><b>'+(sat==null?'–':Math.round(sat)+'<small>%</small>')+'</b><span>만족 비율 (4·5점)</span></div>'
+    + '<div class="tile"><b>'+f2(avgOf(lv,'q7'))+'<small> / 5</small></b><span>'+esc(def.items[6].ko)+'</span></div></div>'
+    + legendHTML() + def.items.map(it=>dvRowHTML(it, lv)).join('');
+  if(def.pace){
+    const pc = PACE.map(p=>[p, lv.filter(r=>r.pace===p.v).length]);
+    h += '<div style="margin-top:14px; font-size:13px; font-weight:700">세션 속도</div><div class="paces">'+pc.map(x=>'<span>'+x[0].ko+'<b>'+x[1]+'</b></span>').join('')+'</div>';
+  }
+  h += '</div>';
+  h += '<div class="rep"><h3>서술 의견</h3><div class="sub">숨긴 응답은 통계에서 빠집니다(시험 응답 정리용).</div><div class="cmts"><div><h4>'+esc(def.open.best.ko)+'</h4>'+cmtHTML(rows,'best')+'</div><div><h4>'+esc(def.open.improve.ko)+'</h4>'+cmtHTML(rows,'improve')+'</div></div></div>';
+  if(def.overall && session===def.overall.n){
+    h += '<div class="rep"><h3>프로그램 전체 (3일) — 마지막 세션에서 함께 받음</h3><div class="sub">교육 전체에 대한 평가</div>'+legendHTML()+def.overall.items.map(it=>dvRowHTML(it, lv)).join('')
+      + '<h4 style="margin:16px 0 8px; font-size:14px">'+esc(def.overall.comment.ko)+'</h4>'+cmtHTML(rows,'o_comment')+'</div>';
+  }
+  return h;
+}
+function overviewHTML(){
+  const def = SV.edu, all = liveR(svRows('edu', null));
+  let h = '<div class="rep"><h3>역량강화 교육 · 세션별 비교</h3><div class="sub">문항별 평균(1–5). 색이 진할수록 높음 · 빈칸은 응답 없음</div>'
+    + '<div class="tiles"><div class="tile"><b>'+all.length+'</b><span>교육 응답 합계</span></div>'
+    + '<div class="tile"><b>'+f2(avgOf(all,'q1'))+'<small> / 5</small></b><span>전반적 만족도 (전체)</span></div>'
+    + '<div class="tile"><b>'+SESSIONS.filter(s=>all.some(r=>String(r.session)===s.n)).length+'<small> / 6</small></b><span>응답 받은 세션</span></div></div>'
+    + '<div style="overflow-x:auto"><table class="heat"><thead><tr><th>세션</th><th>n</th>'+def.items.map(it=>'<th>'+esc(it.ko)+'</th>').join('')+'<th>문항 평균</th></tr></thead><tbody>';
+  SESSIONS.forEach(s=>{
+    const rows = all.filter(r=>String(r.session)===s.n);
+    const avgs = def.items.map(it=>avgOf(rows, it.k));
+    const ok = avgs.filter(v=>v!=null), mean = ok.length ? ok.reduce((a,b)=>a+b,0)/ok.length : null;
+    const cell = v => v==null ? '<td class="na">–</td>' : '<td style="background:'+heatColor(v)+';color:'+((v-1)/4>0.7?'#fff':'#18222B')+'" data-tip="S'+s.n+' · '+v.toFixed(2)+'">'+v.toFixed(2)+'</td>';
+    h += '<tr><td class="nm">S'+s.n+' '+esc(s.ko)+'<small>'+esc(s.dko)+' '+s.half+' · '+esc(s.wko)+'</small></td><td class="n">'+rows.length+'</td>'+avgs.map(cell).join('')+cell(mean)+'</tr>';
+  });
+  h += '</tbody></table></div></div>';
+  const last = all.filter(r=>String(r.session)===def.overall.n);
+  if(last.length) h += '<div class="rep"><h3>프로그램 전체 (3일)</h3><div class="sub">S6 응답자에게 함께 받은 문항</div>'+legendHTML()+def.overall.items.map(it=>dvRowHTML(it,last)).join('')+'</div>';
+  return h;
+}
+function renderSurveyAdmin(){
+  const cnt = (sv, s) => liveR(S.data.filter(r=>r.survey===sv && (s==null || String(r.session)===String(s)))).length;
+  $('#nSurvey').textContent = liveR(S.data).length;
+  const tab = (v, b, sub, cls) => '<button data-t="'+v+'" class="'+(cls||'')+(S.tab===v?' on':'')+'"><b>'+b+'</b><small>'+sub+'</small></button>';
+  $('#svTabs').innerHTML = tab('all','교육 전체','세션 비교 · '+cnt('edu')+'명')
+    + SESSIONS.map(s=>tab(s.n,'S'+s.n+' · '+s.dko.slice(0,5)+' '+s.half, esc(s.wko)+' · '+cnt('edu',s.n)+'명')).join('')
+    + '<span class="sep"></span>' + tab('W','워크숍','11/27(금) · '+cnt('ws')+'명','ws');
+  $('#svBody').innerHTML = S.tab==='all' ? overviewHTML() : S.tab==='W' ? reportHTML('ws', null) : reportHTML('edu', S.tab);
+  $('#svQr').textContent = S.tab==='W' ? '워크숍 QR 포스터' : S.tab==='all' ? '교육 QR 포스터 (세션 자동)' : 'S'+S.tab+' QR 포스터';
+}
+async function loadSurvey(){
+  try{
+    S.data = await call('listResponses', A.key) || [];
+    $('#svLive').textContent = '갱신 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    renderSurveyAdmin();
+  }catch(e){ $('#svLive').textContent = '갱신 실패: '+(e && e.message || e) }
+}
+async function printSurveyPoster(){
+  const base = STATIC ? location.origin + location.pathname : String(A.pub || await call('getAppUrl', A.key) || '').replace(/\?.*$/, '');
+  if(!STATIC && !/\/exec$/.test(base)){ alertBox('QR 주소가 공개 주소(…/exec)가 아닙니다: '+base+' — 위쪽 「참가자 QR 주소」 칸에 배포 관리의 웹 앱 URL(…/exec)을 넣고 저장하세요.'); return }
+  const ws = S.tab==='W', s = (!ws && S.tab!=='all') ? sesOf(S.tab) : null;
+  const url = base + (ws ? '?survey=ws' : '?survey=edu' + (s ? '&s='+s.n : ''));
+  const def = SV[ws?'ws':'edu'];
+  $('#print-root').innerHTML = '<div class="sheet full"><div class="poster'+(ws?' T':'')+'">'
+    + '<div><span class="tag">'+esc(def.pill)+'</span></div>'
+    + '<h2>'+esc(def.ka)+'<small>'+esc(def.en)+(s ? ' · Session '+s.n : '')+'</small></h2>'
+    + (s ? '<div style="margin-top:10px; font-size:18px; color:#55626C">'+esc(s.ka)+'<br>'+esc(s.en)+'</div>' : '')
+    + '<div><div class="qr" id="qrbox"></div></div>'
+    + '<div class="steps"><div><b>1</b><br>დაასკანერეთ QR კოდი<br><span style="color:#55626C">Scan the QR code</span></div>'
+    + '<div><b>2</b><br>შეაფასეთ 1–5 (2 წუთი)<br><span style="color:#55626C">Rate 1–5 (2 minutes)</span></div></div>'
+    + '<div style="margin-top:18px; font-size:15px; color:#55626C; line-height:1.5">ⓘ თუ გვერდი არ იხსნება, გახსენით ბრაუზერის პირად (ინკოგნიტო) ფანჯარაში ან სხვა ბრაუზერში.<br>If the page does not open, use a private / incognito tab or another browser.</div><div class="url"><a href="'+esc(url)+'" style="color:inherit">'+esc(url)+'</a></div></div></div>';
+  if(window.QRCode) new QRCode(document.getElementById('qrbox'), {text:url, width:340, height:340, colorDark:'#08253D', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M});
+  setTimeout(()=>window.print(), 500);
+}
+function setSection(v){
+  A.section = v;
+  $('#topnav').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
+  $('#secIdea').classList.toggle('hidden', v!=='idea');
+  $('#secSurvey').classList.toggle('hidden', v!=='survey');
+  $('#stats').classList.toggle('hidden', v!=='idea');
+  $('#admTitle').textContent = v==='idea' ? '아이디어 카드 관리' : '만족도 조사 결과';
+}
+function bindSurveyAdmin(){
+  $('#topnav').addEventListener('click', e=>{ const b = e.target.closest('button'); if(b) setSection(b.dataset.v) });
+  $('#svTabs').addEventListener('click', e=>{ const b = e.target.closest('button'); if(!b) return; S.tab = b.dataset.t; renderSurveyAdmin() });
+  $('#svShowHidden').addEventListener('change', e=>{ S.showHidden = e.target.checked; renderSurveyAdmin() });
+  $('#svBody').addEventListener('click', async e=>{
+    const b = e.target.closest('[data-rh]'); if(!b) return;
+    await call('setResponseHidden', A.key, b.dataset.rh, b.dataset.h==='1'); await loadSurvey();
+  });
+  $('#svPrint').addEventListener('click', ()=>{
+    $('#print-root').innerHTML = '<div class="report-print">'+$('#svBody').innerHTML+'</div>';
+    setTimeout(()=>window.print(), 200);
+  });
+  $('#svQr').addEventListener('click', printSurveyPoster);
+  // hover tooltip
+  const tip = document.createElement('div'); tip.className = 'tip'; document.body.appendChild(tip);
+  $('#svBody').addEventListener('mousemove', e=>{
+    const t = e.target.closest('[data-tip]');
+    if(!t){ tip.style.display = 'none'; return }
+    tip.textContent = t.dataset.tip; tip.style.display = 'block';
+    tip.style.left = Math.min(e.clientX+14, innerWidth - tip.offsetWidth - 8)+'px'; tip.style.top = (e.clientY+16)+'px';
+  });
+  $('#svBody').addEventListener('mouseleave', ()=>{ tip.style.display = 'none' });
+}
+
+function alertBox(msg){ // 브라우저 알림창 대신 화면 안 안내
+  let b = document.getElementById('admAlert');
+  if(!b){ b = document.createElement('div'); b.id = 'admAlert'; b.style.cssText = 'position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:40;max-width:640px;background:#FDECEA;color:#8A1C12;border-radius:12px;padding:12px 16px;font-size:14px;white-space:pre-wrap;box-shadow:0 10px 30px rgba(0,0,0,.4);cursor:pointer'; b.title = '눌러서 닫기'; b.onclick = ()=>b.remove(); document.body.appendChild(b) }
+  b.textContent = msg;
+}
+/* ---------------- 엑셀 내려받기: 원본 + 세션 요약 ---------------- */
+function exportXlsx(){
+  if(!window.XLSX){ alertBox('엑셀 라이브러리를 불러오지 못했습니다. 「원본 시트 열기」에서 파일 → 다운로드 → Excel을 쓰세요.'); return }
+  const wb = XLSX.utils.book_new();
+  const add = (name, rows) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length ? rows : [{'(없음)':''}]), name);
+  const t = x => x ? new Date(x).toLocaleString('ko-KR') : '';
+  add('개인카드', A.data.P.map(c=>({번호:c.id, 제출:t(c.submitted_at), 숨김:c.hidden?'Y':'', 이름:c.name, 제목:c.title, '대상 이용자와 문제':c.problem, '개선 아이디어':c.idea, 기대효과:c.effect, '관련 자료·경험':c.evidence})));
+  add('조별카드', A.data.T.map(c=>({번호:c.id, 조:c.team, 제출:t(c.submitted_at), 수정:t(c.updated_at), 숨김:c.hidden?'Y':'', 제안자:c.proposers, 제목:c.title, '문제·핵심 기능':c.problem, 'AI·빅데이터':c.ai, '개선 전':c.before, '개선 후':c.after, '데이터·관련 기관':c.data, 기대효과:c.effect, '추가 확인사항':c.open})));
+  const items = k => SV[k].items;
+  add('만족도_원본', S.data.map(r=>{
+    const sv = r.survey==='ws' ? 'ws' : 'edu', o = {응답ID:r.id, 제출:t(r.submitted_at), 숨김:r.hidden?'Y':'', 구분:sv==='ws'?'워크숍':'교육', 세션:sv==='ws'?'W':'S'+r.session};
+    items(sv).forEach(it=>{ o[it.k+' '+it.ko] = r[it.k]===''?'':+r[it.k] });
+    if(sv==='edu'){ o['속도'] = (PACE.find(p=>p.v===r.pace)||{}).ko || ''; SV.edu.overall.items.forEach(it=>{ o[it.k+' '+it.ko] = r[it.k]===''||r[it.k]==null?'':+r[it.k] }) }
+    o['가장 유익했던 점'] = r.best||''; o['개선점'] = r.improve||''; o['프로그램 의견'] = r.o_comment||''; o['소속'] = r.agency||'';
+    return o;
+  }));
+  const sumE = [], sumW = [];
+  SESSIONS.map(s=>['edu', s.n, 'S'+s.n+' '+s.ko+' ('+s.dko+' '+s.half+', '+s.wko+')']).concat([['ws','W','워크숍 (11/27)']]).forEach(([sv, ses, name])=>{
+    const sum = sv==='ws' ? sumW : sumE;
+    const rows = liveR(S.data.filter(r=>r.survey===sv && String(r.session)===ses));
+    const o = {세션:name, 응답수:rows.length, '만족 비율(q1 4·5점)':rows.length ? Math.round(rows.filter(r=>+r.q1>=4).length/rows.length*1000)/10+'%' : ''};
+    items(sv).forEach(it=>{ const a = avgOf(rows, it.k); o[it.ko+' 평균'] = a==null ? '' : Math.round(a*100)/100 });
+    sum.push(o);
+  });
+  add('교육_세션요약', sumE);
+  add('워크숍_요약', sumW);
+  XLSX.writeFile(wb, 'Georgia_교육워크숍_결과_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+/* ================= boot ================= */
+params().then(p=>{
+  if(p.view==='admin'){
+    A.key = p.key || ''; bindAdmin();
+    if(p.session==='team'){ A.type = 'T'; $('#sess').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x.dataset.v==='T')) }
+    if(p.tab==='survey'){ setSection('survey'); if(p.st) S.tab = p.st }
+    if(!A.key && GAS){ $('#gate').classList.remove('hidden') } else startAdmin();
+  } else if(p.survey==='edu' || p.survey==='ws'){
+    SVP.survey = p.survey;
+    SVP.session = p.survey==='edu' ? ((/^[1-6]$/.test(p.s||'') ? p.s : null) || autoSession()) : null;
+    $('#survey').classList.remove('hidden'); bindSurvey(); renderSurvey();
+  } else {
+    curType = (p.card==='team' || p.type==='T') ? 'T' : 'P';
+    $('#participant').classList.remove('hidden'); bindParticipant(); renderForm();
+  }
+});
+</script>
+</body>
+</html>
