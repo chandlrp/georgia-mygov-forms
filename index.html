@@ -302,6 +302,9 @@ button,input,textarea,select{font:inherit}
 .mini .mb p b{color:var(--ink); font-weight:600}
 .mini .mf{display:flex; justify-content:space-between; align-items:center; padding:8px 14px 12px; font-size:12px; color:#8A949B}
 .mini .mf button{border:none; background:none; color:#8A949B; cursor:pointer; font-size:12px; text-decoration:underline}
+.mini .mf .acts{display:flex; gap:10px; align-items:center}
+.mini .mf button.del{color:#B0413E}
+.mini .mf button.del.arm{color:#fff; background:#B0413E; text-decoration:none; border-radius:6px; padding:3px 8px; font-weight:700}
 .teamhead{grid-column:1/-1; display:flex; align-items:center; gap:10px; margin:8px 0 -4px; font-weight:800; font-size:16px; color:var(--gold)}
 .teamhead::after{content:""; flex:1; height:1px; background:var(--line)}
 .blank{border:1.5px dashed var(--line); border-radius:18px; padding:50px 20px; text-align:center; color:#ADCAD5; grid-column:1/-1}
@@ -819,7 +822,8 @@ const MOCK = {
     return c;
   },
   setCommentHidden(key, id, h){ const a = this._cm(); a.forEach(c=>{ if(c.id===id) c.hidden = h }); if(!/demo=1/.test(location.search)) try{ localStorage.setItem('cm_mock', JSON.stringify(a)) }catch(e){} return true },
-  checkKey(key){ return !!key }
+  checkKey(key){ return !!key },
+  deleteCard(key, id){ const d = this._db(); ['P','T'].forEach(t=>{ d[t] = d[t].filter(c=>c.id!==id) }); if(!/demo=1/.test(location.search)) this._save(d); else { ['P','T'].forEach(t=>{ DEMO[t] = d[t] }) } return true }
 };
 const DEMO_CM = [
   {id:'C1', card_id:'P-001', name:'Levan', text:'NAPR already sends SMS for property registration — could the timeline reuse those status codes?', submitted_at:'2026-11-27T07:05:00Z', hidden:false},
@@ -1070,7 +1074,7 @@ function miniHTML(c, i){
   return '<div class="mini '+c.type+(A.sel.has(c.id)?' sel':'')+(c.hidden?' off':'')+'" data-i="'+i+'">'
     + '<div class="mh"><span class="id">'+esc(c.id)+'</span><span class="who">'+esc(who)+'</span><input type="checkbox" data-sel="'+esc(c.id)+'" '+(A.sel.has(c.id)?'checked':'')+'></div>'
     + '<div class="mb"><h4>'+esc(c.title)+'</h4>'+lines.filter(l=>l[1]).map(l=>'<p><b>'+l[0]+'</b> '+esc(l[1])+'</p>').join('')+'</div>'
-    + '<div class="mf"><span>'+(c.submitted_at? new Date(c.submitted_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'')+(c.updated_at? ' · <b style="color:#B8862B">수정 '+new Date(c.updated_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</b>':'')+'</span><button data-hide="'+esc(c.id)+'" data-h="'+(c.hidden?0:1)+'">'+(c.hidden?'되살리기':'숨기기')+'</button></div>'
+    + '<div class="mf"><span>'+(c.submitted_at? new Date(c.submitted_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'')+(c.updated_at? ' · <b style="color:#B8862B">수정 '+new Date(c.updated_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</b>':'')+'</span><span class="acts"><button data-hide="'+esc(c.id)+'" data-h="'+(c.hidden?0:1)+'">'+(c.hidden?'되살리기':'숨기기')+'</button><button class="del" data-del="'+esc(c.id)+'">삭제</button></span></div>'
     + '</div>';
 }
 function renderAdmin(){
@@ -1156,6 +1160,20 @@ function bindAdmin(){
     if(cb){ e.stopPropagation(); const id = cb.dataset.sel; cb.checked ? A.sel.add(id) : A.sel.delete(id); renderAdmin(); return }
     const hb = e.target.closest('[data-hide]');
     if(hb){ e.stopPropagation(); await call('setHidden', A.key, hb.dataset.hide, hb.dataset.h==='1'); await load(); return }
+    const db = e.target.closest('[data-del]');
+    if(db){
+      e.stopPropagation();
+      // two steps: first click arms the button, second click (within 4 s) deletes
+      if(!db.classList.contains('arm')){
+        db.classList.add('arm'); db.textContent = '정말 삭제? 다시 누르기';
+        setTimeout(()=>{ if(db.isConnected){ db.classList.remove('arm'); db.textContent = '삭제' } }, 4000);
+        return;
+      }
+      db.disabled = true; db.textContent = '삭제 중…';
+      try{ await call('deleteCard', A.key, db.dataset.del); A.sel.delete(db.dataset.del); await load() }
+      catch(err){ db.disabled = false; db.classList.remove('arm'); db.textContent = '삭제 실패'; }
+      return;
+    }
     const m = e.target.closest('.mini'); if(m) openModal(+m.dataset.i);
   });
   $('#selAll').addEventListener('click', ()=>{
