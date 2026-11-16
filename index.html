@@ -140,6 +140,78 @@ button,input,textarea,select{font:inherit}
 .done p{color:var(--ink2); font-size:14px; line-height:1.55; margin:14px 0 20px}
 .ghost{border:1.5px solid var(--rule); background:#fff; border-radius:14px; padding:13px 18px; font-weight:700; cursor:pointer; color:var(--ink)}
 .fine{color:#7FA3B3; font-size:12px; text-align:center; margin-top:18px; line-height:1.6}
+.done .acts{display:flex; flex-direction:column; gap:10px; align-items:stretch; max-width:340px; margin:0 auto}
+.done .toBoard{border:none; border-radius:14px; padding:14px 18px; font-weight:800; cursor:pointer; color:#fff; background:var(--navy); display:flex; align-items:center; justify-content:center; gap:10px}
+.done .toBoard small{font-weight:500; opacity:.8}
+
+/* ================= IDEA BOARD (participants) ================= */
+.bd{max-width:1180px; margin:0 auto; padding:20px 16px 64px}
+.bd-head{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; justify-content:space-between; margin:14px 0 16px}
+.bd-head h1{margin:0; font-size:28px; line-height:1.15; font-weight:800}
+.bd-head h1 small{display:block; font-size:14px; font-weight:500; color:#ADCAD5; margin-top:6px}
+.bd-write{display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--navy); background:var(--gold); border-radius:12px; padding:10px 14px; font-weight:800; font-size:14px}
+.bd-tabs{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+.bd-tabs button{flex:1; min-width:200px; display:flex; align-items:center; gap:12px; text-align:left; cursor:pointer; padding:12px 14px; border-radius:14px; border:1.5px solid var(--line); background:rgba(13,45,69,.7); color:#F3F8FC}
+.bd-tabs .ic{display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:var(--navy3); flex:none}
+.bd-tabs .ic svg{width:20px; height:20px}
+.bd-tabs b{display:block; font-size:15px}
+.bd-tabs small{display:block; font-size:12px; color:#ADCAD5}
+.bd-tabs .n{margin-left:auto; font-size:22px; font-weight:800}
+.bd-tabs button[data-v="P"].on{border-color:var(--teal); background:rgba(30,127,140,.28)}
+.bd-tabs button[data-v="P"].on .ic{background:var(--teal); color:var(--navy)}
+.bd-tabs button[data-v="T"].on{border-color:var(--gold); background:rgba(184,134,43,.25)}
+.bd-tabs button[data-v="T"].on .ic{background:var(--gold); color:var(--navy)}
+.bd-tools{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px}
+.bd-tools input{flex:1; min-width:200px; border:1.5px solid var(--line); background:rgba(13,45,69,.7); color:#F3F8FC; border-radius:12px; padding:10px 12px; font-size:15px; outline:none}
+.bd-tools input::placeholder{color:#7FA3B3}
+.bd-seg{display:inline-flex; border:1.5px solid var(--line); border-radius:12px; overflow:hidden}
+.bd-seg button{border:none; background:transparent; color:#ADCAD5; padding:9px 12px; cursor:pointer; font-weight:700; font-size:13px}
+.bd-seg button.on{background:var(--gold-d); color:#fff}
+.bd-upd{font-size:12px; color:#7FA3B3}
+.bd-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:16px; align-items:start}
+@media (max-width:420px){ .bd-grid{grid-template-columns:1fr} }
+.bd-blank{grid-column:1/-1; text-align:center; color:#ADCAD5; padding:48px 16px; border:1.5px dashed var(--line); border-radius:16px; line-height:1.6}
+.bc{background:var(--paper); color:var(--ink); border-radius:18px; overflow:hidden; box-shadow:0 18px 40px -22px rgba(0,0,0,.6)}
+.bc .bh{display:flex; gap:12px; align-items:flex-start; padding:16px 16px 10px; border-top:5px solid var(--teal)}
+.bc.T .bh{border-top-color:var(--gold)}
+.bc .bh .id{flex:none; font-weight:800; font-size:14px; padding:4px 9px; border-radius:8px; background:var(--teal); color:var(--navy)}
+.bc.T .bh .id{background:var(--gold)}
+.bc .bh h3{margin:0; font-size:17px; line-height:1.35}
+.bc .bh .who{font-size:12.5px; color:var(--ink2); margin-top:4px}
+.bc .bb{padding:0 16px 8px}
+.bsec{margin:0 0 10px}
+.bsec .bl{font-size:11.5px; font-weight:700; color:var(--teal-d); letter-spacing:.02em; margin-bottom:2px}
+.bc.T .bsec .bl{color:var(--gold-d)}
+.bsec .bl small{font-weight:500; color:var(--ink2)}
+.bsec .bv{font-size:14px; line-height:1.55; white-space:pre-wrap; word-break:break-word}
+.bba{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px}
+.bba .bsec{margin:0; background:var(--paper2); border-radius:10px; padding:8px 10px}
+.bba .bsec.after{background:#FBEFD6}
+@media (max-width:420px){ .bba{grid-template-columns:1fr} }
+.bcm{border-top:1px solid var(--rule); background:#FBF8EF}
+.bcm-toggle{width:100%; display:flex; align-items:center; gap:8px; border:none; background:transparent; padding:11px 16px; cursor:pointer; color:var(--ink); font-weight:700; font-size:13.5px; text-align:left}
+.bcm-toggle svg{width:18px; height:18px; flex:none; color:var(--teal-d)}
+.bc.T .bcm-toggle svg{color:var(--gold-d)}
+.bcm-toggle .chev{margin-left:auto; transition:.2s}
+.bcm.open .bcm-toggle .chev{transform:rotate(180deg)}
+.bcm-body{padding:0 16px 14px}
+.cm{background:#fff; border:1px solid var(--rule); border-radius:12px; padding:8px 10px; margin-bottom:8px}
+.cm.off{opacity:.45}
+.cm-h{display:flex; gap:8px; align-items:center; font-size:12px; color:var(--ink2)}
+.cm-h b{color:var(--ink); font-size:13px}
+.cm-h .x{margin-left:auto; border:1px solid var(--rule); background:#fff; border-radius:8px; font-size:11px; padding:2px 8px; cursor:pointer; color:#B0413E}
+.cm-t{font-size:14px; line-height:1.5; margin-top:3px; white-space:pre-wrap; word-break:break-word}
+.cm-none{font-size:13px; color:var(--ink2); margin:2px 0 10px}
+.cm-f{display:grid; gap:8px; margin-top:6px}
+.cm-f input, .cm-f textarea{width:100%; border:1.5px solid var(--rule); border-radius:10px; padding:8px 10px; font-size:14px; background:#fff; color:var(--ink); outline:none; resize:vertical}
+.cm-f input:focus, .cm-f textarea:focus{border-color:var(--teal-d)}
+.cm-f .row{display:flex; gap:8px; align-items:center}
+.cm-f .row input{flex:1}
+.cm-f button{flex:none; border:none; border-radius:10px; padding:9px 14px; font-weight:800; cursor:pointer; color:#fff; background:var(--teal-d)}
+.bc.T .cm-f button{background:var(--gold-d)}
+.cm-f button:disabled{opacity:.5; cursor:default}
+.cm-err{font-size:12px; color:#B0413E}
+.bd-err{background:#3A1F25; border:1px solid #7A3B44; color:#F6D5D8; border-radius:12px; padding:10px 12px; margin-bottom:12px; font-size:13px}
 
 /* ================= ADMIN ================= */
 .adm{max-width:1280px; margin:0 auto; padding:20px 20px 60px}
@@ -420,11 +492,37 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
       <div class="big"><div><span>CARD NO.</span><b id="doneNo"></b></div></div>
       <h3>მადლობა! იდეა მიღებულია<small>Thank you! Your idea has been received.</small></h3>
       <p id="doneText"></p>
-      <button class="ghost" id="againBtn" type="button">+ კიდევ ერთი იდეა · Add another idea</button>
+      <div class="acts">
+        <button class="toBoard" id="boardBtn" type="button">ყველა იდეის ნახვა <small>· See all ideas</small> →</button>
+        <button class="ghost" id="againBtn" type="button">+ კიდევ ერთი იდეა · Add another idea</button>
+      </div>
     </div>
   </div>
 
   <div class="fine" id="fine"></div>
+</div>
+
+<!-- ================= IDEA BOARD (participants: ?view=board, &tab=team) ================= -->
+<div id="board" class="bd hidden">
+  <div class="top"><span class="dot"></span>my.gov.ge · AI &amp; Big Data Idea Workshop · 27.11.2026</div>
+  <div class="bd-head">
+    <h1>იდეების დაფა<small>Idea Board — read your colleagues’ ideas and leave comments</small></h1>
+    <a class="bd-write" id="bdWrite" href="#">+ იდეის დამატება · Add an idea</a>
+  </div>
+  <div class="bd-tabs" id="bdTabs">
+    <button data-v="P" class="on"><span class="ic"></span><span><b>ინდივიდუალური</b><small>Individual ideas</small></span><span class="n" id="bdNP">0</span></button>
+    <button data-v="T"><span class="ic"></span><span><b>გუნდური</b><small>Team ideas</small></span><span class="n" id="bdNT">0</span></button>
+  </div>
+  <div class="bd-tools">
+    <input id="bdQ" type="search" placeholder="ძიება · Search ideas and comments">
+    <div class="bd-seg" id="bdSort">
+      <button data-v="new" class="on">ახალი · Newest</button>
+      <button data-v="talk">განხილვა · Most discussed</button>
+    </div>
+    <span class="bd-upd" id="bdUpd"></span>
+  </div>
+  <div class="bd-err hidden" id="bdErr"></div>
+  <div class="bd-grid" id="bdList"></div>
 </div>
 
 <!-- ================= SURVEY (participant) ================= -->
@@ -485,6 +583,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
       <button data-v="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>데이터 표</button>
     </div>
     <div class="navtools">
+      <button class="btn" id="boardOpen" title="참가자용 결과 페이지(댓글 숨기기 버튼 포함)">아이디어 대시보드</button>
       <button class="btn" id="xlsxBtn">엑셀 내려받기</button>
       <button class="btn" id="sheetBtn">원본 시트 열기</button>
     </div>
@@ -664,8 +763,30 @@ const MOCK = {
   setPublicUrl(key,u){ u = String(u||'').trim().replace(/[?#].*$/,''); if(!/^https:\/\/script\.google\.com\/(a\/macros\/[^\/]+|macros)\/s\/[\w-]+\/exec$/.test(u)) throw new Error('웹 앱 URL(https://script.google.com/macros/s/…/exec)을 넣어 주세요'); try{ localStorage.setItem('pub_mock',u) }catch(e){} return u },
   setResponseHidden(key,id,h){ const a = this._sv(); a.forEach(r=>{ if(r.id===id) r.hidden=h }); try{ localStorage.setItem('sv_mock', JSON.stringify(a)) }catch(e){} return true },
   setHidden(key,id,h){ const d = this._db(); ['P','T'].forEach(t=>d[t].forEach(c=>{ if(c.id===id) c.hidden=h })); this._save(d); return true },
-  getAppUrl(){ try{ return localStorage.getItem('pub_mock') || location.href.split('?')[0] }catch(e){ return location.href.split('?')[0] } }
+  getAppUrl(){ try{ return localStorage.getItem('pub_mock') || location.href.split('?')[0] }catch(e){ return location.href.split('?')[0] } },
+  _cm(){ if(/demo=1/.test(location.search)) return DEMO_CM; try{ return JSON.parse(localStorage.getItem('cm_mock')||'[]') }catch(e){ return [] } },
+  listBoard(){
+    const d = this._db(), out = {at:new Date().toISOString()};
+    ['P','T'].forEach(t=> out[t] = d[t].filter(c=>!c.hidden).map(c=>Object.assign({}, c, {type:t})));
+    const ids = new Set(out.P.concat(out.T).map(c=>c.id));
+    out.comments = this._cm().filter(c=>!c.hidden && ids.has(c.card_id));
+    return out;
+  },
+  addComment(cardId, name, text){
+    text = String(text||'').trim().slice(0,1000); name = String(name||'').trim().slice(0,60);
+    if(!text) throw new Error('Comment is empty');
+    const a = this._cm(); const c = {id:'C'+Math.random().toString(36).slice(2,10), card_id:cardId, name, text, submitted_at:new Date().toISOString(), hidden:false};
+    a.push(c); if(!/demo=1/.test(location.search)) try{ localStorage.setItem('cm_mock', JSON.stringify(a)) }catch(e){}
+    return c;
+  },
+  setCommentHidden(key, id, h){ const a = this._cm(); a.forEach(c=>{ if(c.id===id) c.hidden = h }); if(!/demo=1/.test(location.search)) try{ localStorage.setItem('cm_mock', JSON.stringify(a)) }catch(e){} return true },
+  checkKey(key){ return !!key }
 };
+const DEMO_CM = [
+  {id:'C1', card_id:'P-001', name:'Levan', text:'NAPR already sends SMS for property registration — could the timeline reuse those status codes?', submitted_at:'2026-11-27T07:05:00Z', hidden:false},
+  {id:'C2', card_id:'P-001', name:'', text:'ძალიან კარგი იდეა. სასურველია ელფოსტითაც შეტყობინება.', submitted_at:'2026-11-27T07:12:00Z', hidden:false},
+  {id:'C3', card_id:'T2', name:'Ana (Team 3)', text:'Who would maintain the synonym list for Georgian search terms?', submitted_at:'2026-11-27T08:40:00Z', hidden:false}
+];
 /* 로컬 미리보기 전용 예시 카드 (?view=admin&demo=1) — Apps Script에서는 쓰이지 않음 */
 const DEMO = {
   P:[
@@ -851,6 +972,7 @@ function bindParticipant(){
       $('#errbox').classList.remove('hidden');
     }finally{ btn.disabled = false }
   });
+  $('#boardBtn').addEventListener('click', ()=>{ location.href = boardUrl(curType) });
   $('#againBtn').addEventListener('click', ()=>{
     $('#form').classList.remove('hidden'); $('#done').classList.add('hidden'); renderForm(); window.scrollTo({top:0, behavior:'smooth'});
   });
@@ -975,6 +1097,9 @@ async function printPoster(){
 }
 function bindAdmin(){
   bindSurveyAdmin();
+  $('#boardOpen').addEventListener('click', ()=>{
+    window.open(location.pathname + '?view=board' + (A.type==='T' ? '&tab=team' : '') + (A.key ? '&key='+encodeURIComponent(A.key) : '') + (/demo=1/.test(location.search) ? '&demo=1' : ''), '_blank');
+  });
   $('#sess').addEventListener('click', e=>{
     const b = e.target.closest('button'); if(!b) return;
     $('#sess').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
@@ -1482,6 +1607,152 @@ function renderData(){
     + rows.map((r,i)=>'<tr'+(r['숨김']==='Y'?' class="off"':'')+'><td class="rn">'+(i+1)+'</td>'+cols.map(c=>{ const v = fmtCell(r[c]); return '<td class="'+(isNum(c)?'num':(v.length>40?'long':''))+'">'+esc(v)+'</td>' }).join('')+'</tr>').join('')
     + '</tbody></table></div>';
 }
+/* ================= IDEA BOARD (participants: ?view=board, &tab=team, &key=… for moderation) ================= */
+const BD = {type:'P', data:{P:[], T:[], comments:[]}, q:'', sort:'new', open:new Set(), drafts:{}, key:'', mod:false, pending:false, loaded:false};
+const CHAT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>';
+const CHEV = '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+const BD_SEC = {P:['problem','idea','effect','evidence'], T:['problem','ai','ba','data','effect','open']};
+function boardUrl(type){ return location.pathname + '?view=board' + (type==='T' ? '&tab=team' : '') }
+function fmtT(x){ try{ return new Date(x).toLocaleString('en-GB', {timeZone:'Asia/Tbilisi', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) }catch(e){ return '' } }
+function bdComments(id){ return (BD.data.comments||[]).filter(c=>c.card_id===id).sort((a,b)=>String(a.submitted_at).localeCompare(String(b.submitted_at))) }
+function bdLabel(type, k){ const f = CARD[type].fields.find(x=>x.k===k); return f ? [f.ka, f.en] : [k, k] }
+function bdList(){
+  let list = (BD.data[BD.type]||[]).slice();
+  if(BD.q){
+    const q = BD.q.toLowerCase();
+    list = list.filter(c=>Object.values(c).join(' ').toLowerCase().includes(q) || bdComments(c.id).some(m=>(m.name+' '+m.text).toLowerCase().includes(q)));
+  }
+  const n = c=>bdComments(c.id).length, t = c=>String(c.updated_at||c.submitted_at||'');
+  if(BD.sort==='talk') list.sort((a,b)=> n(b)-n(a) || t(b).localeCompare(t(a)));
+  else if(BD.type==='T') list.sort((a,b)=> (+a.team) - (+b.team));
+  else list.sort((a,b)=> t(b).localeCompare(t(a)));
+  return list;
+}
+function bdSec(type, k, v, cls){
+  const l = k==='before' ? [BA.before.ka, BA.before.en] : k==='after' ? [BA.after.ka, BA.after.en] : bdLabel(type, k);
+  return '<div class="bsec'+(cls?' '+cls:'')+'"><div class="bl">'+esc(l[0])+' <small>· '+esc(l[1])+'</small></div><div class="bv">'+esc(v)+'</div></div>';
+}
+function bdCardHTML(c){
+  const T = c.type==='T', cm = bdComments(c.id), open = BD.open.has(c.id);
+  let body = '';
+  BD_SEC[c.type].forEach(k=>{
+    if(k==='ba'){
+      if(c.before || c.after) body += '<div class="bba">'+bdSec(c.type,'before',c.before||'—','before')+bdSec(c.type,'after',c.after||'—','after')+'</div>';
+    } else if(c[k]) body += bdSec(c.type, k, c[k]);
+  });
+  const who = T ? ('გუნდი · Team '+esc(c.team)+(c.proposers ? ' · '+esc(c.proposers) : '')) : esc(c.name||'');
+  const when = fmtT(c.updated_at || c.submitted_at);
+  const list = cm.length
+    ? cm.map(m=>'<div class="cm"><div class="cm-h"><b>'+esc(m.name || 'ანონიმური · Anonymous')+'</b><span>'+esc(fmtT(m.submitted_at))+'</span>'
+        + (BD.mod ? '<button class="x" type="button" data-hide="'+esc(m.id)+'">숨기기 · Hide</button>' : '')+'</div><div class="cm-t">'+esc(m.text)+'</div></div>').join('')
+    : '<div class="cm-none">ჯერ კომენტარი არ არის — იყავით პირველი. · No comments yet — be the first.</div>';
+  return '<article class="bc '+c.type+'" data-id="'+esc(c.id)+'">'
+    + '<div class="bh"><span class="id">'+esc(c.id)+'</span><div><h3>'+esc(c.title)+'</h3><div class="who">'+who+(when ? ' · '+esc(when) : '')+'</div></div></div>'
+    + '<div class="bb">'+body+'</div>'
+    + '<div class="bcm'+(open?' open':'')+'">'
+    +   '<button class="bcm-toggle" type="button" data-toggle="'+esc(c.id)+'">'+CHAT+'<span><b>'+cm.length+'</b> კომენტარი · comment'+(cm.length===1?'':'s')+'</span>'+CHEV+'</button>'
+    +   '<div class="bcm-body'+(open?'':' hidden')+'">'+list
+    +     '<form class="cm-f" data-id="'+esc(c.id)+'">'
+    +       '<textarea name="text" rows="2" maxlength="1000" placeholder="დაწერეთ კომენტარი ან კითხვა · Write a comment or question"></textarea>'
+    +       '<div class="row"><input name="name" maxlength="60" placeholder="სახელი (არასავალდებულო) · Name (optional)"><button type="submit">გაგზავნა · Post</button></div>'
+    +       '<div class="cm-err hidden"></div>'
+    +     '</form>'
+    +   '</div>'
+    + '</div></article>';
+}
+function renderBoard(){
+  const P = BD.data.P||[], T = BD.data.T||[];
+  $('#bdNP').textContent = P.length; $('#bdNT').textContent = T.length;
+  $('#bdTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===BD.type));
+  document.body.classList.toggle('team', BD.type==='T');
+  $('#bdWrite').href = location.pathname + (BD.type==='T' ? '?card=team' : '');
+  const list = bdList();
+  $('#bdList').innerHTML = list.length ? list.map(bdCardHTML).join('')
+    : '<div class="bd-blank">'+(!BD.loaded ? 'იტვირთება… · Loading…'
+        : BD.q ? 'ვერაფერი მოიძებნა. · No matching ideas.'
+        : 'ჯერ იდეა არ არის. ბარათის შევსების შემდეგ ის აქ გამოჩნდება.<br>No ideas yet — they appear here as soon as cards are submitted.')+'</div>';
+  // restore what people were typing (the list is redrawn on refresh)
+  const name = store.get('bd_name') || '';
+  document.querySelectorAll('#bdList .cm-f').forEach(f=>{
+    f.elements.text.value = BD.drafts[f.dataset.id] || '';
+    f.elements.name.value = name;
+  });
+  BD.pending = false;
+}
+async function loadBoard(){
+  try{
+    BD.data = await call('listBoard'); BD.loaded = true;
+    $('#bdErr').classList.add('hidden');
+    $('#bdUpd').textContent = 'განახლდა · Updated ' + fmtT(BD.data.at || new Date());
+  }catch(e){
+    $('#bdErr').textContent = 'იდეები ვერ ჩაიტვირთა. · Could not load ideas. ('+(e && e.message || e)+')';
+    $('#bdErr').classList.remove('hidden'); BD.loaded = true;
+  }
+  // do not redraw while someone is typing a comment — redraw when they leave the box
+  if(document.activeElement && document.activeElement.closest && document.activeElement.closest('#bdList .cm-f')) BD.pending = true;
+  else renderBoard();
+}
+function bindBoard(){
+  $('#bdTabs').addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    BD.type = b.dataset.v; renderBoard();
+    history.replaceState(null, '', boardUrl(BD.type) + (BD.key ? '&key='+encodeURIComponent(BD.key) : ''));
+  });
+  $('#bdSort').addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    BD.sort = b.dataset.v; $('#bdSort').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b)); renderBoard();
+  });
+  $('#bdQ').addEventListener('input', e=>{ BD.q = e.target.value.trim(); renderBoard() });
+  const L = $('#bdList');
+  L.addEventListener('click', async e=>{
+    const t = e.target.closest('[data-toggle]');
+    if(t){ const id = t.dataset.toggle; BD.open.has(id) ? BD.open.delete(id) : BD.open.add(id); renderBoard(); return }
+    const h = e.target.closest('[data-hide]');
+    if(h && BD.mod){
+      h.disabled = true;
+      try{ await call('setCommentHidden', BD.key, h.dataset.hide, true); BD.data.comments = BD.data.comments.filter(c=>c.id!==h.dataset.hide); renderBoard() }
+      catch(err){ h.disabled = false; h.textContent = '!'; }
+    }
+  });
+  L.addEventListener('input', e=>{
+    const f = e.target.closest('.cm-f'); if(!f) return;
+    if(e.target.name==='text') BD.drafts[f.dataset.id] = e.target.value;
+    if(e.target.name==='name') store.set('bd_name', e.target.value.trim());
+  });
+  L.addEventListener('focusout', ()=>{ setTimeout(()=>{ if(BD.pending && !(document.activeElement && document.activeElement.closest && document.activeElement.closest('#bdList .cm-f'))) renderBoard() }, 150) });
+  L.addEventListener('submit', async e=>{
+    const f = e.target.closest('.cm-f'); if(!f) return;
+    e.preventDefault();
+    const id = f.dataset.id, text = f.elements.text.value.trim(), name = f.elements.name.value.trim();
+    const err = f.querySelector('.cm-err');
+    if(!text){ err.textContent = 'ჩაწერეთ კომენტარი. · Please write a comment.'; err.classList.remove('hidden'); return }
+    const btn = f.querySelector('button[type=submit]'); btn.disabled = true;
+    try{
+      const c = await call('addComment', id, name, text);
+      (BD.data.comments = BD.data.comments || []).push(c);
+      delete BD.drafts[id]; store.set('bd_name', name);
+      if(document.activeElement) document.activeElement.blur();
+      renderBoard();
+    }catch(x){
+      err.textContent = 'ვერ გაიგზავნა. სცადეთ თავიდან. · Could not post — please try again. ('+(x && x.message || x)+')';
+      err.classList.remove('hidden'); btn.disabled = false;
+    }
+  });
+  // refresh every 45 s while the page is visible (keeps server load low with 50 phones)
+  setInterval(()=>{ if(document.visibilityState==='visible') loadBoard() }, 45000);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') loadBoard() });
+}
+function startBoard(p){
+  BD.type = (p.tab==='team' || p.tab==='T') ? 'T' : 'P';
+  BD.key = p.key || '';
+  $('#bdTabs').querySelector('[data-v="P"] .ic').innerHTML = ICON.P;
+  $('#bdTabs').querySelector('[data-v="T"] .ic').innerHTML = ICON.T;
+  document.title = 'Idea Board · my.gov.ge Workshop';
+  $('#board').classList.remove('hidden'); bindBoard(); renderBoard();
+  if(BD.key) call('checkKey', BD.key).then(ok=>{ BD.mod = !!ok; renderBoard() }).catch(()=>{});
+  loadBoard();
+}
+
 /* ================= boot ================= */
 params().then(p=>{
   if(p.view==='admin'){
@@ -1490,6 +1761,8 @@ params().then(p=>{
     if(p.tab==='survey'){ setSection('survey'); if(p.st) S.tab = p.st }
     if(p.tab==='data'){ if(p.sheet) DT.sheet = p.sheet; setSection('data') }
     if(!A.key && GAS){ $('#gate').classList.remove('hidden') } else startAdmin();
+  } else if(p.view==='board'){
+    startBoard(p);
   } else if(p.survey==='edu' || p.survey==='ws'){
     SVP.survey = p.survey;
     SVP.session = p.survey==='edu' ? ((/^[1-6]$/.test(p.s||'') ? p.s : null) || autoSession()) : null;
