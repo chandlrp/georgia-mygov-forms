@@ -393,6 +393,24 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
 .pace span small{display:block; font-weight:500; color:var(--ink2); font-size:11.5px}
 .pace input:checked + span{background:var(--navy); border-color:var(--navy); color:#fff}
 .pace input:checked + span small{color:#ADCAD5}
+.pace.two{grid-template-columns:repeat(2,1fr)}
+.lk .st .qn{display:inline-grid; place-items:center; width:24px; height:24px; margin-right:8px; border-radius:50%; background:var(--navy); color:var(--accent-strong); font-size:12px; font-weight:800; vertical-align:2px}
+.lk .st .req{color:#C2410C; margin-left:2px}
+.picks{display:grid; gap:6px; margin-top:12px}
+.picks label{cursor:pointer}
+.picks input{position:absolute; opacity:0; pointer-events:none}
+.picks span{display:flex; gap:10px; align-items:center; padding:9px 12px; border-radius:12px; border:1.5px solid var(--rule); background:var(--paper); transition:.12s}
+.picks i{flex:none; width:26px; height:26px; border-radius:8px; display:grid; place-items:center; font-style:normal; font-weight:800; font-size:13px; border:1.5px solid var(--rule); background:#fff}
+.picks b{font-size:13.5px; line-height:1.35}
+.picks b small{display:block; font-weight:500; font-size:11.5px; color:var(--ink2)}
+.picks input:checked + span{background:var(--navy); border-color:var(--navy); color:#fff}
+.picks input:checked + span i{background:var(--accent-strong); border-color:var(--accent-strong); color:var(--navy)}
+.picks input:checked + span b small{color:#ADCAD5}
+.picks input:focus-visible + span{outline:3px solid var(--accent-soft)}
+.gtab{border-collapse:collapse; font-size:13px; width:100%; margin-bottom:6px}
+.gtab th, .gtab td{padding:7px 10px; border-bottom:1px solid var(--rule); text-align:right; white-space:nowrap}
+.gtab th:first-child, .gtab td:first-child{text-align:left}
+.gtab tr:last-child td{font-weight:700}
 .sv-again{display:flex; gap:10px; align-items:flex-start; background:#FFF4DB; color:#5C4300; border-radius:12px; padding:10px 12px; font-size:13px; line-height:1.45; margin-bottom:16px}
 
 /* ================= ADMIN: top sections ================= */
@@ -602,7 +620,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
       <div class="big"><div><span>THANK YOU</span><b>✓</b></div></div>
       <h3>მადლობა შეფასებისთვის!<small>Thank you for your feedback!</small></h3>
       <p id="svDoneText"></p>
-      <button class="ghost" id="svAgainBtn" type="button">← სხვა სესია · Another session</button>
+      
     </div>
   </div>
   <div class="fine">თქვენი პასუხები გამოყენებული იქნება მხოლოდ სწავლების გასაუმჯობესებლად.<br>Your answers are used only to improve the training.</div>
@@ -844,15 +862,17 @@ const DEMO = {
 };
 const DEMO_SV = (()=>{
   let seed = 7; const rnd = ()=> (seed = (seed*9301+49297)%233280)/233280;
-  const pick = (base)=> String(Math.max(1, Math.min(5, Math.round(base + (rnd()-0.5)*2.2))));
-  const best = ['Concrete Korean examples of portal integration.','Step-by-step explanation of the data-sharing architecture.','ძალიან საინტერესო მაგალითები.','The Q&A part was the most useful.'];
-  const imp = ['More time for questions.','Slides in Georgian would help.','More examples about small agencies.',''];
+  const sc = (base)=> String(Math.max(1, Math.min(5, Math.round(base + (rnd()-0.5)*2.2))));
+  const orgs = ['DGA / Digital Services Dept.','Ministry of Justice / Analytical Dept.','PSDA / Service Delivery','NAPR / Registry Operations','Public Service Hall'];
+  const pos = ['Senior Specialist','Head of Division','Analyst','','Project Manager'];
+  const cm = ['Very useful Korean examples; I would recommend it to colleagues.','More time for Q&A would help.','ძალიან საინტერესო მაგალითები.','',''];
   const out = []; let k = 0;
-  [['edu','1',14,4.2],['edu','2',12,3.9],['edu','3',15,4.4],['edu','4',9,3.6],['ws','W',11,4.1]].forEach(([sv,ses,n,base])=>{
-    for(let i=0;i<n;i++){ const r = {id:'R'+(++k), survey:sv, session:ses, hidden:false, submitted_at:'2026-11-2'+(sv==='ws'?7:(ses<3?4:5))+'T0'+(8+i%2)+':'+(10+i)+':00Z', agency:['DGA','MoJ','PSDA',''][i%4]};
-      ['q1','q2','q3','q4','q5','q6','q7'].forEach((q,j)=> r[q] = pick(base - (j===4?0.6:0) + (j===2?0.3:0)));
-      if(sv==='edu') r.pace = ['ok','ok','ok','fast','slow'][i%5];
-      if(i%3===0) r.best = best[i%4]; if(i%4===1) r.improve = imp[i%4];
+  [['edu','ALL',38,4.2,'2026-11-26T12:4'],['ws','WS',17,4.0,'2026-11-27T11:3']].forEach(([sv,ses,n,base,t])=>{
+    for(let i=0;i<n;i++){ const r = {id:'R'+(++k), survey:sv, session:ses, hidden:false, submitted_at:t+(i%10)+':00Z',
+        org:orgs[i%5], position:pos[i%5], gender:i%5<3?'Female':'Male'};
+      ['q1','q2','q3','q4','q5','q6'].forEach((q,j)=> r[q] = sc(base - (j===1?0.4:0) + (j===3?0.3:0)));
+      r.pick = [String(1+i%6), i%3===0 ? String(1+(i+2)%6) : ''].filter(Boolean).filter((v,x,a)=>a.indexOf(v)===x).join(',');
+      r.comment = cm[i%5];
       out.push(r) } });
   return out;
 })();
@@ -1233,86 +1253,92 @@ function startAdmin(){
 }
 
 /* =====================================================================
- * 만족도 조사 — 역량강화 교육(6개 세션) · 워크숍
+ * 만족도 조사 — 역량강화 교육 종합(1회, 11/26 세션 6 끝) · 워크숍(1회, 11/27 시상 전)
+ *   문항 근거: KOICA_표준_역량교육_만족도조사_v0.1.xlsx — 기본 3 + Q1~Q6(1–5) + Q7(복수 선택) + Q8(서술)
+ *   워크숍은 같은 틀로 문항만 워크숍에 맞춤(새로 작성).
+ *   session 값: 교육 'ALL', 워크숍 'WS'. 예전 세션별 응답('1'~'6', 'W')은 화면·엑셀 집계에서 뺀다(시트에는 남음).
  * ===================================================================== */
-const SESSIONS = [
-  {n:'1', date:'2026-11-24', day:'24.11 (Tue)', dko:'11/24(화)', start:'09:30', end:'12:30', half:'오전',
-   ka:'ხელოვნური ინტელექტისა და ციფრული მთავრობის პოლიტიკა და მმართველობა', en:'AI & Digital Government Policy and Governance', ko:'AI·디지털정부 정책·거버넌스', who:'Dr. Oh Kwangseok', wko:'오광석 박사'},
-  {n:'2', date:'2026-11-24', day:'24.11 (Tue)', dko:'11/24(화)', start:'14:00', end:'17:00', half:'오후',
-   ka:'პორტალის განვითარება, სერვისების ინოვაცია და გამოყენების ზრდა', en:'Portal Development, Service Innovation and Usage Growth', ko:'포털 발전·서비스 혁신 및 이용 활성화', who:'Oh Jonghyuk', wko:'오종혁 부대표'},
-  {n:'3', date:'2026-11-25', day:'25.11 (Wed)', dko:'11/25(수)', start:'09:30', end:'12:30', half:'오전',
-   ka:'ხელოვნური ინტელექტისა და დიდი მონაცემების ტენდენციები და გამოყენების მაგალითები', en:'AI and Big Data Trends and Use Cases', ko:'AI·빅데이터 동향 및 활용사례', who:'Choi Keun Ho', wko:'최근호 전무이사'},
-  {n:'4', date:'2026-11-25', day:'25.11 (Wed)', dko:'11/25(수)', start:'14:00', end:'17:00', half:'오후',
-   ka:'K-DID (ციფრული იდენტობა): მიმოხილვა და გამოყენების მაგალითები', en:'K-DID (Digital ID): Overview and Use Cases', ko:'K-DID(디지털ID) 개요 및 적용 사례', who:'Lee Jaeyoung', wko:'이재영 이사'},
-  {n:'5', date:'2026-11-26', day:'26.11 (Thu)', dko:'11/26(목)', start:'09:30', end:'12:30', half:'오전',
-   ka:'ადმინისტრაციული ინფორმაციის გაზიარების სისტემა', en:'Administrative Information Sharing System', ko:'행정정보 공유 시스템', who:'Dr. Jeong Chanil', wko:'정찬일 박사'},
-  {n:'6', date:'2026-11-26', day:'26.11 (Thu)', dko:'11/26(목)', start:'14:00', end:'17:00', half:'오후',
-   ka:'ხელოვნური ინტელექტის სერვისების დაგეგმვა, PCP და პროექტების მართვა', en:'AI Service Planning, PCP and Project Management', ko:'AI 서비스 기획·PCP·프로젝트관리', who:'Ahn Heecheol', wko:'안희철 수석'}
+const SESSIONS = [   // 제목 = 각 세션 교육자료 표지(2026-11-18 기준본). 세션 4는 자료가 없어 교육계획서 v1.1 제목
+  {n:'1', dko:'11/24(화) 오전', ko:'한국의 전자정부·디지털정부', wko:'오광석 박사',
+   ka:'ელექტრონული მმართველობა / ციფრული მმართველობა კორეაში', en:'E-Government/Digital Government in Korea'},
+  {n:'2', dko:'11/24(화) 오후', ko:'포털 발전, 서비스 혁신 및 이용 활성화', wko:'오종혁 부대표',
+   ka:'პორტალის განვითარება, სერვისების ინოვაცია და გამოყენების ზრდა', en:'Portal Development, Service Innovation and Uptake'},
+  {n:'3', dko:'11/25(수) 오전', ko:'AI·빅데이터 동향 및 활용 사례', wko:'최근호 전무이사',
+   ka:'ხელოვნური ინტელექტისა და დიდი მონაცემების ტენდენციები და გამოყენების მაგალითები', en:'AI and Big Data Trends and Use Cases'},
+  {n:'4', dko:'11/25(수) 오후', ko:'공공서비스를 위한 인증 및 디지털 신원', wko:'이재영 이사',
+   ka:'ავთენტიფიკაცია და ციფრული იდენტობა საჯარო სერვისებისთვის', en:'Authentication and Digital Identity for Public Services'},
+  {n:'5', dko:'11/26(목) 오전', ko:'정부 데이터: 상호운용성, 표준, 데이터 거버넌스', wko:'정찬일 박사',
+   ka:'სახელმწიფო მონაცემები: თავსებადობა, სტანდარტები და მონაცემთა მმართველობა', en:'Government Data: Interoperability, Standards, and Data Governance'},
+  {n:'6', dko:'11/26(목) 오후', ko:'디지털정부 사업관리 — 사업관리와 사업개념서(PCP)', wko:'안희철 수석',
+   ka:'ციფრული მმართველობის პროექტების მართვა — პროექტების მართვა და პროექტის საკონცეფციო დოკუმენტი (PCP)', en:'Digital Government Project Management — Project Management and Project Concept Paper (PCP)'}
 ];
 const LIK = {
   ka:['სრულიად არ ვეთანხმები','არ ვეთანხმები','ნეიტრალური','ვეთანხმები','სრულიად ვეთანხმები'],
   en:['Strongly disagree','Disagree','Neutral','Agree','Strongly agree'],
-  ko:['전혀 아니다','아니다','보통','그렇다','매우 그렇다']
+  ko:['매우 불만족','불만족','보통','만족','매우 만족']
+};
+const BASIC = {
+  org:{ka:'ორგანიზაცია და დეპარტამენტი', en:'Organization & Department', ko:'소속 기관·부서', req:true},
+  position:{ka:'თანამდებობა და პასუხისმგებლობის სფერო', en:'Position & Role', ko:'직급·담당 업무', req:false},
+  gender:{ka:'სქესი', en:'Gender', ko:'성별', req:true,
+    opts:[{v:'Male', ka:'მამრობითი', en:'Male', ko:'남성'}, {v:'Female', ka:'მდედრობითი', en:'Female', ko:'여성'}]}
 };
 const SV = {
   edu:{
-    top:'my.gov.ge · Digital Government Capacity Building · 24–26.11.2026',
-    pill:'სესიის შეფასება · Session feedback', ka:'სასწავლო სესიის შეფასება', en:'Training Session Feedback',
-    group:['ამ სესიის შესახებ','About this session'],
+    code:'ALL', top:'my.gov.ge · Digital Government Capacity Building Training · 24–26.11.2026',
+    pill:'ტრენინგის შეფასება · Training feedback',
+    ka:'შესაძლებლობების განვითარების ტრენინგის კმაყოფილების კვლევა', en:'Capacity Building Training Satisfaction Survey',
+    tko:'역량강화 교육 종합 만족도', sub:'11/24–26 · 6개 세션 · 11/26(목) 세션 6 종료 전 1회',
+    lead:['მადლობას გიხდით ტრენინგში მონაწილეობისთვის. გთხოვთ, დაუთმოთ 2-3 წუთი ამ მოკლე კითხვარის შევსებას.',
+          'Thank you for participating in the training. Please take 2–3 minutes to complete this brief survey.'],
+    group:['მთელი სასწავლო პროგრამა (3 დღე)','The whole training program (3 days)'],
     items:[
-      {k:'q1', ka:'საერთო ჯამში, კმაყოფილი ვარ ამ სესიით.', en:'Overall, I am satisfied with this session.', ko:'전반적 만족도', ke:'Overall'},
-      {k:'q2', ka:'შინაარსი რელევანტური იყო ჩემი სამუშაოსთვის.', en:'The content was relevant to my work.', ko:'업무 관련성', ke:'Relevance'},
-      {k:'q3', ka:'ლექტორმა თემა გასაგებად ახსნა.', en:'The instructor explained the topic clearly.', ko:'강사 설명', ke:'Instructor'},
-      {k:'q4', ka:'სასწავლო მასალები (სლაიდები) სასარგებლო იყო.', en:'The materials (slides) were helpful.', ko:'교육자료', ke:'Materials'},
-      {k:'q5', ka:'ქართული თარგმანი გასაგები იყო.', en:'The Georgian interpretation was clear.', ko:'통역', ke:'Interpretation'},
-      {k:'q6', ka:'ახლა ამ თემას უკეთ ვიგებ, ვიდრე სესიამდე.', en:'I understand this topic better than before the session.', ko:'이해도 향상', ke:'Understanding'},
-      {k:'q7', ka:'შემიძლია ნასწავლის გამოყენება ჩემს სამუშაოში.', en:'I can apply what I learned to my work.', ko:'업무 활용 가능성', ke:'Applicability'}
+      {k:'q1', ka:'ზოგადად, რამდენად კმაყოფილი ხართ მთელი სასწავლო პროგრამის ორგანიზებითა და ჩატარებით?', en:'Overall, how satisfied are you with the organization and delivery of the entire training program?', ko:'과정 전반 만족도', ke:'Overall'},
+      {k:'q2', ka:'რამდენად მიღწეულ იქნა ტრენინგის დასახული მიზნები და ოპტიმალური იყო თუ არა მთლიანი ხანგრძლივობა და დროის განაწილება?', en:'Were the stated training objectives achieved, and was the overall schedule and time allocation appropriate?', ko:'목표 달성 및 일정 적정성', ke:'Objectives & schedule'},
+      {k:'q3', ka:'რამდენად შეესაბამებოდა ტრენინგის თემები თქვენი უწყების მიმდინარე საჭიროებებსა და პრიორიტეტებს?', en:"Were the training topics relevant to your institution's current needs and digital government priorities?", ko:'정책·현안 수요 부합성', ke:'Relevance'},
+      {k:'q4', ka:'რამდენად სასარგებლოა კორეის ელექტრონული მმართველობის გამოცდილება და ცოდნა თქვენი სამსახურებრივი მოვალეობების შესასრულებლად?', en:'Are the Korean e-Government cases and knowledge practically useful for your actual duties?', ko:'현업 적용 유용성', ke:'Usefulness'},
+      {k:'q5', ka:'რამდენად კმაყოფილი ხართ კორეელი ექსპერტების პროფესიონალიზმით, მასალის გადმოცემითა და სასწავლო მასალებით?', en:"Were you satisfied with the Korean lecturers' expertise, delivery (including Q&A), and training materials?", ko:'강사진·교육 자료 품질', ke:'Lecturers & materials'},
+      {k:'q6', ka:'რამდენად მაღალი იყო თარგმანის სიზუსტე და გამართული იყო თუ არა საორგანიზაციო/ტექნიკური მხარდაჭერა?', en:'Were the interpretation accuracy, venue facilities, and administrative support smooth?', ko:'통역 및 현장 운영 지원', ke:'Interpretation & support'}
     ],
-    pace:true,
-    open:{best:{ka:'რა იყო ყველაზე სასარგებლო ამ სესიაში?', en:'What was most useful in this session?', ko:'가장 유익했던 점'},
-          improve:{ka:'რა გავაუმჯობესოთ, ან რა თემაზე გსურთ მეტის გაგება?', en:'What should we improve, or what would you like to learn more about?', ko:'개선점 · 더 듣고 싶은 주제'}},
-    overall:{n:'6', group:['მთელი სასწავლო პროგრამა (3 დღე)','Whole training program (3 days)'],
-      items:[
-        {k:'o1', ka:'საერთო ჯამში, კმაყოფილი ვარ მთელი პროგრამით.', en:'Overall, I am satisfied with the whole program.', ko:'프로그램 전체 만족도', ke:'Program overall'},
-        {k:'o2', ka:'ორგანიზება (ადგილი, განრიგი, კვება) კარგი იყო.', en:'The organisation (venue, schedule, meals) was good.', ko:'운영(장소·일정·식사)', ke:'Organisation'},
-        {k:'o3', ka:'ამ პროგრამას კოლეგებს ვურჩევდი.', en:'I would recommend this program to colleagues.', ko:'추천 의향', ke:'Recommend'}
-      ],
-      comment:{ka:'სხვა კომენტარები მთელი პროგრამის შესახებ', en:'Other comments on the whole program', ko:'프로그램 전체 의견'}}
+    pick:{ka:'მთელი ტრენინგის განმავლობაში რომელი სესია (თემა) იყო თქვენთვის ყველაზე სასარგებლო? (შეგიძლიათ აირჩიოთ რამდენიმე)',
+          en:'Which lecture session(s) did you find most useful? (Select all that apply)', ko:'가장 유익했던 세션', label:'Session',
+          opts:SESSIONS.map(s=>({v:s.n, ka:s.ka, en:'Session '+s.n+'. '+s.en, ko:'세션 '+s.n+'. '+s.ko, sub:s.dko+' · '+s.wko}))},
+    comment:{ka:'გაუწევდით თუ არა რეკომენდაციას ამ ტრენინგს კოლეგებთან? გთხოვთ გაგვიზიაროთ მთავარი შთაბეჭდილებები ან სასურველი თემები სამომავლო ტრენინგებისთვის.',
+             en:'Would you recommend this training to colleagues? Please share any key takeaways or topics for future training.', ko:'종합 의견 및 향후 희망 주제'},
+    thanks:['მადლობა მონაწილეობისთვის! ვორქშოპზე შეხვედრამდე (27.11).','Thank you for taking part! See you at the workshop (27 Nov).']
   },
   ws:{
-    top:'my.gov.ge · AI & Big Data Idea Workshop · 27.11.2026',
-    pill:'ვორქშოპის შეფასება · Workshop feedback', ka:'ვორქშოპის შეფასება', en:'Workshop Feedback',
-    group:['ვორქშოპის შესახებ','About the workshop'],
+    code:'WS', top:'my.gov.ge · AI & Big Data Idea Workshop · 27.11.2026',
+    pill:'ვორქშოპის შეფასება · Workshop feedback',
+    ka:'ვორქშოპის კმაყოფილების კვლევა', en:'Workshop Satisfaction Survey',
+    tko:'워크숍 만족도', sub:'11/27(금) · AI·빅데이터 서비스 발굴 워크숍 · 오후 공감투표 집계 중(시상 전) 1회',
+    lead:['მადლობას გიხდით ვორქშოპში მონაწილეობისთვის. გთხოვთ, დაუთმოთ 2-3 წუთი ამ მოკლე კითხვარის შევსებას.',
+          'Thank you for participating in the workshop. Please take 2–3 minutes to complete this brief survey.'],
+    group:['ვორქშოპი (27.11)','The workshop (27 Nov)'],
     items:[
-      {k:'q1', ka:'საერთო ჯამში, კმაყოფილი ვარ ვორქშოპით.', en:'Overall, I am satisfied with the workshop.', ko:'전반적 만족도', ke:'Overall'},
-      {k:'q2', ka:'შემთხვევებისა და კვლევის შედეგების პრეზენტაცია დამეხმარა პრობლემების გააზრებაში.', en:'The case and survey presentations helped me understand the problems.', ko:'사례·설문 발표', ke:'Cases & survey'},
-      {k:'q3', ka:'გუნდურ განხილვაში ყველას ჰქონდა აზრის გამოთქმის შესაძლებლობა.', en:'In the team discussion everyone had a chance to share ideas.', ko:'팀 토의 참여', ke:'Team discussion'},
-      {k:'q4', ka:'ექსპერტების რჩევები სასარგებლო იყო იდეების განსავითარებლად.', en:'Expert advice helped us develop our ideas.', ko:'전문가 자문', ke:'Expert advice'},
-      {k:'q5', ka:'თითოეული ეტაპისთვის დრო საკმარისი იყო.', en:'There was enough time for each activity.', ko:'시간 배분', ke:'Time'},
-      {k:'q6', ka:'თარგმანი და მოდერაცია გასაგები იყო.', en:'Interpretation and facilitation were clear.', ko:'통역·진행', ke:'Interpretation'},
-      {k:'q7', ka:'მოველი, რომ ჩვენი იდეები გამოყენებული იქნება my.gov.ge-ის გასაუმჯობესებლად.', en:'I expect our ideas to be used to improve my.gov.ge.', ko:'아이디어 활용 기대', ke:'Use of ideas'}
+      {k:'q1', ka:'ზოგადად, რამდენად კმაყოფილი ხართ ვორქშოპის ორგანიზებითა და ჩატარებით?', en:'Overall, how satisfied are you with the organization and delivery of the workshop?', ko:'워크숍 전반 만족도', ke:'Overall'},
+      {k:'q2', ka:'რამდენად მიღწეულ იქნა ვორქშოპის მიზნები და საკმარისი იყო თუ არა დრო თითოეული აქტივობისთვის?', en:'Were the workshop objectives achieved, and was the time for each activity appropriate?', ko:'목표 달성 및 시간 배분', ke:'Objectives & time'},
+      {k:'q3', ka:'რამდენად ჰქონდა გუნდურ განხილვაში ყველას აზრის გამოთქმის შესაძლებლობა?', en:'Did the team discussion give everyone a chance to share ideas?', ko:'팀 토의 참여', ke:'Team discussion'},
+      {k:'q4', ka:'რამდენად დაგეხმარათ ექსპერტების რჩევები იდეების განვითარებაში?', en:'Did the expert advice help your team develop its ideas?', ko:'전문가 자문 유용성', ke:'Expert advice'},
+      {k:'q5', ka:'რამდენად სასარგებლო იქნება შემუშავებული იდეები my.gov.ge-ის გასაუმჯობესებლად და თქვენი სამუშაოსთვის?', en:'Will the ideas developed be useful for improving my.gov.ge and for your work?', ko:'아이디어 활용 기대', ke:'Use of ideas'},
+      {k:'q6', ka:'რამდენად გამართული იყო თარგმანი, მოდერაცია და საორგანიზაციო მხარდაჭერა?', en:'Were the interpretation, facilitation, and administrative support smooth?', ko:'통역·진행 및 운영 지원', ke:'Interpretation & support'}
     ],
-    pace:false,
-    open:{best:{ka:'რა იყო ყველაზე სასარგებლო ვორქშოპში?', en:'What was most useful in the workshop?', ko:'가장 유익했던 점'},
-          improve:{ka:'რა გავაუმჯობესოთ შემდეგ ჯერზე?', en:'What should we improve next time?', ko:'개선점'}}
+    pick:{ka:'ვორქშოპის რომელი აქტივობა იყო თქვენთვის ყველაზე სასარგებლო? (შეგიძლიათ აირჩიოთ რამდენიმე)',
+          en:'Which workshop activities did you find most useful? (Select all that apply)', ko:'가장 유익했던 활동', label:'Activity',
+          opts:[
+            {v:'1', ka:'შემთხვევებისა და კვლევის შედეგების გაზიარება', en:'Sharing cases and survey results', ko:'사례·설문 결과 공유', sub:'오전'},
+            {v:'2', ka:'ინდივიდუალური იდეის ბარათის შევსება', en:'Writing individual idea cards', ko:'개인 아이디어 카드 작성', sub:'오전'},
+            {v:'3', ka:'გუნდური განხილვა', en:'Team discussion', ko:'팀 토의', sub:'오전'},
+            {v:'4', ka:'გუნდების პრეზენტაციები', en:'Team presentations', ko:'팀 발표', sub:'오전'},
+            {v:'5', ka:'ექსპერტების კონსულტაცია იდეებზე', en:'Expert advice on team ideas', ko:'아이디어 자문(팀 카드 보완)', sub:'오후'},
+            {v:'6', ka:'იდეების გამოფენა და ხმის მიცემა', en:'Idea gallery and voting', ko:'전시·공감투표', sub:'오후'}
+          ]},
+    comment:{ka:'გაუწევდით თუ არა რეკომენდაციას ამ ვორქშოპს კოლეგებთან? გთხოვთ გაგვიზიაროთ მთავარი შთაბეჭდილებები ან წინადადებები სამომავლო ვორქშოპებისთვის.',
+             en:'Would you recommend this workshop to colleagues? Please share any key takeaways or suggestions for future workshops.', ko:'종합 의견 및 개선 제안'},
+    thanks:['მადლობა მონაწილეობისთვის!','Thank you for taking part!']
   }
 };
-const PACE = [
-  {v:'slow', ka:'ძალიან ნელი', en:'Too slow', ko:'느림'},
-  {v:'ok', ka:'შესაფერისი', en:'Just right', ko:'적절'},
-  {v:'fast', ka:'ძალიან სწრაფი', en:'Too fast', ko:'빠름'}
-];
-const sesOf = n => SESSIONS.find(s=>s.n===String(n));
-/* 트빌리시(UTC+4) 시각으로 지금 응답할 세션: 시작 30분 전 ~ 끝나고 3시간 */
-function autoSession(){
-  const now = Date.now(); let pick = null;
-  SESSIONS.forEach(s=>{
-    const [y,m,d] = s.date.split('-').map(Number);
-    const t = (hm, add) => { const [h,mi] = hm.split(':').map(Number); return Date.UTC(y, m-1, d, h-4, mi) + add*60000 };
-    if(now >= t(s.start,-30) && now <= t(s.end,180)) pick = s.n;
-  });
-  return pick;
-}
+const RATE = ['q1','q2','q3','q4','q5','q6'];
 function deviceId(){
   let d = store.get('sv_device');
   if(!d){ d = 'D'+Math.random().toString(36).slice(2,10); store.set('sv_device', d) }
@@ -1320,16 +1346,31 @@ function deviceId(){
 }
 
 /* ---------------- participant ---------------- */
-const SVP = {survey:'edu', session:null};
-function lkHTML(it){
-  return '<div class="lk" data-k="'+it.k+'"><div class="st">'+esc(it.ka)+'<small>'+esc(it.en)+'</small></div>'
+const SVP = {survey:'edu'};
+function lkHTML(it, n){
+  return '<div class="lk" data-k="'+it.k+'"><div class="st"><span class="qn">'+n+'</span>'+esc(it.ka)+'<small>'+esc(it.en)+'</small></div>'
     + '<div class="scale">'+[1,2,3,4,5].map(v=>'<label title="'+esc(LIK.en[v-1])+'"><input type="radio" name="'+it.k+'" value="'+v+'"><span>'+v+'</span></label>').join('')+'</div>'
     + '<div class="ends"><span>1 · '+esc(LIK.ka[0])+'<br>'+LIK.en[0]+'</span><span>5 · '+esc(LIK.ka[4])+'<br>'+LIK.en[4]+'</span></div></div>';
 }
-function openHTML(k, o, rows){
-  return '<div class="f" data-k="'+k+'"><div class="lab"><span class="num">✎</span><div class="t">'+esc(o.ka)+'<small>'+esc(o.en)+'</small></div></div>'
-    + '<div class="in"><textarea name="'+k+'" rows="'+(rows||3)+'" maxlength="2000" style="min-height:'+(32*(rows||3)+4)+'px"></textarea></div></div>';
+function textHTML(k, o, n){
+  return '<div class="f" data-k="'+k+'"><div class="lab"><span class="num">'+n+'</span><div class="t">'+esc(o.ka)+(o.req?'<span class="req">*</span>':'')
+    + '<small>'+esc(o.en)+(o.req?'':' · არასავალდებულო (optional)')+'</small></div></div>'
+    + '<div class="in"><input type="text" name="'+k+'" maxlength="120"'+(k==='org'?' autocomplete="organization"':'')+'></div></div>';
 }
+function openHTML(k, o, n, rows){
+  return '<div class="f" data-k="'+k+'"><div class="lab"><span class="num">'+n+'</span><div class="t">'+esc(o.ka)+'<small>'+esc(o.en)+' · არასავალდებულო (optional)</small></div></div>'
+    + '<div class="in"><textarea name="'+k+'" rows="'+(rows||4)+'" maxlength="2000" style="min-height:'+(32*(rows||4)+4)+'px"></textarea></div></div>';
+}
+function genderHTML(n){
+  const g = BASIC.gender;
+  return '<div class="lk" data-k="gender"><div class="st"><span class="qn">'+n+'</span>'+esc(g.ka)+'<span class="req">*</span><small>'+esc(g.en)+'</small></div><div class="pace two">'
+    + g.opts.map(o=>'<label><input type="radio" name="gender" value="'+o.v+'"><span>'+esc(o.ka)+'<small>'+o.en+'</small></span></label>').join('')+'</div></div>';
+}
+function pickHTML(p, n){
+  return '<div class="lk" data-k="pick"><div class="st"><span class="qn">'+n+'</span>'+esc(p.ka)+'<span class="req">*</span><small>'+esc(p.en)+'</small></div><div class="picks">'
+    + p.opts.map(o=>'<label><input type="checkbox" name="pick" value="'+o.v+'"><span><i>'+o.v+'</i><b>'+esc(o.ka)+'<small>'+esc(o.en)+'</small></b></span></label>').join('')+'</div></div>';
+}
+const draftKey = ()=> 'sv2_draft_'+SVP.survey, doneKey = ()=> 'sv2_done_'+SVP.survey;
 function renderSurvey(){
   const def = SV[SVP.survey], ws = SVP.survey==='ws';
   document.body.classList.add('sv'); document.body.classList.toggle('ws', ws);
@@ -1337,170 +1378,132 @@ function renderSurvey(){
   $('#svTop').textContent = def.top;
   $('#svPill').innerHTML = '<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></i>'+esc(def.pill);
   $('#svTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
-  $('#svLead').innerHTML = 'შეაფასეთ 1-დან 5-მდე (1 = სრულიად არ ვეთანხმები, 5 = სრულიად ვეთანხმები). დაახლოებით 2 წუთი.<br><span style="opacity:.8">Rate from 1 to 5 (1 = strongly disagree, 5 = strongly agree). About 2 minutes.</span>';
+  $('#svLead').innerHTML = esc(def.lead[0])+' 1 = '+esc(LIK.ka[0])+', 5 = '+esc(LIK.ka[4])+'.<br><span style="opacity:.8">'+esc(def.lead[1])+' 1 = strongly disagree, 5 = strongly agree.</span>';
   $('#svKicker').textContent = ws ? 'Feedback · Workshop' : 'Feedback · Training';
   $('#svCardTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
-
-  // 세션 고르기 (교육만)
-  const card = document.querySelector('#survey .card');
-  if(!ws && !SVP.session){
-    let html = '<div class="sv-sessions">', lastDay = '';
-    SESSIONS.forEach(s=>{
-      if(s.day!==lastDay){ html += '<div class="day">'+esc(s.day)+'</div>'; lastDay = s.day }
-      const done = store.get('sv_done_edu'+s.n);
-      html += '<button type="button" class="sv-ses" data-s="'+s.n+'"><span class="no">'+s.n+'</span><span><b>'+esc(s.ka)+'</b><small>'+esc(s.en)+' · '+s.start+'–'+s.end+'</small></span>'+(done?'<span class="done">✓</span>':'')+'</button>';
-    });
-    $('#svPicker').innerHTML = '<p style="margin:0 0 8px; color:#ADCAD5; font-size:14px">აირჩიეთ სესია · Choose the session</p>'+html+'</div>';
-    card.classList.add('hidden');
-    return;
-  }
-  card.classList.remove('hidden');
+  $('#svPicker').innerHTML = ''; $('#svHead').classList.add('hidden');
   $('#svForm').classList.remove('hidden'); $('#svDone').classList.add('hidden');
-  const s = ws ? null : sesOf(SVP.session);
-  $('#svPicker').innerHTML = ws ? '' : '<button type="button" class="sv-change" id="svChange">↺ სესიის შეცვლა · Change session</button>';
-  $('#svHead').classList.toggle('hidden', ws);
-  if(s) $('#svHead').innerHTML = '<span class="no">'+s.n+'</span><span><b>'+esc(s.ka)+'</b><small>'+esc(s.en)+'<br>'+esc(s.day)+' · '+s.start+'–'+s.end+' · '+esc(s.who)+'</small></span>';
-
-  const doneKey = 'sv_done_'+SVP.survey+(SVP.session||'W');
-  $('#svAgain').classList.toggle('hidden', !store.get(doneKey));
+  $('#svAgain').classList.toggle('hidden', !store.get(doneKey()));
   $('#svAgain').innerHTML = 'ⓘ <span>ამ მოწყობილობიდან უკვე გაგზავნეთ შეფასება. ხელახლა გაგზავნა მხოლოდ საჭიროების შემთხვევაში.<br>You already sent feedback from this device. Please send again only if needed.</span>';
 
-  let h = '<div class="sv-group">'+esc(def.group[0])+' · '+esc(def.group[1])+'</div>' + def.items.map(lkHTML).join('');
-  if(def.pace){
-    h += '<div class="lk" data-k="pace"><div class="st">სესიის ტემპი<small>Pace of the session</small></div><div class="pace">'
-      + PACE.map(p=>'<label><input type="radio" name="pace" value="'+p.v+'"><span>'+esc(p.ka)+'<small>'+p.en+'</small></span></label>').join('')+'</div></div>';
-  }
-  h += openHTML('best', def.open.best) + openHTML('improve', def.open.improve);
-  if(def.overall && SVP.session===def.overall.n){
-    h += '<div class="sv-group">'+esc(def.overall.group[0])+' · '+esc(def.overall.group[1])+'</div>' + def.overall.items.map(lkHTML).join('') + openHTML('o_comment', def.overall.comment);
-  }
-  h += '<div class="f" data-k="agency"><div class="lab"><span class="num">i</span><div class="t">ორგანიზაცია (არასავალდებულო)<small>Organisation (optional)</small></div></div><div class="in"><input type="text" name="agency" maxlength="120" autocomplete="organization"></div></div>';
+  let n = 0, h = '<div class="sv-group">ძირითადი ინფორმაცია · Basic information</div>'
+    + textHTML('org', BASIC.org, ++n) + textHTML('position', BASIC.position, ++n) + genderHTML(++n)
+    + '<div class="sv-group">'+esc(def.group[0])+' · '+esc(def.group[1])+'</div>'
+    + def.items.map(it=>lkHTML(it, ++n)).join('')
+    + pickHTML(def.pick, ++n) + openHTML('comment', def.comment, ++n);
   $('#svFields').innerHTML = h;
-  const draft = store.get('sv_draft_'+SVP.survey+(SVP.session||'W')) || {};
+  const draft = store.get(draftKey()) || {};
   Object.keys(draft).forEach(k=>{
+    if(k==='pick'){ const on = String(draft.pick||'').split(','); document.querySelectorAll('#svForm input[name=pick]').forEach(c=>{ c.checked = on.includes(c.value) }); return }
     const el = $('#svForm').elements[k]; if(!el) return;
     if(el instanceof RadioNodeList) el.forEach(r=>{ r.checked = r.value===draft[k] }); else el.value = draft[k];
   });
   $('#svErr').classList.add('hidden');
 }
-function svRead(){ const o = {}; new FormData($('#svForm')).forEach((v,k)=>{ o[k] = String(v).trim() }); return o }
+function svRead(){
+  const fd = new FormData($('#svForm')), o = {};
+  fd.forEach((v,k)=>{ if(k!=='pick') o[k] = String(v).trim() });
+  o.pick = fd.getAll('pick').join(',');
+  return o;
+}
 function bindSurvey(){
-  $('#svPicker').addEventListener('click', e=>{
-    const b = e.target.closest('[data-s]');
-    if(b){ SVP.session = b.dataset.s; renderSurvey(); window.scrollTo({top:0, behavior:'smooth'}); return }
-    if(e.target.closest('#svChange')){ SVP.session = null; renderSurvey() }
-  });
-  const save = ()=> store.set('sv_draft_'+SVP.survey+(SVP.session||'W'), svRead());
+  const save = ()=> store.set(draftKey(), svRead());
   $('#svForm').addEventListener('input', save); $('#svForm').addEventListener('change', save);
   $('#svForm').addEventListener('submit', async e=>{
     e.preventDefault();
-    const o = svRead(); let first = null;
-    document.querySelectorAll('#svFields .lk').forEach(el=>el.classList.remove('err'));
-    SV[SVP.survey].items.forEach(it=>{ if(!o[it.k]){ const el = document.querySelector('.lk[data-k="'+it.k+'"]'); el.classList.add('err'); first = first || el } });
+    const def = SV[SVP.survey], o = svRead(); let first = null;
+    const mark = el => { el.classList.add('err'); first = first || el };
+    document.querySelectorAll('#svFields .lk, #svFields .f').forEach(el=>el.classList.remove('err'));
+    if(!o.org) mark(document.querySelector('.f[data-k="org"]'));
+    if(!o.gender) mark(document.querySelector('.lk[data-k="gender"]'));
+    def.items.forEach(it=>{ if(!o[it.k]) mark(document.querySelector('.lk[data-k="'+it.k+'"]')) });
+    if(!o.pick) mark(document.querySelector('.lk[data-k="pick"]'));
     if(first){
       first.scrollIntoView({behavior:'smooth', block:'center'});
-      $('#svErr').textContent = 'გთხოვთ, უპასუხოთ ყველა შეფასების კითხვას (1–5). · Please answer all rating questions (1–5).';
+      $('#svErr').textContent = 'გთხოვთ, შეავსოთ * ნიშნით აღნიშნული ველები და ყველა შეფასება (1–5). · Please fill in the fields marked * and all ratings (1–5).';
       $('#svErr').classList.remove('hidden'); return;
     }
     const btn = $('#svSubmit'); btn.disabled = true;
     try{
-      await call('submitSurvey', Object.assign(o, {survey:SVP.survey, session:SVP.session||'W', device:deviceId()}));
-      const key = SVP.survey+(SVP.session||'W');
-      store.del('sv_draft_'+key); store.set('sv_done_'+key, Date.now());
-      const last = SVP.survey==='ws' || SVP.session==='6';
-      $('#svDoneText').innerHTML = last ? 'მადლობა მონაწილეობისთვის!<br>Thank you for taking part!' : 'შემდეგ სესიაზე შეხვედრამდე!<br>See you at the next session!';
-      $('#svAgainBtn').classList.toggle('hidden', SVP.survey==='ws');
+      await call('submitSurvey', Object.assign(o, {survey:SVP.survey, session:def.code, device:deviceId()}));
+      store.del(draftKey()); store.set(doneKey(), Date.now());
+      $('#svDoneText').innerHTML = esc(def.thanks[0])+'<br>'+esc(def.thanks[1]);
       $('#svForm').classList.add('hidden'); $('#svDone').classList.remove('hidden');
-      $('#svPicker').innerHTML = '';
       document.querySelector('#survey .card').scrollIntoView({behavior:'smooth', block:'start'});
     }catch(err){
       $('#svErr').textContent = 'ვერ გაიგზავნა. სცადეთ თავიდან. · Could not send — please try again. ('+(err && err.message || err)+')';
       $('#svErr').classList.remove('hidden');
     }finally{ btn.disabled = false }
   });
-  $('#svAgainBtn').addEventListener('click', ()=>{ SVP.session = null; renderSurvey(); window.scrollTo({top:0, behavior:'smooth'}) });
 }
 
 /* ---------------- admin: 만족도 조사 결과 ---------------- */
-const S = {data:[], tab:'all', showHidden:false};
+const S = {data:[], tab:'edu', showHidden:false};
 const DV = ['#B8432F','#E89A85','#E3DFD5','#86B6EA','#2A6FC2'];       // 1~5 (diverging: red ↔ gray ↔ blue)
 const DV_INK = ['#fff','#3A1A12','#3A3A36','#0E2440','#fff'];
-const HEAT = ['#F1F7F6','#CBE9E4','#94D3C9','#4FB3A6','#1E7F8C'];      // sequential, one hue
-function svRows(survey, session){
-  return S.data.filter(r=>(S.showHidden || !r.hidden) && r.survey===survey && (session==null || String(r.session)===String(session)));
-}
+/* 이번 판 응답만 (예전 세션별 응답·워크숍 구판 응답 제외) */
+const svAll = sv => S.data.filter(r=>r.survey===sv && String(r.session)===SV[sv].code);
+const svRows = sv => svAll(sv).filter(r=>S.showHidden || !r.hidden);
 const liveR = rows => rows.filter(r=>!r.hidden);
 function avgOf(rows, k){ const v = rows.map(r=>+r[k]).filter(x=>x>=1&&x<=5); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null }
 function distOf(rows, k){ const d = [0,0,0,0,0]; rows.forEach(r=>{ const x = +r[k]; if(x>=1&&x<=5) d[x-1]++ }); return d }
+function meanOf(r){ const v = RATE.map(k=>+r[k]).filter(x=>x>=1&&x<=5); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null }
+function allMean(rows){ const v = rows.map(meanOf).filter(x=>x!=null); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null }
+const pickList = r => String(r.pick||'').split(',').filter(Boolean);
+const pickText = (sv, r) => pickList(r).map(v=>SV[sv].pick.label+' '+v).join(', ');
 const f2 = v => v==null ? '–' : v.toFixed(2);
+const p1 = v => v==null ? '–' : (Math.round(v*10)/10)+'%';
 function legendHTML(){
   return '<div class="legend">'+LIK.ko.map((t,i)=>'<span><i style="background:'+DV[i]+'"></i>'+(i+1)+' '+t+'</span>').join('')+'</div>';
 }
-function dvRowHTML(it, rows){
-  const d = distOf(rows, it.k), n = d.reduce((a,b)=>a+b,0), a = avgOf(rows, it.k);
+function dvRowHTML(it, rows, n){
+  const d = distOf(rows, it.k), cnt = d.reduce((a,b)=>a+b,0), a = avgOf(rows, it.k);
   let bar = '';
-  if(!n) bar = '<div class="empty"></div>';
-  else d.forEach((c,i)=>{ if(!c) return; const p = c/n*100;
+  if(!cnt) bar = '<div class="empty"></div>';
+  else d.forEach((c,i)=>{ if(!c) return; const p = c/cnt*100;
     bar += '<div class="dvs" style="flex:'+c+';background:'+DV[i]+';color:'+DV_INK[i]+'" data-tip="'+esc(it.ko)+' · '+(i+1)+' '+LIK.ko[i]+': '+c+'명 ('+Math.round(p)+'%)">'+(p>=9?Math.round(p)+'%':'')+'</div>' });
-  return '<div class="dvrow"><div class="lb">'+esc(it.ko)+'<small>'+esc(it.en)+'</small></div><div class="dvbar">'+bar+'</div><div class="avg">'+f2(a)+'<small>n='+n+'</small></div></div>';
+  return '<div class="dvrow"><div class="lb">Q'+n+' '+esc(it.ko)+'<small>'+esc(it.ke)+'</small></div><div class="dvbar">'+bar+'</div><div class="avg">'+f2(a)+'<small>n='+cnt+'</small></div></div>';
 }
 function cmtHTML(rows, k){
   const list = rows.filter(r=>r[k]);
   if(!list.length) return '<div class="none-yet">아직 의견 없음</div>';
-  return list.map(r=>'<div class="cmt'+(r.hidden?' off':'')+'">'+esc(r[k])+'<div class="meta"><span>'+esc(r.agency||'')+(r.agency?' · ':'')+(r.submitted_at? new Date(r.submitted_at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</span><button data-rh="'+esc(r.id)+'" data-h="'+(r.hidden?0:1)+'">'+(r.hidden?'되살리기':'응답 숨기기')+'</button></div></div>').join('');
+  return list.map(r=>'<div class="cmt'+(r.hidden?' off':'')+'">'+esc(r[k])+'<div class="meta"><span>'+esc([r.org, r.position].filter(Boolean).join(' · '))+(r.org||r.position?' · ':'')+(r.submitted_at? new Date(r.submitted_at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</span><button data-rh="'+esc(r.id)+'" data-h="'+(r.hidden?0:1)+'">'+(r.hidden?'되살리기':'응답 숨기기')+'</button></div></div>').join('');
 }
-function heatColor(v){ const t = Math.max(0, Math.min(1, (v-1)/4)); return HEAT[Math.min(4, Math.round(t*4))] }
-function reportHTML(survey, session){
-  const def = SV[survey], rows = svRows(survey, session), lv = liveR(rows), ws = survey==='ws';
-  const s = ws ? null : sesOf(session);
-  const q1 = avgOf(lv,'q1'), sat = lv.length ? lv.filter(r=>+r.q1>=4).length/lv.length*100 : null;
-  let h = '<div class="rep"><h3>'+(ws ? '워크숍 만족도 · 11/27(금)' : 'S'+s.n+' · '+esc(s.ko))+'</h3>'
-    + '<div class="sub">'+(ws ? 'AI·빅데이터 서비스 발굴 워크숍 · 09:00–12:00, 14:00–17:00' : esc(s.dko)+' '+s.half+' '+s.start+'–'+s.end+' · '+esc(s.wko)+' · '+esc(s.en))+'</div>'
+/* KOICA 성인지 통계 + 종합 만족도 (엑셀 3_응답집계 시트 1번 표와 같은 계산) */
+function genderTable(lv){
+  const g = [['남성 (Male)', lv.filter(r=>r.gender==='Male')], ['여성 (Female)', lv.filter(r=>r.gender==='Female')], ['전체 (Total)', lv]];
+  return g.map(([name, rows])=>{ const q1 = avgOf(rows,'q1'), m = allMean(rows);
+    return {name, n:rows.length, pct: lv.length ? rows.length/lv.length*100 : null, q1, m, k: m==null ? null : m/5*100} });
+}
+function reportHTML(sv){
+  const def = SV[sv], rows = svRows(sv), lv = liveR(rows);
+  const q1 = avgOf(lv,'q1'), sat = lv.length ? lv.filter(r=>+r.q1>=4).length/lv.length*100 : null, m = allMean(lv);
+  let h = '<div class="rep"><h3>'+esc(def.tko)+'</h3><div class="sub">'+esc(def.sub)+' · '+esc(def.en)+'</div>'
     + '<div class="tiles"><div class="tile"><b>'+lv.length+'</b><span>응답 수</span></div>'
-    + '<div class="tile"><b>'+f2(q1)+'<small> / 5</small></b><span>전반적 만족도 평균</span></div>'
-    + '<div class="tile"><b>'+(sat==null?'–':Math.round(sat)+'<small>%</small>')+'</b><span>만족 비율 (4·5점)</span></div>'
-    + '<div class="tile"><b>'+f2(avgOf(lv,'q7'))+'<small> / 5</small></b><span>'+esc(def.items[6].ko)+'</span></div></div>'
-    + legendHTML() + def.items.map(it=>dvRowHTML(it, lv)).join('');
-  if(def.pace){
-    const pc = PACE.map(p=>[p, lv.filter(r=>r.pace===p.v).length]);
-    h += '<div style="margin-top:14px; font-size:13px; font-weight:700">세션 속도</div><div class="paces">'+pc.map(x=>'<span>'+x[0].ko+'<b>'+x[1]+'</b></span>').join('')+'</div>';
-  }
-  h += '</div>';
-  h += '<div class="rep"><h3>서술 의견</h3><div class="sub">숨긴 응답은 통계에서 빠집니다(시험 응답 정리용).</div><div class="cmts"><div><h4>'+esc(def.open.best.ko)+'</h4>'+cmtHTML(rows,'best')+'</div><div><h4>'+esc(def.open.improve.ko)+'</h4>'+cmtHTML(rows,'improve')+'</div></div></div>';
-  if(def.overall && session===def.overall.n){
-    h += '<div class="rep"><h3>프로그램 전체 (3일) — 마지막 세션에서 함께 받음</h3><div class="sub">교육 전체에 대한 평가</div>'+legendHTML()+def.overall.items.map(it=>dvRowHTML(it, lv)).join('')
-      + '<h4 style="margin:16px 0 8px; font-size:14px">'+esc(def.overall.comment.ko)+'</h4>'+cmtHTML(rows,'o_comment')+'</div>';
-  }
-  return h;
-}
-function overviewHTML(){
-  const def = SV.edu, all = liveR(svRows('edu', null));
-  let h = '<div class="rep"><h3>역량강화 교육 · 세션별 비교</h3><div class="sub">문항별 평균(1–5). 색이 진할수록 높음 · 빈칸은 응답 없음</div>'
-    + '<div class="tiles"><div class="tile"><b>'+all.length+'</b><span>교육 응답 합계</span></div>'
-    + '<div class="tile"><b>'+f2(avgOf(all,'q1'))+'<small> / 5</small></b><span>전반적 만족도 (전체)</span></div>'
-    + '<div class="tile"><b>'+SESSIONS.filter(s=>all.some(r=>String(r.session)===s.n)).length+'<small> / 6</small></b><span>응답 받은 세션</span></div></div>'
-    + '<div style="overflow-x:auto"><table class="heat"><thead><tr><th>세션</th><th>n</th>'+def.items.map(it=>'<th>'+esc(it.ko)+'</th>').join('')+'<th>문항 평균</th></tr></thead><tbody>';
-  SESSIONS.forEach(s=>{
-    const rows = all.filter(r=>String(r.session)===s.n);
-    const avgs = def.items.map(it=>avgOf(rows, it.k));
-    const ok = avgs.filter(v=>v!=null), mean = ok.length ? ok.reduce((a,b)=>a+b,0)/ok.length : null;
-    const cell = v => v==null ? '<td class="na">–</td>' : '<td style="background:'+heatColor(v)+';color:'+((v-1)/4>0.7?'#fff':'#18222B')+'" data-tip="S'+s.n+' · '+v.toFixed(2)+'">'+v.toFixed(2)+'</td>';
-    h += '<tr><td class="nm">S'+s.n+' '+esc(s.ko)+'<small>'+esc(s.dko)+' '+s.half+' · '+esc(s.wko)+'</small></td><td class="n">'+rows.length+'</td>'+avgs.map(cell).join('')+cell(mean)+'</tr>';
-  });
-  h += '</tbody></table></div></div>';
-  const last = all.filter(r=>String(r.session)===def.overall.n);
-  if(last.length) h += '<div class="rep"><h3>프로그램 전체 (3일)</h3><div class="sub">S6 응답자에게 함께 받은 문항</div>'+legendHTML()+def.overall.items.map(it=>dvRowHTML(it,last)).join('')+'</div>';
+    + '<div class="tile"><b>'+f2(q1)+'<small> / 5</small></b><span>Q1 전반 만족도 평균</span></div>'
+    + '<div class="tile"><b>'+(sat==null?'–':Math.round(sat)+'<small>%</small>')+'</b><span>만족 비율 (Q1 4·5점)</span></div>'
+    + '<div class="tile"><b>'+(m==null?'–':(Math.round(m/5*1000)/10)+'<small> / 100</small>')+'</b><span>KOICA 환산 (Q1~Q6 평균)</span></div></div>'
+    + '<h4 style="margin:4px 0 8px; font-size:14px">성별 통계 (KOICA 성인지)</h4><div style="overflow-x:auto"><table class="gtab"><thead><tr><th>구분</th><th>응답 인원</th><th>비율</th><th>Q1 전반(5점)</th><th>Q1~Q6 평균(5점)</th><th>KOICA 환산(100점)</th></tr></thead><tbody>'
+    + genderTable(lv).map(g=>'<tr><td>'+g.name+'</td><td>'+g.n+'</td><td>'+p1(g.pct)+'</td><td>'+f2(g.q1)+'</td><td>'+f2(g.m)+'</td><td>'+(g.k==null?'–':g.k.toFixed(1))+'</td></tr>').join('')
+    + '</tbody></table></div>'
+    + '<h4 style="margin:18px 0 8px; font-size:14px">문항별 만족도 (Q1~Q6)</h4>' + legendHTML() + def.items.map((it,i)=>dvRowHTML(it, lv, i+1)).join('') + '</div>';
+  // Q7 복수 선택
+  const max = Math.max(1, ...def.pick.opts.map(o=>lv.filter(r=>pickList(r).includes(o.v)).length));
+  h += '<div class="rep"><h3>Q7 '+esc(def.pick.ko)+' (복수 선택)</h3><div class="sub">선택 수 · 응답자 대비 비율</div>'
+    + def.pick.opts.map(o=>{ const c = lv.filter(r=>pickList(r).includes(o.v)).length, p = lv.length ? c/lv.length*100 : 0;
+        return '<div class="dvrow"><div class="lb">'+esc(o.ko)+'<small>'+esc(o.sub||'')+'</small></div><div class="dvbar">'
+          + (c ? '<div class="dvs" style="flex:0 0 '+(c/max*100)+'%;background:#2A6FC2;color:#fff;border-radius:4px" data-tip="'+esc(o.ko)+': '+c+'명 ('+Math.round(p)+'%)">'+(c/max>=.12?c:'')+'</div>' : '<div class="empty"></div>')
+          + '</div><div class="avg">'+c+'<small>'+Math.round(p)+'%</small></div></div>' }).join('') + '</div>';
+  h += '<div class="rep"><h3>Q8 '+esc(def.comment.ko)+'</h3><div class="sub">숨긴 응답은 통계에서 빠집니다(시험 응답 정리용).</div>'+cmtHTML(rows,'comment')+'</div>';
   return h;
 }
 function renderSurveyAdmin(){
-  const cnt = (sv, s) => liveR(S.data.filter(r=>r.survey===sv && (s==null || String(r.session)===String(s)))).length;
-  $('#nSurvey').textContent = liveR(S.data).length;
+  const cnt = sv => liveR(svAll(sv)).length;
+  $('#nSurvey').textContent = cnt('edu') + cnt('ws');
   const tab = (v, b, sub, cls) => '<button data-t="'+v+'" class="'+(cls||'')+(S.tab===v?' on':'')+'"><b>'+b+'</b><small>'+sub+'</small></button>';
-  $('#svTabs').innerHTML = tab('all','교육 전체','세션 비교 · '+cnt('edu')+'명')
-    + SESSIONS.map(s=>tab(s.n,'S'+s.n+' · '+s.dko.slice(0,5)+' '+s.half, esc(s.wko)+' · '+cnt('edu',s.n)+'명')).join('')
-    + '<span class="sep"></span>' + tab('W','워크숍','11/27(금) · '+cnt('ws')+'명','ws');
-  $('#svBody').innerHTML = S.tab==='all' ? overviewHTML() : S.tab==='W' ? reportHTML('ws', null) : reportHTML('edu', S.tab);
-  $('#svQr').textContent = S.tab==='W' ? '워크숍 QR 포스터' : S.tab==='all' ? '교육 QR 포스터 (세션 자동)' : 'S'+S.tab+' QR 포스터';
+  $('#svTabs').innerHTML = tab('edu','교육 종합','11/24–26 · '+cnt('edu')+'명') + '<span class="sep"></span>' + tab('ws','워크숍','11/27(금) · '+cnt('ws')+'명','ws');
+  $('#svBody').innerHTML = reportHTML(S.tab==='ws' ? 'ws' : 'edu');
+  $('#svQr').textContent = S.tab==='ws' ? '워크숍 QR 포스터' : '교육 QR 포스터';
 }
 async function loadSurvey(){
   try{
@@ -1512,16 +1515,14 @@ async function loadSurvey(){
 async function printSurveyPoster(){
   const base = STATIC ? location.origin + location.pathname : String(A.pub || await call('getAppUrl', A.key) || '').replace(/\?.*$/, '');
   if(!STATIC && !/\/exec$/.test(base)){ alertBox('QR 주소가 공개 주소(…/exec)가 아닙니다: '+base+' — 위쪽 「참가자 QR 주소」 칸에 배포 관리의 웹 앱 URL(…/exec)을 넣고 저장하세요.'); return }
-  const ws = S.tab==='W', s = (!ws && S.tab!=='all') ? sesOf(S.tab) : null;
-  const url = base + (ws ? '?survey=ws' : '?survey=edu' + (s ? '&s='+s.n : ''));
-  const def = SV[ws?'ws':'edu'];
+  const sv = S.tab==='ws' ? 'ws' : 'edu', ws = sv==='ws', def = SV[sv];
+  const url = base + '?survey=' + sv;
   $('#print-root').innerHTML = '<div class="sheet full"><div class="poster'+(ws?' T':'')+'">'
     + '<div><span class="tag">'+esc(def.pill)+'</span></div>'
-    + '<h2>'+esc(def.ka)+'<small>'+esc(def.en)+(s ? ' · Session '+s.n : '')+'</small></h2>'
-    + (s ? '<div style="margin-top:10px; font-size:18px; color:#55626C">'+esc(s.ka)+'<br>'+esc(s.en)+'</div>' : '')
+    + '<h2>'+esc(def.ka)+'<small>'+esc(def.en)+'</small></h2>'
     + '<div><div class="qr" id="qrbox"></div></div>'
     + '<div class="steps"><div><b>1</b><br>დაასკანერეთ QR კოდი<br><span style="color:#55626C">Scan the QR code</span></div>'
-    + '<div><b>2</b><br>შეაფასეთ 1–5 (2 წუთი)<br><span style="color:#55626C">Rate 1–5 (2 minutes)</span></div></div>'
+    + '<div><b>2</b><br>შეაფასეთ 1–5 (2–3 წუთი)<br><span style="color:#55626C">Rate 1–5 (2–3 minutes)</span></div></div>'
     + '<div style="margin-top:18px; font-size:15px; color:#55626C; line-height:1.5">ⓘ თუ გვერდი არ იხსნება, გახსენით ბრაუზერის პირად (ინკოგნიტო) ფანჯარაში ან სხვა ბრაუზერში.<br>If the page does not open, use a private / incognito tab or another browser.</div><div class="url"><a href="'+esc(url)+'" style="color:inherit">'+esc(url)+'</a></div></div></div>';
   if(window.QRCode) new QRCode(document.getElementById('qrbox'), {text:url, width:340, height:340, colorDark:'#08253D', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M});
   setTimeout(()=>window.print(), 500);
@@ -1581,50 +1582,54 @@ function buildSheets(){
   const qcol = (it, i) => 'Q'+(i+1)+' '+it.ko;
   const pcol = (it, i) => 'P'+(i+1)+' '+it.ko;
 
-  /* 1) 교육 만족도: 응답 1건 = 1행 (세션 → 제출 시각 순) */
-  const edu = S.data.filter(r=>r.survey==='edu').sort((a,b)=>(+a.session - +b.session) || byTime(a,b));
-  add('교육_응답', edu.map(r=>{
-    const s = sesOf(r.session) || {};
-    const o = {'응답ID':r.id, '제출일시(트빌리시)':dt(r.submitted_at), '세션':+r.session, '세션명':s.ko||'', '일자':s.dko||'', '오전/오후':s.half||'', '강사':s.wko||''};
-    SV.edu.items.forEach((it,i)=>{ o[qcol(it,i)] = num(r[it.k]) });
-    o['속도'] = (PACE.find(p=>p.v===r.pace)||{}).ko || '';
-    SV.edu.overall.items.forEach((it,i)=>{ o[pcol(it,i)] = num(r[it.k]) });
-    o['가장 유익했던 점'] = r.best||''; o['개선점·더 듣고 싶은 주제'] = r.improve||''; o['프로그램 전체 의견'] = r.o_comment||'';
-    o['소속'] = r.agency||''; o['기기ID'] = r.device||''; o['숨김'] = r.hidden ? 'Y' : 'N';
-    return o;
-  }), [11,17,5,30,10,8,12, 9,9,9,9,9,9,9, 6, 9,9,9, 40,40,40, 12,11,5]);
+  /* 1) 응답 원본: 엑셀(KOICA 표준) 3_응답집계 시트 '원시 응답 입력란'과 같은 열 순서 → 그대로 붙여넣기 가능 */
+  const resp = sv => { const def = SV[sv];
+    return svAll(sv).sort(byTime).map((r,i)=>{
+      const o = {'연번':i+1, '소속 기관·부서':r.org||'', '직급·담당 업무':r.position||'', '성별':r.gender||''};
+      def.items.forEach((it,j)=>{ o[qcol(it,j)] = num(r[it.k]) });
+      const m = meanOf(r);
+      o['개인 평균(5점)'] = m==null ? '' : Math.round(m*100)/100;
+      o['100점 환산'] = m==null ? '' : Math.round(m/5*1000)/10;
+      o['Q7 '+def.pick.ko] = pickText(sv, r);
+      o['Q8 '+def.comment.ko] = r.comment||'';
+      o['응답ID'] = r.id; o['제출일시(트빌리시)'] = dt(r.submitted_at); o['기기ID'] = r.device||''; o['숨김'] = r.hidden ? 'Y' : 'N';
+      return o;
+    }) };
+  const RW = [5,26,20,8, 9,9,9,9,9,9, 9,9, 26,50, 11,17,11,5];
+  add('교육_응답', resp('edu'), RW);
+  add('워크숍_응답', resp('ws'), RW);
 
-  /* 2) 워크숍 만족도: 응답 1건 = 1행 */
-  const ws = S.data.filter(r=>r.survey==='ws').sort(byTime);
-  add('워크숍_응답', ws.map(r=>{
-    const o = {'응답ID':r.id, '제출일시(트빌리시)':dt(r.submitted_at)};
-    SV.ws.items.forEach((it,i)=>{ o[qcol(it,i)] = num(r[it.k]) });
-    o['가장 유익했던 점'] = r.best||''; o['개선점'] = r.improve||'';
-    o['소속'] = r.agency||''; o['기기ID'] = r.device||''; o['숨김'] = r.hidden ? 'Y' : 'N';
-    return o;
-  }), [11,17, 9,9,9,9,9,9,9, 40,40, 12,11,5]);
+  /* 2) 요약 (숨긴 응답 제외): 성별 통계 · 문항별 평균 · Q7 선택 */
+  const summary = sv => { const def = SV[sv], lv = liveR(svAll(sv)), out = [];
+    genderTable(lv).forEach(g=>out.push({'표':'성별 통계(KOICA 성인지)', '구분':g.name, '응답 인원(명)':g.n, '비율(%)':g.pct==null?'':Math.round(g.pct*10)/10,
+      'Q1 과정 전반(5점)':g.q1==null?'':Math.round(g.q1*100)/100, 'Q1~Q6 평균(5점)':g.m==null?'':Math.round(g.m*100)/100, 'KOICA 환산(100점)':g.k==null?'':Math.round(g.k*10)/10, '긍정 응답률(4~5점, %)':''}));
+    def.items.forEach((it,j)=>{ const a = avgOf(lv, it.k), v = lv.filter(r=>+r[it.k]>=1);
+      out.push({'표':'문항별 평균', '구분':qcol(it,j), '응답 인원(명)':v.length, '비율(%)':'', 'Q1 과정 전반(5점)':'', 'Q1~Q6 평균(5점)':a==null?'':Math.round(a*100)/100,
+        'KOICA 환산(100점)':a==null?'':Math.round(a/5*1000)/10, '긍정 응답률(4~5점, %)':v.length ? Math.round(v.filter(r=>+r[it.k]>=4).length/v.length*1000)/10 : ''}) });
+    def.pick.opts.forEach(o=>{ const c = lv.filter(r=>pickList(r).includes(o.v)).length;
+      out.push({'표':'Q7 '+def.pick.ko+'(복수)', '구분':def.pick.label+' '+o.v+' · '+o.ko.replace(/^세션 \d+\. /,''), '응답 인원(명)':c, '비율(%)':lv.length ? Math.round(c/lv.length*1000)/10 : '',
+        'Q1 과정 전반(5점)':'', 'Q1~Q6 평균(5점)':'', 'KOICA 환산(100점)':'', '긍정 응답률(4~5점, %)':''}) });
+    return out };
+  const SW = [22,40,12,9,14,14,14,16];
+  add('교육_요약', summary('edu'), SW);
+  add('워크숍_요약', summary('ws'), SW);
 
-  /* 3) 요약 (숨긴 응답 제외) */
-  const summary = (sv, list) => list.map(([ses, name])=>{
-    const rows = liveR(S.data.filter(r=>r.survey===sv && String(r.session)===ses));
-    const o = {'구분':name, '응답수':rows.length, '만족 비율(Q1 4·5점, %)':rows.length ? Math.round(rows.filter(r=>+r.q1>=4).length/rows.length*1000)/10 : ''};
-    SV[sv].items.forEach((it,i)=>{ const a = avgOf(rows, it.k); o[qcol(it,i)+' 평균'] = a==null ? '' : Math.round(a*100)/100 });
-    return o;
-  });
-  add('교육_세션요약', summary('edu', SESSIONS.map(s=>[s.n, 'S'+s.n+' '+s.ko+' ('+s.dko+' '+s.half+', '+s.wko+')'])));
-  add('워크숍_요약', summary('ws', [['W','워크숍 (11/27)']]));
-
-  /* 4) 문항 설명 (코드북) */
+  /* 3) 문항 설명 (코드북) */
   const book = [];
-  const scale = '1 전혀 아니다 · 2 아니다 · 3 보통 · 4 그렇다 · 5 매우 그렇다';
-  SV.edu.items.forEach((it,i)=>book.push({'구분':'교육', '열':qcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
-  book.push({'구분':'교육', '열':'속도', '한국어':'세션 속도', 'English':'Pace of the session', 'ქართული':'სესიის ტემპი', '척도':'느림 · 적절 · 빠름'});
-  SV.edu.overall.items.forEach((it,i)=>book.push({'구분':'교육(S6만)', '열':pcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
-  SV.ws.items.forEach((it,i)=>book.push({'구분':'워크숍', '열':qcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
+  const scale = '1 매우 불만족 · 2 불만족 · 3 보통 · 4 만족 · 5 매우 만족 (영·조지아어: Strongly disagree ~ Strongly agree)';
+  [['edu','교육'],['ws','워크숍']].forEach(([sv, nm])=>{ const def = SV[sv];
+    book.push({'구분':nm, '열':'소속 기관·부서', '한국어':BASIC.org.ko+' (필수)', 'English':BASIC.org.en, 'ქართული':BASIC.org.ka, '척도':'단답'});
+    book.push({'구분':nm, '열':'직급·담당 업무', '한국어':BASIC.position.ko+' (선택)', 'English':BASIC.position.en, 'ქართული':BASIC.position.ka, '척도':'단답'});
+    book.push({'구분':nm, '열':'성별', '한국어':BASIC.gender.ko+' (필수, KOICA 성인지 통계)', 'English':BASIC.gender.en, 'ქართული':BASIC.gender.ka, '척도':'Male / Female'});
+    def.items.forEach((it,i)=>book.push({'구분':nm, '열':qcol(it,i), '한국어':it.ko, 'English':it.en, 'ქართული':it.ka, '척도':scale}));
+    book.push({'구분':nm, '열':'Q7 '+def.pick.ko, '한국어':def.pick.ko+' (복수 선택, 필수)', 'English':def.pick.en, 'ქართული':def.pick.ka,
+      '척도':def.pick.opts.map(o=>def.pick.label+' '+o.v+' = '+o.ko).join(' · ')});
+    book.push({'구분':nm, '열':'Q8 '+def.comment.ko, '한국어':def.comment.ko+' (선택)', 'English':def.comment.en, 'ქართული':def.comment.ka, '척도':'서술'});
+  });
+  book.push({'구분':'공통', '열':'개인 평균·100점 환산', '한국어':'응답자별 Q1~Q6 평균, ×20 (KOICA 환산)', 'English':'', 'ქართული':'', '척도':''});
   book.push({'구분':'공통', '열':'숨김', '한국어':'운영자가 숨긴 응답(시험 응답 등). 분석 시 Y 제외', 'English':'', 'ქართული':'', '척도':'Y / N'});
   book.push({'구분':'공통', '열':'기기ID', '한국어':'같은 휴대폰에서 낸 응답 표시(익명). 중복 확인용', 'English':'', 'ქართული':'', '척도':''});
-  add('문항설명', book, [10,22,30,60,60,40]);
-
+  add('문항설명', book, [10,22,30,60,60,50]);
   /* 5) 아이디어 카드 */
   add('개인카드', A.data.P.slice().sort(byTime).map(c=>({'번호':c.id, '제출일시(트빌리시)':dt(c.submitted_at), '이름':c.name, '제목':c.title, '대상 이용자와 문제':c.problem, '개선 아이디어':c.idea, '기대효과':c.effect, '관련 자료·경험':c.evidence, '숨김':c.hidden?'Y':'N'})), [8,17,16,30,40,40,30,30,5]);
   add('조별카드', A.data.T.slice().sort((a,b)=>(+a.team - +b.team)).map(c=>({'번호':c.id, '조':+c.team, '제출일시(트빌리시)':dt(c.submitted_at), '수정일시(트빌리시)':dt(c.updated_at), '제안자':c.proposers, '제목':c.title, '문제·핵심 기능':c.problem, 'AI·빅데이터':c.ai, '개선 전':c.before, '개선 후':c.after, '데이터·관련 기관':c.data, '기대효과':c.effect, '추가 확인사항':c.open, '숨김':c.hidden?'Y':'N'})), [6,4,17,17,20,30,40,30,30,30,30,30,30,5]);
@@ -1659,7 +1664,7 @@ function renderData(){
   const cols = sh.rows.length ? Object.keys(sh.rows[0]) : [];
   $('#dtCount').textContent = rows.length+' / '+sh.rows.length+'행';
   if(!cols.length){ $('#dtBody').innerHTML = '<div class="blank">아직 데이터가 없습니다.</div>'; return }
-  const isNum = c => /^(Q\d|P\d|세션$|조$|응답수|만족 비율)/.test(c);
+  const isNum = c => /^(Q[1-6] |연번|조$|응답 인원|비율|Q1 과정|Q1~Q6|KOICA|긍정|개인 평균|100점)/.test(c);
   $('#dtBody').innerHTML = '<div class="dtwrap"><table class="dtable"><thead><tr><th class="rn">#</th>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'
     + rows.map((r,i)=>'<tr'+(r['숨김']==='Y'?' class="off"':'')+'><td class="rn">'+(i+1)+'</td>'+cols.map(c=>{ const v = fmtCell(r[c]); return '<td class="'+(isNum(c)?'num':(v.length>40?'long':''))+'">'+esc(v)+'</td>' }).join('')+'</tr>').join('')
     + '</tbody></table></div>';
@@ -1825,14 +1830,13 @@ params().then(p=>{
   if(p.view==='admin'){
     A.key = p.key || ''; bindAdmin();
     if(p.session==='team'){ A.type = 'T'; $('#sess').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x.dataset.v==='T')) }
-    if(p.tab==='survey'){ setSection('survey'); if(p.st) S.tab = p.st }
+    if(p.tab==='survey'){ setSection('survey'); if(p.st) S.tab = (p.st==='ws'||p.st==='W') ? 'ws' : 'edu' }
     if(p.tab==='data'){ if(p.sheet) DT.sheet = p.sheet; setSection('data') }
     if(!A.key && GAS){ $('#gate').classList.remove('hidden') } else startAdmin();
   } else if(p.view==='board'){
     startBoard(p);
   } else if(p.survey==='edu' || p.survey==='ws'){
     SVP.survey = p.survey;
-    SVP.session = p.survey==='edu' ? ((/^[1-6]$/.test(p.s||'') ? p.s : null) || autoSession()) : null;
     $('#survey').classList.remove('hidden'); bindSurvey(); renderSurvey();
   } else {
     curType = (p.card==='team' || p.type==='T') ? 'T' : 'P';

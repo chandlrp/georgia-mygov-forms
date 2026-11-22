@@ -6,7 +6,7 @@ Participant pages for the Georgia my.gov.ge digital-government capacity-building
 |---|---|
 | Individual idea card | `./` |
 | Team idea card (one per team) | `./?card=team` |
-| Training session feedback | `./?survey=edu` (auto-selects the current session) · `./?survey=edu&s=1..6` |
+| Training feedback (whole program, once at the end) | `./?survey=edu` |
 | Workshop feedback | `./?survey=ws` |
 
 Data is stored in a Google Sheet through a Google Apps Script web app (`API_URL` in `index.html`). This repository contains only the static page; no data or admin key is stored here.
