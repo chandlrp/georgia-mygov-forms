@@ -630,7 +630,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
       
     </div>
   </div>
-  <div class="fine">თქვენი პასუხები გამოყენებული იქნება მხოლოდ სწავლების გასაუმჯობესებლად.<br>Your answers are used only to improve the training.</div>
+  <div class="fine">თქვენი პასუხები გამოყენებული იქნება მხოლოდ სწავლების გასაუმჯობესებლად.<br>Your answers are used only to improve the program.</div>
 </div>
 
 <!-- ================= ADMIN ================= -->
@@ -1301,26 +1301,26 @@ const BASIC = {
 };
 const SV = {
   edu:{
-    code:'ALL', top:'my.gov.ge · Digital Government Capacity Building Training · 24–26.11.2026',
-    pill:'ტრენინგის შეფასება · Training feedback',
-    ka:'შესაძლებლობების განვითარების ტრენინგის კმაყოფილების კვლევა', en:'Capacity Building Training Satisfaction Survey',
+    code:'ALL', top:'my.gov.ge · Digital Government Capacity Building · 24–26.11.2026',
+    pill:'პროგრამის შეფასება · Capacity building feedback',
+    ka:'შესაძლებლობების განვითარების პროგრამის კმაყოფილების კვლევა', en:'Capacity Building Satisfaction Survey',
     tko:'역량강화 교육 종합 만족도', sub:'11/24–26 · 6개 세션 · 11/26(목) 세션 6 종료 전 1회',
-    lead:['მადლობას გიხდით ტრენინგში მონაწილეობისთვის. გთხოვთ, დაუთმოთ 2-3 წუთი ამ მოკლე კითხვარის შევსებას.',
-          'Thank you for participating in the training. Please take 2–3 minutes to complete this brief survey.'],
-    group:['მთელი სასწავლო პროგრამა (3 დღე)','The whole training program (3 days)'],
+    lead:['მადლობას გიხდით შესაძლებლობების განვითარების პროგრამაში მონაწილეობისთვის. გთხოვთ, დაუთმოთ 2-3 წუთი ამ მოკლე კითხვარის შევსებას.',
+          'Thank you for participating in the capacity building program. Please take 2–3 minutes to complete this brief survey.'],
+    group:['მთელი სასწავლო პროგრამა (3 დღე)','The whole capacity building program (3 days)'],
     items:[
-      {k:'q1', ka:'ზოგადად, რამდენად კმაყოფილი ხართ მთელი სასწავლო პროგრამის ორგანიზებითა და ჩატარებით?', en:'Overall, how satisfied are you with the organization and delivery of the entire training program?', ko:'과정 전반 만족도', ke:'Overall'},
-      {k:'q2', ka:'რამდენად მიღწეულ იქნა ტრენინგის დასახული მიზნები და ოპტიმალური იყო თუ არა მთლიანი ხანგრძლივობა და დროის განაწილება?', en:'Were the stated training objectives achieved, and was the overall schedule and time allocation appropriate?', ko:'목표 달성 및 일정 적정성', ke:'Objectives & schedule'},
-      {k:'q3', ka:'რამდენად შეესაბამებოდა ტრენინგის თემები თქვენი უწყების მიმდინარე საჭიროებებსა და პრიორიტეტებს?', en:"Were the training topics relevant to your institution's current needs and digital government priorities?", ko:'정책·현안 수요 부합성', ke:'Relevance'},
+      {k:'q1', ka:'ზოგადად, რამდენად კმაყოფილი ხართ მთელი სასწავლო პროგრამის ორგანიზებითა და ჩატარებით?', en:'Overall, how satisfied are you with the organization and delivery of the entire capacity building program?', ko:'과정 전반 만족도', ke:'Overall'},
+      {k:'q2', ka:'რამდენად მიღწეულ იქნა პროგრამის დასახული მიზნები და ოპტიმალური იყო თუ არა მთლიანი ხანგრძლივობა და დროის განაწილება?', en:'Were the stated program objectives achieved, and was the overall schedule and time allocation appropriate?', ko:'목표 달성 및 일정 적정성', ke:'Objectives & schedule'},
+      {k:'q3', ka:'რამდენად შეესაბამებოდა პროგრამის თემები თქვენი უწყების მიმდინარე საჭიროებებსა და პრიორიტეტებს?', en:"Were the program topics relevant to your institution's current needs and digital government priorities?", ko:'정책·현안 수요 부합성', ke:'Relevance'},
       {k:'q4', ka:'რამდენად სასარგებლოა კორეის ელექტრონული მმართველობის გამოცდილება და ცოდნა თქვენი სამსახურებრივი მოვალეობების შესასრულებლად?', en:'Are the Korean e-Government cases and knowledge practically useful for your actual duties?', ko:'현업 적용 유용성', ke:'Usefulness'},
-      {k:'q5', ka:'რამდენად კმაყოფილი ხართ კორეელი ექსპერტების პროფესიონალიზმით, მასალის გადმოცემითა და სასწავლო მასალებით?', en:"Were you satisfied with the Korean lecturers' expertise, delivery (including Q&A), and training materials?", ko:'강사진·교육 자료 품질', ke:'Lecturers & materials'},
+      {k:'q5', ka:'რამდენად კმაყოფილი ხართ კორეელი ექსპერტების პროფესიონალიზმით, მასალის გადმოცემითა და სასწავლო მასალებით?', en:"Were you satisfied with the Korean lecturers' expertise, delivery (including Q&A), and lecture materials?", ko:'강사진·교육 자료 품질', ke:'Lecturers & materials'},
       {k:'q6', ka:'რამდენად მაღალი იყო თარგმანის სიზუსტე და გამართული იყო თუ არა საორგანიზაციო/ტექნიკური მხარდაჭერა?', en:'Were the interpretation accuracy, venue facilities, and administrative support smooth?', ko:'통역 및 현장 운영 지원', ke:'Interpretation & support'}
     ],
-    pick:{ka:'მთელი ტრენინგის განმავლობაში რომელი სესია (თემა) იყო თქვენთვის ყველაზე სასარგებლო? (შეგიძლიათ აირჩიოთ რამდენიმე)',
+    pick:{ka:'მთელი პროგრამის განმავლობაში რომელი სესია (თემა) იყო თქვენთვის ყველაზე სასარგებლო? (შეგიძლიათ აირჩიოთ რამდენიმე)',
           en:'Which lecture session(s) did you find most useful? (Select all that apply)', ko:'가장 유익했던 세션', label:'Session',
           opts:SESSIONS.map(s=>({v:s.n, ka:s.ka, en:'Session '+s.n+'. '+s.en, ko:'세션 '+s.n+'. '+s.ko, sub:s.dko+' · '+s.wko}))},
-    comment:{ka:'გაუწევდით თუ არა რეკომენდაციას ამ ტრენინგს კოლეგებთან? გთხოვთ გაგვიზიაროთ მთავარი შთაბეჭდილებები ან სასურველი თემები სამომავლო ტრენინგებისთვის.',
-             en:'Would you recommend this training to colleagues? Please share any key takeaways or topics for future training.', ko:'종합 의견 및 향후 희망 주제'},
+    comment:{ka:'გაუწევდით თუ არა რეკომენდაციას ამ პროგრამას კოლეგებთან? გთხოვთ გაგვიზიაროთ მთავარი შთაბეჭდილებები ან სასურველი თემები სამომავლო პროგრამებისთვის.',
+             en:'Would you recommend this program to colleagues? Please share any key takeaways or topics for future programs.', ko:'종합 의견 및 향후 희망 주제'},
     thanks:['მადლობა მონაწილეობისთვის! ვორქშოპზე შეხვედრამდე (27.11).','Thank you for taking part! See you at the workshop (27 Nov).']
   },
   ws:{
@@ -1395,7 +1395,7 @@ function renderSurvey(){
   $('#svPill').innerHTML = '<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></i>'+esc(def.pill);
   $('#svTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
   $('#svLead').innerHTML = esc(def.lead[0])+' 1 = '+esc(LIK.ka[0])+', 5 = '+esc(LIK.ka[4])+'.<br><span style="opacity:.8">'+esc(def.lead[1])+' 1 = strongly disagree, 5 = strongly agree.</span>';
-  $('#svKicker').textContent = ws ? 'Feedback · Workshop' : 'Feedback · Training';
+  $('#svKicker').textContent = ws ? 'Feedback · Workshop' : 'Feedback · Capacity Building';
   $('#svCardTitle').innerHTML = esc(def.ka)+'<small>'+esc(def.en)+'</small>';
   $('#svPicker').innerHTML = ''; $('#svHead').classList.add('hidden');
   $('#svForm').classList.remove('hidden'); $('#svDone').classList.add('hidden');
