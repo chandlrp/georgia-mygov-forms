@@ -167,6 +167,7 @@ button,input,textarea,select{font:inherit}
 .bd-seg{display:inline-flex; border:1.5px solid var(--line); border-radius:12px; overflow:hidden}
 .bd-seg button{border:none; background:transparent; color:#ADCAD5; padding:9px 12px; cursor:pointer; font-weight:700; font-size:13px}
 .bd-seg button.on{background:var(--gold-d); color:#fff}
+.bd-seg button i, .seg button i{font-style:normal} .bd-seg button small, .seg button small{font-size:inherit; font-weight:inherit}
 .bd-upd{font-size:12px; color:#7FA3B3}
 .bd-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:16px; align-items:start}
 @media (max-width:420px){ .bd-grid{grid-template-columns:1fr} }
@@ -248,8 +249,10 @@ body.team .bd-vote{display:block}
   .bd-tabs .n{font-size:18px}
   .bd-tools{gap:8px; margin-bottom:8px}
   .bd-tools input{min-width:0; flex:1 1 100%; padding:9px 11px}
-  .bd-seg{flex:1}
-  .bd-seg button{flex:1; padding:8px 6px; font-size:12px}
+  .bd-seg{flex:1 1 100%}   /* 휴대전화: 정렬·언어 버튼을 각각 한 줄 전체로 */
+  .bd-seg button{flex:1; padding:7px 4px; font-size:12.5px; line-height:1.25}
+  .bd-seg button i{display:none} .bd-seg button small{display:block; font-size:11px; font-weight:600; opacity:.85}
+  .tr-note{width:100%}
   .bd-upd{width:100%; font-size:11px}
   .bd-grid{grid-template-columns:1fr; gap:12px; margin-top:6px}
   .bc .bh{padding:14px 14px 8px}
@@ -585,9 +588,9 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
   <div class="bd-tools">
     <input id="bdQ" type="search" placeholder="ძიება · Search ideas and comments">
     <div class="bd-seg" id="bdSort">
-      <button data-v="new" class="on">ახალი · Newest</button>
-      <button data-v="talk">განხილვა · Most discussed</button>
-      <button data-v="like">მოწონება · Most liked</button>
+      <button data-v="new" class="on">ახალი<i> · </i><small>Newest</small></button>
+      <button data-v="talk">განხილვა<i> · </i><small>Most discussed</small></button>
+      <button data-v="like">მოწონება<i> · </i><small>Most liked</small></button>
     </div>
     <div class="bd-seg tr-seg" data-trbar></div><span class="tr-note hidden">자동 번역 · Machine translation</span>
     <span class="bd-upd" id="bdUpd"></span>
@@ -1096,7 +1099,7 @@ function cardHTML(c){
 
 
 /* ================= 번역 보기 (원문 · EN · KA · KO) — 서버 translateTexts(Google 번역) ================= */
-const TR_LANGS = [['', '원문 · Original'], ['en', 'English'], ['ka', 'ქართული'], ['ko', '한국어']];
+const TR_LANGS = [['', '원문<i> · </i><small>Original</small>'], ['en', 'English'], ['ka', 'ქართული'], ['ko', '한국어']];
 const TR = {lang: (store.get('tr_lang') || ''), map: {}, busy: false};
 const TR_KO = {name:'이름', title:'제목', problem:'대상·문제', idea:'개선 아이디어', effect:'기대효과', evidence:'관련 데이터·경험',
   proposers:'제안자', ai:'AI·빅데이터 활용', data:'데이터·관련 기관', open:'확인할 사항', before:'현재', after:'개선 후', teamproblem:'문제·핵심 기능'};
