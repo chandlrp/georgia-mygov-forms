@@ -180,6 +180,8 @@ button,input,textarea,select{font:inherit}
 .blike{flex:none; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:6px 12px; border-radius:999px; border:1.5px solid var(--rule); background:#fff; color:var(--ink2); font:700 15px var(--f); cursor:pointer; transition:transform .12s}
 .blike svg{width:20px; height:20px; fill:none}
 .blike.on{border-color:#D9485F; background:#FDEBEE; color:#C2344B}
+.bd-vote{display:none; margin:0 0 14px; padding:12px 16px; border-radius:14px; background:#FDEBEE; border:1.5px solid #D9485F; color:#7A1F2E; font-size:15px; line-height:1.5}
+body.team .bd-vote{display:block}
 .blike.on svg{fill:currentColor}
 .blike:active{transform:scale(.94)}
 .bc .bh h3{margin:0; font-size:17px; line-height:1.35}
@@ -588,6 +590,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
     </div>
     <span class="bd-upd" id="bdUpd"></span>
   </div>
+  <div class="bd-vote" id="bdVote">♥ <b>VOTE</b> — Press ♥ on the <b>one</b> team idea you think is best. <b>One vote per phone</b>: pressing ♥ on another team idea moves your vote. Please do not vote for your own team.</div>
   <div class="bd-err hidden" id="bdErr"></div>
   <div class="bd-grid" id="bdList"></div>
 </div>
@@ -756,7 +759,7 @@ const CARD = {
     lead:['გაგვიზიარეთ, როგორ შეიძლება my.gov.ge გახდეს უფრო მარტივი და სასარგებლო.', 'Tell us how my.gov.ge could become easier and more useful.'],
     note:['ერთ ბარათზე ჩაწერეთ მხოლოდ ერთი იდეა. დაიწყეთ რეალური პრობლემით, რომელიც თქვენ ან მოქალაქეებმა განიცადეს.',
           'One idea per card. Start from a real problem that you or citizens have experienced.'],
-    done:['დაიმახსოვრეთ ბარათის ნომერი — ის დაგჭირდებათ ხმის მიცემისას.', 'Please remember your card number — you will need it for voting.'],
+    done:['დაიმახსოვრეთ ბარათის ნომერი.', 'Please remember your card number — your team can list it as a proposer.'],
     fine:['ერთ ბარათზე — ერთი იდეა. შეგიძლიათ დაწეროთ ქართულად ან ინგლისურად.', 'One idea per card. You may write in Georgian or English.'],
     fields:[
       {k:'name', type:'text', ka:'სახელი და გვარი', en:'Your name', req:1, max:80},
@@ -777,7 +780,7 @@ const CARD = {
     note:['თითოეული გუნდი წარადგენს ერთ ბარათს — გუნდის მთავარ იდეას. შენახვის შემდეგაც შეგიძლიათ დაბრუნდეთ და შეასწოროთ.',
           'Each team submits ONE card — its main idea. You can come back later and edit it.'],
     done:['შესასწორებლად კვლავ აირჩიეთ თქვენი გუნდის ნომერი — ბარათი ავტომატურად ჩაიტვირთება.', 'To edit, choose your team number again — the card loads automatically.'],
-    fine:['ერთი გუნდი — ერთი ბარათი. შეავსებს გუნდის ჩამწერი.', 'One card per team. Filled in by the team’s note-taker.'],
+    fine:['ერთი გუნდი — ერთი ბარათი. შეავსებს მხოლოდ გუნდის წარმომადგენელი.', 'One card per team. Only the team representative fills it in and edits it.'],
     fields:[
       {k:'team', type:'team', ka:'გუნდის ნომერი', en:'Team No.', req:1},
       {k:'proposers', type:'text', ka:'იდეის ავტორ(ებ)ი', en:'Proposer(s)', max:200,
@@ -834,9 +837,11 @@ const MOCK = {
   _cm(){ if(/demo=1/.test(location.search)) return DEMO_CM; try{ return JSON.parse(localStorage.getItem('cm_mock')||'[]') }catch(e){ return [] } },
   _lk(){ try{ return JSON.parse(localStorage.getItem('lk_mock')||'{}') }catch(e){ return {} } },
   setLike(cardId, device, on){
-    const a = this._lk(); a[cardId] = a[cardId] || {}; a[cardId][device] = !!on;
+    const a = this._lk(), moved = [], counts = {};
+    if(on && cardId.charAt(0)==='T') Object.keys(a).forEach(k=>{ if(k!==cardId && k.charAt(0)==='T' && a[k][device]){ a[k][device] = false; moved.push(k); counts[k] = Object.values(a[k]).filter(Boolean).length + (DEMO_LK[k]||0) } });
+    a[cardId] = a[cardId] || {}; a[cardId][device] = !!on;
     try{ localStorage.setItem('lk_mock', JSON.stringify(a)) }catch(e){}
-    return {card_id:cardId, liked:!!on, count:Object.values(a[cardId]).filter(Boolean).length + (DEMO_LK[cardId]||0)};
+    return {card_id:cardId, liked:!!on, count:Object.values(a[cardId]).filter(Boolean).length + (DEMO_LK[cardId]||0), moved, counts};
   },
   listBoard(device){
     const d = this._db(), out = {at:new Date().toISOString(), likes:Object.assign({}, DEMO_LK), mine:[]};
@@ -1167,7 +1172,7 @@ async function printPoster(){
     + '<h2>'+esc(def.ka)+'<small>'+esc(def.en)+' · my.gov.ge AI &amp; Big Data Workshop</small></h2>'
     + '<div><div class="qr" id="qrbox"></div></div>'
     + '<div class="steps"><div><b>1</b><br>დაასკანერეთ QR კოდი<br><span style="color:#55626C">Scan the QR code</span></div>'
-    + (T ? '<div><b>2</b><br>შეავსებს გუნდის ჩამწერი<br><span style="color:#55626C">The team note-taker fills it in</span></div>'
+    + (T ? '<div><b>2</b><br>შეავსებს გუნდის წარმომადგენელი<br><span style="color:#55626C">The team representative fills it in</span></div>'
          : '<div><b>2</b><br>ჩაწერეთ იდეა და გააგზავნეთ<br><span style="color:#55626C">Write your idea and submit</span></div>')
     + '</div><div style="margin-top:18px; font-size:15px; color:#55626C; line-height:1.5">ⓘ თუ გვერდი არ იხსნება, გახსენით ბრაუზერის პირად (ინკოგნიტო) ფანჯარაში ან სხვა ბრაუზერში.<br>If the page does not open, use a private / incognito tab or another browser.</div><div class="url"><a href="'+esc(url)+'" style="color:inherit">'+esc(url)+'</a></div></div></div>';
   if(window.QRCode) new QRCode(document.getElementById('qrbox'), {text:url, width:340, height:340, colorDark:'#08253D', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M});
@@ -1730,7 +1735,7 @@ function bdCardHTML(c){
     : '<div class="cm-none">ჯერ კომენტარი არ არის — იყავით პირველი. · No comments yet — be the first.</div>';
   return '<article class="bc '+c.type+'" data-id="'+esc(c.id)+'">'
     + '<div class="bh"><span class="id">'+esc(c.id)+'</span><div class="bt"><h3>'+esc(c.title)+'</h3><div class="who">'+who+(when ? ' · '+esc(when) : '')+'</div></div>'
-    +   '<button class="blike'+(liked?' on':'')+'" type="button" data-like="'+esc(c.id)+'" aria-pressed="'+liked+'" title="მომწონს · Like (not the official vote)">'+HEART+'<b>'+likes+'</b></button></div>'
+    +   '<button class="blike'+(liked?' on':'')+'" type="button" data-like="'+esc(c.id)+'" aria-pressed="'+liked+'" title="'+(c.type==='T' ? 'Vote — one vote per phone' : 'მომწონს · Like (not the vote)')+'">'+HEART+'<b>'+likes+'</b></button></div>'
     + '<div class="bb">'+body+'</div><button class="bmore hidden" type="button" data-more="'+esc(c.id)+'"></button>'
     + '<div class="bcm'+(open?' open':'')+'">'
     +   '<button class="bcm-toggle" type="button" data-toggle="'+esc(c.id)+'">'+CHAT+'<span><b>'+cm.length+'</b> კომენტარი · comment'+(cm.length===1?'':'s')+'</span>'+CHEV+'</button>'
@@ -1805,12 +1810,14 @@ function bindBoard(){
     if(lb){   // 좋아요: 화면 먼저 바꾸고 서버 결과로 맞춤, 실패하면 되돌림
       const id = lb.dataset.like, on = !(BD.data.mine||[]).includes(id);
       const L0 = BD.data.likes = BD.data.likes || {};
+      if(on && id.charAt(0)==='T') (BD.data.mine||[]).filter(x=>x!==id && x.charAt(0)==='T').forEach(x=>{ L0[x] = Math.max(0, (+L0[x]||0) - 1) });   // 팀 투표: 기기당 1표 → 표 옮김
+      if(on && id.charAt(0)==='T') BD.data.mine = (BD.data.mine||[]).filter(x=>x.charAt(0)!=='T');
       BD.data.mine = on ? (BD.data.mine||[]).concat(id) : (BD.data.mine||[]).filter(x=>x!==id);
       L0[id] = Math.max(0, (+L0[id]||0) + (on?1:-1));
       BD.liking[id] = on; renderBoard();
       try{
         const r = await call('setLike', id, deviceId(), on);
-        if(BD.liking[id]===on){ BD.data.likes[id] = r.count; delete BD.liking[id]; renderBoard() }
+        if(BD.liking[id]===on){ BD.data.likes[id] = r.count; Object.assign(BD.data.likes, r.counts||{}); delete BD.liking[id]; renderBoard() }
       }catch(err){
         if(BD.liking[id]===on){
           delete BD.liking[id];
