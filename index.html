@@ -180,6 +180,7 @@ button,input,textarea,select{font:inherit}
 .blike{flex:none; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:6px 12px; border-radius:999px; border:1.5px solid var(--rule); background:#fff; color:var(--ink2); font:700 15px var(--f); cursor:pointer; transition:transform .12s}
 .blike svg{width:20px; height:20px; fill:none}
 .blike.on{border-color:#D9485F; background:#FDEBEE; color:#C2344B}
+.tr-note{font-size:12px;color:#8FB0C0;align-self:center} .tr-note.busy::after{content:' …'} .tr-note.hidden{display:none}
 .bd-vote{display:none; margin:0 0 14px; padding:12px 16px; border-radius:14px; background:#FDEBEE; border:1.5px solid #D9485F; color:#7A1F2E; font-size:15px; line-height:1.5}
 body.team .bd-vote{display:block}
 .blike.on svg{fill:currentColor}
@@ -588,6 +589,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
       <button data-v="talk">განხილვა · Most discussed</button>
       <button data-v="like">მოწონება · Most liked</button>
     </div>
+    <div class="bd-seg tr-seg" data-trbar></div><span class="tr-note hidden">자동 번역 · Machine translation</span>
     <span class="bd-upd" id="bdUpd"></span>
   </div>
   <div class="bd-vote" id="bdVote">♥ <b>VOTE</b> — Press ♥ on the <b>one</b> team idea you think is best. <b>One vote per phone</b>: pressing ♥ on another team idea moves your vote. Please do not vote for your own team.</div>
@@ -714,6 +716,7 @@ body.sv.ws{--accent:var(--gold-d); --accent-soft:#FBEFD6; --accent-strong:var(--
     </div>
     <input class="tb-input" id="q" placeholder="검색 (제목·이름·내용)">
     <label class="chk"><input type="checkbox" id="showHidden"> 숨긴 카드</label>
+    <div class="seg tr-seg" data-trbar></div><span class="tr-note hidden">자동 번역</span>
     <span class="spacer"></span>
     <span class="live" id="live"></span>
     <select class="tb-input" id="layout" style="min-width:0">
@@ -828,6 +831,7 @@ const MOCK = {
   _sv(){ if(/demo=1/.test(location.search)) return DEMO_SV; try{ return JSON.parse(localStorage.getItem('sv_mock')||'[]') }catch(e){ return [] } },
   submitSurvey(d){ const a = this._sv(); const id = 'R'+Math.random().toString(36).slice(2,10); a.push(Object.assign({id, submitted_at:new Date().toISOString(), hidden:false}, d)); try{ localStorage.setItem('sv_mock', JSON.stringify(a)) }catch(e){} return {id} },
   listResponses(){ return this._sv() },
+  translateTexts(texts, lang){ return apiCall('translateTexts', [texts, lang]) },   // 번역은 예시에서도 실서버(읽기 전용)
   adminData(){ return {cards:this._db(), responses:this._sv()} },
   getSheetUrl(){ return 'https://docs.google.com/spreadsheets/' },
   setPublicUrl(key,u){ u = String(u||'').trim().replace(/[?#].*$/,''); if(!/^https:\/\/script\.google\.com\/(a\/macros\/[^\/]+|macros)\/s\/[\w-]+\/exec$/.test(u)) throw new Error('웹 앱 URL(https://script.google.com/macros/s/…/exec)을 넣어 주세요'); try{ localStorage.setItem('pub_mock',u) }catch(e){} return u },
@@ -1067,7 +1071,8 @@ function cardHTML(c){
   const def = CARD[c.type], T = c.type==='T';
   const sec = (k, ka, en, full) => {
     const v = c[k];
-    return '<div class="sec'+(full?' full':'')+'"><div class="sl">'+esc(ka)+' <small>· '+esc(en)+'</small></div><div class="sv'+(v?'':' none')+'">'+(v?esc(v):'—')+'</div></div>';
+    const l = trLabel(c.type, k, ka, en);
+    return '<div class="sec'+(full?' full':'')+'"><div class="sl">'+esc(l[0])+' <small>· '+esc(l[1])+'</small></div><div class="sv'+(v?'':' none')+'"'+trTitle(v)+'>'+(v?esc(tx(v)):'—')+'</div></div>';
   };
   let body = '';
   def.fields.forEach(f=>{
@@ -1081,13 +1086,58 @@ function cardHTML(c){
   const fmt = x => new Date(x).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
   const stampTxt = (c.submitted_at ? fmt(c.submitted_at) : '') + (c.updated_at ? ' · updated '+fmt(c.updated_at) : '');
   return '<div class="pcard '+c.type+'">'
-    + '<div class="ph"><div><div class="kind">'+(T?'Team Idea · გუნდური':'Individual Idea · ინდივიდუალური')+'</div><div class="ttl">'+esc(c.title)+'</div></div>'
+    + '<div class="ph"><div><div class="kind">'+(T?'Team Idea · გუნდური':'Individual Idea · ინდივიდუალური')+'</div><div class="ttl">'+esc(tx(c.title))+'</div></div>'
     + '<div class="no"><span>CARD NO.</span><b>'+esc(c.id)+'</b></div></div>'
     + '<div class="meta">'+meta+'</div>'
     + '<div class="pb'+(T?' two':'')+'">'+body+'</div>'
     + '<div class="pf"><span>my.gov.ge · AI &amp; Big Data Idea Workshop · 27.11.2026</span><span>'+esc(stampTxt)+'</span></div>'
     + '</div>';
 }
+
+
+/* ================= 번역 보기 (원문 · EN · KA · KO) — 서버 translateTexts(Google 번역) ================= */
+const TR_LANGS = [['', '원문 · Original'], ['en', 'English'], ['ka', 'ქართული'], ['ko', '한국어']];
+const TR = {lang: (store.get('tr_lang') || ''), map: {}, busy: false};
+const TR_KO = {name:'이름', title:'제목', problem:'대상·문제', idea:'개선 아이디어', effect:'기대효과', evidence:'관련 데이터·경험',
+  proposers:'제안자', ai:'AI·빅데이터 활용', data:'데이터·관련 기관', open:'확인할 사항', before:'현재', after:'개선 후', teamproblem:'문제·핵심 기능'};
+function tx(s){ if(!TR.lang || !s) return s; const v = TR.map[TR.lang + '\u0001' + s]; return v == null ? s : v }
+function trTitle(s){ return (TR.lang && s && tx(s) !== s) ? ' title="'+esc('원문 · Original: ' + s)+'"' : '' }
+function trLabel(type, k, ka, en){   // 한국어 보기일 때 항목 이름도 한국어
+  if(TR.lang !== 'ko') return [ka, en];
+  const ko = (type==='T' && k==='problem') ? TR_KO.teamproblem : TR_KO[k];
+  return ko ? [ko, en] : [ka, en];
+}
+function trBar(cls){ return TR_LANGS.map(l=>'<button type="button" data-lang="'+l[0]+'" class="'+(TR.lang===l[0]?'on':'')+'">'+l[1]+'</button>').join('') }
+function trPaint(){
+  document.querySelectorAll('[data-trbar]').forEach(el=>{ el.innerHTML = trBar(); });
+  document.querySelectorAll('.tr-note').forEach(el=>el.classList.toggle('hidden', !TR.lang));
+}
+function trRender(){
+  if(!$('#board').classList.contains('hidden')) renderBoard();
+  if(!$('#admin').classList.contains('hidden')){ renderAdmin(); if(!$('#modal').classList.contains('hidden') && A.view.length) $('#mBody').innerHTML = cardHTML(A.view[A.mi]); }
+}
+const TR_FIELDS = ['title','problem','idea','effect','evidence','ai','before','after','data','open'];
+function trCardTexts(list){ const out = []; (list||[]).forEach(c=>TR_FIELDS.forEach(k=>{ if(c[k]) out.push(String(c[k])) })); return out }
+async function trAfter(texts){   // 화면에 있는 글 중 아직 번역 안 된 것만 서버에 묻고, 받으면 다시 그림
+  if(!TR.lang || TR.busy) return;
+  const lang = TR.lang, need = [...new Set(texts.filter(t=>t && String(t).trim() && TR.map[lang+'\u0001'+t] == null))];
+  if(!need.length) return;
+  TR.busy = true; document.querySelectorAll('.tr-note').forEach(el=>el.classList.add('busy'));
+  try{
+    for(let i=0;i<need.length;i+=15){   // 15개씩 묻고 받는 대로 화면에 반영
+      const part = need.slice(i, i+15);
+      let r = [];
+      try{ r = await call('translateTexts', part, lang) || [] }catch(e){ r = [] }
+      part.forEach((t,j)=>{ TR.map[lang+'\u0001'+t] = (r[j] == null ? t : r[j]) });   // 실패하면 원문(다시 묻지 않음)
+      if(TR.lang === lang && i+15 < need.length) trRender();
+    }
+  } finally { TR.busy = false; document.querySelectorAll('.tr-note').forEach(el=>el.classList.remove('busy')) }
+  if(TR.lang === lang) trRender();
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-lang]'); if(!b || !b.closest('[data-trbar]')) return;
+  TR.lang = b.dataset.lang; store.set('tr_lang', TR.lang); trPaint(); trRender();
+});
 
 /* ================= ADMIN ================= */
 const A = {key:'', data:{P:[],T:[]}, type:'P', team:'', q:'', showHidden:false, sel:new Set(), view:[], mi:0};
@@ -1114,7 +1164,7 @@ function miniHTML(c, i){
   const lines = T ? [['문제·기능', c.problem], ['AI·데이터', c.ai]] : [['문제', c.problem], ['아이디어', c.idea]];
   return '<div class="mini '+c.type+(A.sel.has(c.id)?' sel':'')+(c.hidden?' off':'')+'" data-i="'+i+'">'
     + '<div class="mh"><span class="id">'+esc(c.id)+'</span><span class="who">'+esc(who)+'</span><input type="checkbox" data-sel="'+esc(c.id)+'" '+(A.sel.has(c.id)?'checked':'')+'></div>'
-    + '<div class="mb"><h4>'+esc(c.title)+'</h4>'+lines.filter(l=>l[1]).map(l=>'<p><b>'+l[0]+'</b> '+esc(l[1])+'</p>').join('')+'</div>'
+    + '<div class="mb"><h4'+trTitle(c.title)+'>'+esc(tx(c.title))+'</h4>'+lines.filter(l=>l[1]).map(l=>'<p'+trTitle(l[1])+'><b>'+l[0]+'</b> '+esc(tx(l[1]))+'</p>').join('')+'</div>'
     + '<div class="mf"><span>'+(c.submitted_at? new Date(c.submitted_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'')+(c.updated_at? ' · <b style="color:#B8862B">수정 '+new Date(c.updated_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</b>':'')+'</span><span class="acts"><button data-hide="'+esc(c.id)+'" data-h="'+(c.hidden?0:1)+'">'+(c.hidden?'되살리기':'숨기기')+'</button><button class="del" data-del="'+esc(c.id)+'">삭제</button></span></div>'
     + '</div>';
 }
@@ -1135,6 +1185,7 @@ function renderAdmin(){
   const sel = A.view.filter(c=>A.sel.has(c.id)).length;
   $('#printBtn').textContent = sel ? '선택 '+sel+'장 인쇄' : '보이는 '+A.view.length+'장 인쇄';
   $('#qrBtn').textContent = (A.type==='P'?'개인':'조별')+' QR 포스터';
+  trAfter(trCardTexts((A.data.P||[]).concat(A.data.T||[])));
 }
 async function load(){
   try{
@@ -1715,8 +1766,9 @@ function bdList(){
   return list;
 }
 function bdSec(type, k, v, cls){
-  const l = k==='before' ? [BA.before.ka, BA.before.en] : k==='after' ? [BA.after.ka, BA.after.en] : bdLabel(type, k);
-  return '<div class="bsec'+(cls?' '+cls:'')+'"><div class="bl">'+esc(l[0])+' <small>· '+esc(l[1])+'</small></div><div class="bv">'+esc(v)+'</div></div>';
+  const l0 = k==='before' ? [BA.before.ka, BA.before.en] : k==='after' ? [BA.after.ka, BA.after.en] : bdLabel(type, k);
+  const l = trLabel(type, k, l0[0], l0[1]);
+  return '<div class="bsec'+(cls?' '+cls:'')+'"><div class="bl">'+esc(l[0])+' <small>· '+esc(l[1])+'</small></div><div class="bv"'+trTitle(v)+'>'+esc(tx(v))+'</div></div>';
 }
 function bdCardHTML(c){
   const T = c.type==='T', cm = bdComments(c.id), open = BD.open.has(c.id);
@@ -1731,10 +1783,10 @@ function bdCardHTML(c){
   const when = fmtT(c.updated_at || c.submitted_at);
   const list = cm.length
     ? cm.map(m=>'<div class="cm"><div class="cm-h"><b>'+esc(m.name || 'ანონიმური · Anonymous')+'</b><span>'+esc(fmtT(m.submitted_at))+'</span>'
-        + (BD.mod ? '<button class="x" type="button" data-hide="'+esc(m.id)+'">숨기기 · Hide</button>' : '')+'</div><div class="cm-t">'+esc(m.text)+'</div></div>').join('')
+        + (BD.mod ? '<button class="x" type="button" data-hide="'+esc(m.id)+'">숨기기 · Hide</button>' : '')+'</div><div class="cm-t"'+trTitle(m.text)+'>'+esc(tx(m.text))+'</div></div>').join('')
     : '<div class="cm-none">ჯერ კომენტარი არ არის — იყავით პირველი. · No comments yet — be the first.</div>';
   return '<article class="bc '+c.type+'" data-id="'+esc(c.id)+'">'
-    + '<div class="bh"><span class="id">'+esc(c.id)+'</span><div class="bt"><h3>'+esc(c.title)+'</h3><div class="who">'+who+(when ? ' · '+esc(when) : '')+'</div></div>'
+    + '<div class="bh"><span class="id">'+esc(c.id)+'</span><div class="bt"><h3'+trTitle(c.title)+'>'+esc(tx(c.title))+'</h3><div class="who">'+who+(when ? ' · '+esc(when) : '')+'</div></div>'
     +   '<button class="blike'+(liked?' on':'')+'" type="button" data-like="'+esc(c.id)+'" aria-pressed="'+liked+'" title="'+(c.type==='T' ? 'Vote — one vote per phone' : 'მომწონს · Like (not the vote)')+'">'+HEART+'<b>'+likes+'</b></button></div>'
     + '<div class="bb">'+body+'</div><button class="bmore hidden" type="button" data-more="'+esc(c.id)+'"></button>'
     + '<div class="bcm'+(open?' open':'')+'">'
@@ -1774,6 +1826,7 @@ function renderBoard(){
     else { bb.classList.add('clip'); mb.textContent = 'სრულად ნახვა · Show more ▼' }
   });
   BD.pending = false;
+  trAfter(trCardTexts((BD.data.P||[]).concat(BD.data.T||[])).concat((BD.data.comments||[]).map(m=>m.text)));
 }
 async function loadBoard(){
   try{
@@ -1876,6 +1929,7 @@ function startBoard(p){
 }
 
 /* ================= boot ================= */
+trPaint();
 params().then(p=>{
   if(p.view==='admin'){
     A.key = p.key || ''; bindAdmin();
