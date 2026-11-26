@@ -1086,7 +1086,7 @@ function cardHTML(c){
   const meta = T
     ? '<span><i>Team · გუნდი</i><b>'+esc(c.team)+'</b></span><span><i>Proposer(s) · ავტორ(ებ)ი</i><b>'+esc(c.proposers||'—')+'</b></span>'
     : '<span><i>Author · ავტორი</i><b>'+esc(c.name||'—')+'</b></span>';
-  const fmt = x => new Date(x).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  const fmt = x => new Date(x).toLocaleString('en-GB',{timeZone:'Asia/Tbilisi',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
   const stampTxt = (c.submitted_at ? fmt(c.submitted_at) : '') + (c.updated_at ? ' · updated '+fmt(c.updated_at) : '');
   return '<div class="pcard '+c.type+'">'
     + '<div class="ph"><div><div class="kind">'+(T?'Team Idea · გუნდური':'Individual Idea · ინდივიდუალური')+'</div><div class="ttl">'+esc(tx(c.title))+'</div></div>'
@@ -1168,7 +1168,7 @@ function miniHTML(c, i){
   return '<div class="mini '+c.type+(A.sel.has(c.id)?' sel':'')+(c.hidden?' off':'')+'" data-i="'+i+'">'
     + '<div class="mh"><span class="id">'+esc(c.id)+'</span><span class="who">'+esc(who)+'</span><input type="checkbox" data-sel="'+esc(c.id)+'" '+(A.sel.has(c.id)?'checked':'')+'></div>'
     + '<div class="mb"><h4'+trTitle(c.title)+'>'+esc(tx(c.title))+'</h4>'+lines.filter(l=>l[1]).map(l=>'<p'+trTitle(l[1])+'><b>'+l[0]+'</b> '+esc(tx(l[1]))+'</p>').join('')+'</div>'
-    + '<div class="mf"><span>'+(c.submitted_at? new Date(c.submitted_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'')+(c.updated_at? ' · <b style="color:#B8862B">수정 '+new Date(c.updated_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</b>':'')+'</span><span class="acts"><button data-hide="'+esc(c.id)+'" data-h="'+(c.hidden?0:1)+'">'+(c.hidden?'되살리기':'숨기기')+'</button><button class="del" data-del="'+esc(c.id)+'">삭제</button></span></div>'
+    + '<div class="mf"><span>'+(c.submitted_at? new Date(c.submitted_at).toLocaleTimeString('ko-KR',{timeZone:'Asia/Tbilisi',hour:'2-digit',minute:'2-digit'}):'')+(c.updated_at? ' · <b style="color:#B8862B">수정 '+new Date(c.updated_at).toLocaleTimeString('ko-KR',{timeZone:'Asia/Tbilisi',hour:'2-digit',minute:'2-digit'})+'</b>':'')+'</span><span class="acts"><button data-hide="'+esc(c.id)+'" data-h="'+(c.hidden?0:1)+'">'+(c.hidden?'되살리기':'숨기기')+'</button><button class="del" data-del="'+esc(c.id)+'">삭제</button></span></div>'
     + '</div>';
 }
 function renderAdmin(){
@@ -1194,7 +1194,7 @@ async function load(){
   try{
     A.data = await call('listCards', A.key);
     A.data.P = A.data.P||[]; A.data.T = A.data.T||[];
-    $('#live').textContent = '갱신 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    $('#live').textContent = '갱신(트빌리시) '+new Date().toLocaleTimeString('ko-KR',{timeZone:'Asia/Tbilisi',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     renderAdmin();
   }catch(e){
     if(/authori/i.test(String(e && e.message || e))){ $('#admin').classList.add('hidden'); $('#gate').classList.remove('hidden') }
@@ -1296,10 +1296,10 @@ function bindAdmin(){
 async function refreshAll(){
   try{
     const d = await call('adminData', A.key);
-    const t = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const t = new Date().toLocaleTimeString('ko-KR',{timeZone:'Asia/Tbilisi',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     A.data = d.cards || {P:[],T:[]}; A.data.P = A.data.P||[]; A.data.T = A.data.T||[];
     S.data = d.responses || [];
-    $('#live').textContent = '갱신 '+t; $('#svLive').textContent = '갱신 '+t;
+    $('#live').textContent = '갱신(트빌리시) '+t; $('#svLive').textContent = '갱신(트빌리시) '+t;
     renderAdmin(); renderSurveyAdmin(); if(A.section==='data') renderData();
   }catch(e){
     if(/authori/i.test(String(e && e.message || e))){ $('#admin').classList.add('hidden'); $('#gate').classList.remove('hidden') }
@@ -1542,7 +1542,7 @@ function dvRowHTML(it, rows, n){
 function cmtHTML(rows, k){
   const list = rows.filter(r=>r[k]);
   if(!list.length) return '<div class="none-yet">아직 의견 없음</div>';
-  return list.map(r=>'<div class="cmt'+(r.hidden?' off':'')+'">'+esc(r[k])+'<div class="meta"><span>'+esc([r.org, r.position].filter(Boolean).join(' · '))+(r.org||r.position?' · ':'')+(r.submitted_at? new Date(r.submitted_at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</span><button data-rh="'+esc(r.id)+'" data-h="'+(r.hidden?0:1)+'">'+(r.hidden?'되살리기':'응답 숨기기')+'</button></div></div>').join('');
+  return list.map(r=>'<div class="cmt'+(r.hidden?' off':'')+'">'+esc(r[k])+'<div class="meta"><span>'+esc([r.org, r.position].filter(Boolean).join(' · '))+(r.org||r.position?' · ':'')+(r.submitted_at? new Date(r.submitted_at).toLocaleString('ko-KR',{timeZone:'Asia/Tbilisi',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</span><button data-rh="'+esc(r.id)+'" data-h="'+(r.hidden?0:1)+'">'+(r.hidden?'되살리기':'응답 숨기기')+'</button></div></div>').join('');
 }
 /* KOICA 성인지 통계 + 종합 만족도 (엑셀 3_응답집계 시트 1번 표와 같은 계산) */
 function genderTable(lv){
@@ -1583,7 +1583,7 @@ function renderSurveyAdmin(){
 async function loadSurvey(){
   try{
     S.data = await call('listResponses', A.key) || [];
-    $('#svLive').textContent = '갱신 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    $('#svLive').textContent = '갱신(트빌리시) '+new Date().toLocaleTimeString('ko-KR',{timeZone:'Asia/Tbilisi',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     renderSurveyAdmin();
   }catch(e){ $('#svLive').textContent = '갱신 실패: '+(e && e.message || e) }
 }
